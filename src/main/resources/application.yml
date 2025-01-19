@@ -1,0 +1,13 @@
+shiro:
+  ws:
+    client:
+      enable: true
+      url: ws://nas.com:3001
+    access-token: 7KeBPR3sNpba7AH4dPCk
+per:
+  file-location: ${dev.file-location}
+spring:
+  profiles:
+    active: dev
+server:
+  port: 8001
