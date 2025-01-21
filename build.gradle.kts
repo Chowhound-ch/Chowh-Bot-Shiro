@@ -22,7 +22,7 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    implementation("com.mikuac:shiro:2.3.3")
+    implementation("com.mikuac:shiro:2.3.5")
     implementation("cn.hutool:hutool-all:5.7.10")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")

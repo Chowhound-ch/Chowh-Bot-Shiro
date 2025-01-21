@@ -2,7 +2,7 @@ shiro:
   ws:
     client:
       enable: true
-      url: ws://nas.com:3001
+      url: ${dev.ws.clientUrl}
     access-token: 7KeBPR3sNpba7AH4dPCk
 per:
   file-location: ${dev.file-location}
