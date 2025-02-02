@@ -6,6 +6,8 @@ shiro:
     access-token: 7KeBPR3sNpba7AH4dPCk
 per:
   file-location: ${dev.file-location}
+  video-location: ${dev.video-location}
+  video-location-raw: ${dev.video-location-raw}
 spring:
   profiles:
     active: dev
