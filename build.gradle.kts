@@ -9,10 +9,8 @@ plugins {
 group = "per.chowhound.bot"
 version = "0.0.1"
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
+
+
 
 repositories {
     mavenCentral()
@@ -22,8 +20,9 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    implementation("com.mikuac:shiro:2.4.5")
+    implementation("com.mikuac:shiro:2.4.6")
     implementation("cn.hutool:hutool-all:5.7.10")
+    implementation("org.springframework.boot:spring-boot-starter-amqp")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 }

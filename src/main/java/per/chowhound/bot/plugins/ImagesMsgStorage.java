@@ -6,8 +6,6 @@ import com.mikuac.shiro.annotation.MessageHandlerFilter;
 import com.mikuac.shiro.annotation.PrivateMessageHandler;
 import com.mikuac.shiro.annotation.common.Shiro;
 import com.mikuac.shiro.core.Bot;
-import com.mikuac.shiro.dto.action.common.ActionData;
-import com.mikuac.shiro.dto.action.response.DownloadFileResp;
 import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 import com.mikuac.shiro.enums.MsgTypeEnum;
 import com.mikuac.shiro.model.ArrayMsg;
@@ -23,7 +21,6 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 
 @Slf4j
@@ -36,18 +33,18 @@ public class ImagesMsgStorage {
     private String VIDEO_PATH_RAW;
     @Value("${per.video-location}")
     private String VIDEO_PATH;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     @PrivateMessageHandler
     @MessageHandlerFilter(types = {MsgTypeEnum.image, MsgTypeEnum.forward, MsgTypeEnum.video})
     public void test(Bot bot, PrivateMessageEvent event, Matcher matcher) {
         List<ArrayMsg> arrayMsg = event.getArrayMsg();
         for (ArrayMsg msg : arrayMsg) {
-            Map<String, String> data = msg.getData();
+            JsonNode data = msg.getData();
             if (MsgTypeEnum.image.equals(msg.getType())) {
-                saveImage(data.get("url"), data.get("file"));
+                saveImage(data.get("url").asText(), data.get("file").asText());
             } else if (MsgTypeEnum.video.equals(msg.getType())) {
-                saveVideo(data.get("url"), data.get("file"));
+                saveVideo(data.get("url").asText(), data.get("file").asText());
             } else if (MsgTypeEnum.forward.equals(msg.getType())) {
                 JsonNode node = JacksonUtil.readTree(data.get("content"));
                 saveMedia(node);

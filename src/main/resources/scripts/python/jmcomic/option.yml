@@ -1,0 +1,58 @@
+log: true
+
+# 配置客户端相关
+client:
+  # impl: 客户端实现类，不配置默认会使用JmModuleConfig.DEFAULT_CLIENT_IMPL
+  # 可配置:
+  #  html - 表示网页端
+  #  api - 表示APP端
+  # APP端不限ip兼容性好，网页端限制ip地区但效率高
+  impl: api
+  postman:
+    meta_data:
+      # proxies: 代理配置，默认是 system，表示使用系统代理。
+      # 以下的写法都可以:
+      # proxies: null # 不使用代理
+      # proxies: clash
+      # proxies: v2ray
+      # proxies: 127.0.0.1:7890
+       proxies: 127.0.0.1:7890
+# 下载配置
+download:
+  image:
+    decode: true # JM的原图是混淆过的，要不要还原？默认为true
+    suffix: .jpg # 把图片都转为.jpg格式，默认为null，表示不转换。
+dir_rule:
+  # base_dir: 根目录。
+  # 此配置也支持引用环境变量，例如
+  # base_dir: ${JM_DIR}/下载文件夹/
+  base_dir: D:/downloads/jm
+
+plugins:
+  after_init:
+    - plugin: jm_server
+      kwargs:
+        password: '3333' # 服务器访问密码
+        # 下面是高级配置，不配置也可以
+        # run下的参数是flask框架的app对象的run方法参数，详见flask文档
+        run:
+          host: 0.0.0.0 # 默认接收所有ip的请求
+          port: 3110 # 服务器端口，默认为80
+          debug: false # 是否开启debug模式，默认为false
+        # 支持重写背景图片，可以使用你喜欢的背景图片作为背景
+#        img_overwrite:
+#          bg.jpg: D:/浏览器的背景图
+#          m_bg.jpeg: D:/移动设备浏览器的背景图
+  before_photo:
+    - plugin: skip_photo_with_few_images # 跳过下载章节图片数量过少的章节。一些韩漫的章节是公告，没有实际内容，就可以用该插件来跳过下载这些章节。
+      kwargs:
+        at_least_image_count: 3 # 至少要有多少张图，才下载此章节
+  after_photo:
+    # 把章节的所有图片合并为一个pdf的插件
+    # 使用前需要安装依赖库: [pip install img2pdf]
+    - plugin: img2pdf
+      kwargs:
+        pdf_dir: D:/downloads/pdf # pdf存放文件夹
+        filename_rule: Pid # pdf命名规则，P代表photo, id代表使用photo.id也就是章节id
+        encrypt: # pdf密码，可选配置项
+          password: 123 # 密码
