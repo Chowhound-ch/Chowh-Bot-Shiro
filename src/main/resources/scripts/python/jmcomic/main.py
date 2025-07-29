@@ -47,7 +47,7 @@ def callback(ch, method, properties, body):
     print(" [x] Received %r" % body.decode())
     jm_code = json.loads(body.decode())
     resp = jmcomic.download_album(jm_code['jmCode'], option)
-    send_message(json.dumps({'data': get_jm_info(resp), 'type': jm_code['type'], 'number': jm_code['number']})
+    send_message(json.dumps({'data': get_jm_info(resp), 'meta': jm_code})
                  .encode('utf-8'))
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
