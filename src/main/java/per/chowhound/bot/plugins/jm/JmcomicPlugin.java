@@ -1,5 +1,6 @@
 package per.chowhound.bot.plugins.jm;
 
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mikuac.shiro.annotation.AnyMessageHandler;
@@ -8,22 +9,24 @@ import com.mikuac.shiro.annotation.common.Shiro;
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.common.utils.ShiroUtils;
 import com.mikuac.shiro.core.Bot;
-import com.mikuac.shiro.core.BotContainer;
 import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import per.chowhound.bot.plugins.jm.domain.JmDownMsg;
+import per.chowhound.bot.plugins.jm.domain.JmAlbum;
+import per.chowhound.bot.plugins.jm.domain.JmPhoto;
+import per.chowhound.bot.plugins.jm.domain.JmRelated;
+import per.chowhound.bot.utils.ConfigUtils;
 import per.chowhound.bot.utils.JacksonUtil;
+import per.chowhound.bot.utils.ProcessUtils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -40,7 +43,12 @@ public class JmcomicPlugin{
     private String PYTHON_PATH;
     @Value("${per.jm.img-path}")
     private String jmPath;
+    private static final String PYTHON_SCRIPTS_PATH;
     private final String password = "123";
+
+    static {
+        PYTHON_SCRIPTS_PATH = ConfigUtils.CONFIG_PATH + "scripts/python/jmcomic/";
+    }
 
 //
 //    @Override
@@ -68,30 +76,40 @@ public class JmcomicPlugin{
         boolean group = "group".equals(event.getMessageType());
         String res = getRes(jmCode, password);
 
-        JmDownMsg node = JacksonUtil.readValue(res, JmDownMsg.class);
+
+        JmPhoto node = JacksonUtil.readValue(res, JmPhoto.class);
         if (node == null){
             return;
         }
-        String title = node.getTitle();
+        String title = node.getName();
         List<String> msgList = new ArrayList<>();
         msgList.add(MsgUtils.builder()
-                .img("file://" + jmPath + "img/" + title + "/view.jpg").build()
+                .img("file://" + imageBlur(jmPath + "img/" + title + "/00001.jpg",
+                        jmPath + "img/" + title + "/view.jpg")).build()
         );
-        msgList.add("标题：" + title);
+        msgList.add("标题：" + "[" + node.getPhotoId() + "]" + title);
         msgList.add("标签：" + String.join(", ",  node.getTags()));
         msgList.add("相关推荐：");
-        node.getRelatedList().forEach(related -> {
-            MsgUtils builder = MsgUtils.builder();
+        JmAlbum fromAlbum = node.getFromAlbum();
+        if (fromAlbum != null){
+            List<JmRelated> relatedList = fromAlbum.getRelatedList();
+            if (relatedList != null){
+                relatedList.forEach(related -> {
+                    MsgUtils builder = MsgUtils.builder();
 //                    不发图片
 //                    if (StrUtil.isNotBlank(related.getImage())){
 //                        builder.img(related.getImage());
 //                    }
-            builder.text("jm号：" + related.getId() + "\n标题：" + related.getName());
-            if (StrUtil.isNotBlank(related.getAuthor())){
-                builder.text("\n作者：" + related.getAuthor());
+                    builder.text("jm号：" + related.getId() + "\n标题：" + related.getName());
+                    if (StrUtil.isNotBlank(related.getAuthor())){
+                        builder.text("\n作者：" + related.getAuthor());
+                    }
+                    msgList.add(builder.build());
+                });
             }
-            msgList.add(builder.build());
-        });
+
+        }
+
         List<Map<String, Object>> forwardMsg = ShiroUtils.generateForwardMsg(
                 event.getSender().getUserId(),
                 event.getSender().getNickname(),
@@ -110,25 +128,16 @@ public class JmcomicPlugin{
     }
 
     private String getRes(String jmCode, String password) {
-        URL mainUrl = ClassLoaderUtil.getClassLoader().getResource("scripts/python/jmcomic/main.py");
-        ProcessBuilder processBuilder = new ProcessBuilder(PYTHON_PATH, mainUrl.getFile(), jmCode);
+        ProcessBuilder processBuilder = new ProcessBuilder(PYTHON_PATH, PYTHON_SCRIPTS_PATH + "main.py", jmCode);
         Map<String, String> environment = processBuilder.environment();
         environment.put("JM_DIR", jmPath);
         environment.put("JM_PASSWORD", password);
-        StringBuilder sb = new StringBuilder();
-        try {
-            Process process = processBuilder.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine())!= null) {
-                sb.append(line);
-            }
-            int exitCode = process.waitFor();
-            log.error("Python script exited with code: {}", exitCode);
-        } catch (IOException | InterruptedException e) {
-            log.error(e.getMessage(), e);
-        }
-        return sb.toString();
+        environment.put("JM_CONFIG", PYTHON_SCRIPTS_PATH + "option.yml");
+       return ProcessUtils.exec(processBuilder);
+    }
+    private String imageBlur(String from, String to){
+        ProcessBuilder processBuilder = new ProcessBuilder(PYTHON_PATH, PYTHON_SCRIPTS_PATH + "image_blur.py", from, to);
+        return ProcessUtils.exec(processBuilder);
     }
 
 }
