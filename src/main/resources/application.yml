@@ -3,7 +3,7 @@ shiro:
     client:
       enable: true
       url: ${dev.ws.clientUrl}
-    access-token: 7KeBPR3sNpba7AH4dPCk
+    access-token: ${dev.token}
 per:
   file-location: ${dev.file-location}
   video-location: ${dev.video-location}
@@ -12,13 +12,35 @@ per:
     path: ${dev.python.path}
   jm:
     img-path: ${dev.img-path}
+  bot:
+    owner: 825352674
+
+server:
+  port: 8002
+
 spring:
   profiles:
     active: dev
-  rabbitmq:
-    host: ${dev.server-ip}
-    port: 5672
-    username: ${dev.rabbitmq.username}
-    password: ${dev.rabbitmq.password}
-server:
-  port: 8002
+  datasource:
+    url: jdbc:mysql://${dev.server-ip}:3306/chowh_bot?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: ${dev.database.username}
+    password: ${dev.database.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 10000
+      validation-timeout: 3000
+      idle-timeout: 60000
+      login-timeout: 5
+      max-lifetime: 60000
+      maximum-pool-size: 10
+      minimum-idle: 5
+      read-only: false
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: is_delete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      id-type: auto
