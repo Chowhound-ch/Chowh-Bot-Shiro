@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.chowhound.bot.plugins.core.mapper.GroupMapper">
+
+    <resultMap id="BaseResultMap" type="per.chowhound.bot.plugins.core.domain.Group">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="groupId" column="group_id" jdbcType="BIGINT"/>
+            <result property="groupStatus" column="group_status" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="group_fields">
+        id, group_id, group_status, 
+        create_time, modify_time
+    </sql>
+
+    <sql id="group_as_fields">
+        id as "${prefix}id", 
+        group_id as "${prefix}group_id", 
+        group_status as "${prefix}group_status", 
+        create_time as "${prefix}create_time", 
+        modify_time as "${prefix}modify_time"
+    </sql>
+    <sql id="group_t_as_fields">
+        ${tb_alias}.id as "${prefix}id", 
+        ${tb_alias}.group_id as "${prefix}group_id", 
+        ${tb_alias}.group_status as "${prefix}group_status", 
+        ${tb_alias}.create_time as "${prefix}create_time", 
+        ${tb_alias}.modify_time as "${prefix}modify_time"
+    </sql>
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.chowhound.bot.plugins.core.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="per.chowhound.bot.plugins.core.domain.User">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="role" column="role" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="user_fields">
+        id, user_id, role, 
+        create_time, modify_time, is_delete
+    </sql>
+
+    <sql id="user_as_fields">
+        id as "${prefix}id", 
+        user_id as "${prefix}user_id", 
+        role as "${prefix}role", 
+        create_time as "${prefix}create_time", 
+        modify_time as "${prefix}modify_time", 
+        is_delete as "${prefix}is_delete"
+    </sql>
+    <sql id="user_t_as_fields">
+        ${tb_alias}.id as "${prefix}id", 
+        ${tb_alias}.user_id as "${prefix}user_id", 
+        ${tb_alias}.role as "${prefix}role", 
+        ${tb_alias}.create_time as "${prefix}create_time", 
+        ${tb_alias}.modify_time as "${prefix}modify_time", 
+        ${tb_alias}.is_delete as "${prefix}is_delete"
+    </sql>
+</mapper>
