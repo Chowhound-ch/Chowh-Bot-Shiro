@@ -23,8 +23,17 @@ dependencies {
     implementation("cn.hutool:hutool-all:5.7.10")
     implementation("com.baomidou:mybatis-plus-spring-boot3-starter:3.5.12")
     implementation("org.springframework.boot:spring-boot-starter-aop")
+    implementation("org.springframework.boot:spring-boot-starter-cache")
+    // https://mvnrepository.com/artifact/javax.cache/cache-api
+    implementation("javax.cache:cache-api:1.1.1")
+
 //    mysql驱动
     implementation("com.mysql:mysql-connector-j")
+    implementation("org.ehcache:ehcache:3.10.8"){
+        capabilities {
+            requireCapability("org.ehcache:ehcache-jakarta")
+        }
+    }
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")

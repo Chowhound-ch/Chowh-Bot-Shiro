@@ -1,0 +1,32 @@
+<config xmlns='http://www.ehcache.org/v3'>
+    <!--
+        磁盘存储:将缓存中暂时不使用的对象,转移到硬盘,类似于Windows系统的虚拟内存
+        path:指定在硬盘上存储对象的路径
+        path可以配置的目录有：
+        user.home（用户的家目录）
+        user.dir（用户当前的工作目录）
+        java.io.tmpdir（默认的临时目录）
+        ehcache.disk.store.dir（ehcache的配置目录）
+        绝对路径（如：d:\\ehcache）
+        查看路径方法：String tmpDir = System.getProperty("java.io.tmpdir");
+     -->
+    <cache-template name="defaults">
+        <key-type>java.lang.Long</key-type>
+        <value-type>java.lang.String</value-type>
+        <resources>
+            <heap>200</heap>
+            <offheap unit="MB">10</offheap>
+        </resources>
+    </cache-template>
+
+    <cache alias="group" uses-template="defaults">
+        <value-type>per.chowh.bot.plugins.core.domain.Group</value-type>
+    </cache>
+    <cache alias="groupList" uses-template="defaults">
+        <value-type>java.util.List</value-type>
+    </cache>
+    <cache alias="user" uses-template="defaults">
+        <value-type>per.chowh.bot.plugins.core.domain.User</value-type>
+    </cache>
+
+</config>
