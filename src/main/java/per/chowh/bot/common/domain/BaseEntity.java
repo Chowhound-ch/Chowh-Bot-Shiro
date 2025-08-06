@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,7 +12,7 @@ import java.util.Date;
  * @since : 2025/8/1 - 13:57
  */
 @Data
-public class BaseEntity {
+public class BaseEntity implements Serializable {
 
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;

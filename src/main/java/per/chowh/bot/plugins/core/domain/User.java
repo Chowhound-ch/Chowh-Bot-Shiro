@@ -22,4 +22,6 @@ public class User extends BaseEntity {
 
     @TableField("role")
     private PermissionEnum role;
+
+    public static final User NULL = new User();
 }

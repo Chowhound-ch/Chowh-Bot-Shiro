@@ -33,18 +33,15 @@ import java.util.Objects;
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @CacheConfig(cacheNames = "user")
 public class UserService extends ServiceImpl<UserMapper, User>{
-
-
     @Autowired
     private UserService self;
-
-
 
     @Cacheable(key = "#userId")
     public User getByUserId(Long userId) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(User::getUserId, userId);
-        return baseMapper.selectOne(wrapper);
+        User user = baseMapper.selectOne(wrapper);
+        return user == null ? User.NULL : user;
     }
 
     @Transactional
@@ -56,11 +53,11 @@ public class UserService extends ServiceImpl<UserMapper, User>{
         self.updateRole(userId, PermissionEnum.OWNER);
     }
 
-    @CachePut(key = "#userId")
+    @CachePut(key = "#userId", unless = "#result == null")
     @Transactional
     public void updateRole(Long userId, PermissionEnum role) {
         User user = self.getByUserId(userId);
-        if (user == null) {
+        if (user == User.NULL) {
             user = new User();
             user.setUserId(userId);
         }
@@ -75,10 +72,6 @@ public class UserService extends ServiceImpl<UserMapper, User>{
         wrapper.in(User::getUserId, userIds);
         return baseMapper.selectList(wrapper);
     }
-
-
-
-
 }
 
 
