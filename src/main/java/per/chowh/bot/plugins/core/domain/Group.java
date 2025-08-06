@@ -11,7 +11,7 @@ import per.chowh.bot.plugins.core.enums.GroupStatusEnum;
  * @TableName group
  */
 @EqualsAndHashCode(callSuper = true)
-@TableName(value ="group")
+@TableName(value ="`group`")
 @Data
 public class Group extends BaseEntity {
     @TableId
@@ -20,4 +20,6 @@ public class Group extends BaseEntity {
     private Long groupId;
 
     private GroupStatusEnum groupStatus;
+
+    public static final Group NULL = new Group();
 }

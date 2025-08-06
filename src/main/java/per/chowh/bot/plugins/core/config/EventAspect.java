@@ -66,7 +66,7 @@ public class EventAspect {
             // 消息类型先判断用户权限
             Long userId = msgEvent.getUserId();
             User user = userService.getByUserId(userId);
-            PermissionEnum curPermit = user == null ? PermissionEnum.COMMON: user.getRole();
+            PermissionEnum curPermit = user == User.NULL ? PermissionEnum.COMMON: user.getRole();
             if (filter.permit().getValue() > curPermit.getValue()) {
                 log.info("监听器：[{}]执行失败，用户[{}]权限不足", methodName, userId);
                 return false;
@@ -75,9 +75,9 @@ public class EventAspect {
             if (event instanceof GroupMessageEvent groupMsgEvent) {
                 Long groupId = groupMsgEvent.getGroupId();
                 Group group = groupService.getByGroupId(groupId);
-                GroupStatusEnum curStatus = group == null ? GroupStatusEnum.CLOSED : group.getGroupStatus();
+                GroupStatusEnum curStatus = group == Group.NULL ? GroupStatusEnum.CLOSED : group.getGroupStatus();
                 if (filter.groupStatus().getValue() > curStatus.getValue()) {
-                    log.info("监听器：[{}]执行失败，群聊[{}]权限不足", methodName, groupId);
+                    log.info("监听器：[{}]执行失败，该功能对群聊[{}]暂未开放", methodName, groupId);
                     return false;
                 }
             }

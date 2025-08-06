@@ -3,11 +3,8 @@ package per.chowh.bot.plugins.core.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,9 +16,7 @@ import per.chowh.bot.plugins.core.enums.PermissionEnum;
 import per.chowh.bot.plugins.core.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
 * @author hh825
@@ -55,7 +50,7 @@ public class UserService extends ServiceImpl<UserMapper, User>{
 
     @CachePut(key = "#userId", unless = "#result == null")
     @Transactional
-    public void updateRole(Long userId, PermissionEnum role) {
+    public User updateRole(Long userId, PermissionEnum role) {
         User user = self.getByUserId(userId);
         if (user == User.NULL) {
             user = new User();
@@ -64,6 +59,7 @@ public class UserService extends ServiceImpl<UserMapper, User>{
         user.setRole(role);
 
         this.saveOrUpdate(user);
+        return user;
     }
 
     @Cacheable(keyGenerator = "listKeyGenerator")
