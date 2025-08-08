@@ -24,4 +24,7 @@ public class User extends BaseEntity {
     private PermissionEnum role;
 
     public static final User NULL = new User();
+    static {
+        NULL.setNull(true);
+    }
 }

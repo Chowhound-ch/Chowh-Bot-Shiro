@@ -52,7 +52,7 @@ public class UserService extends ServiceImpl<UserMapper, User>{
     @Transactional
     public User updateRole(Long userId, PermissionEnum role) {
         User user = self.getByUserId(userId);
-        if (user == User.NULL) {
+        if (user.isNull()) {
             user = new User();
             user.setUserId(userId);
         }

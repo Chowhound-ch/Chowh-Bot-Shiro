@@ -22,4 +22,8 @@ public class Group extends BaseEntity {
     private GroupStatusEnum groupStatus;
 
     public static final Group NULL = new Group();
+
+    static {
+        NULL.setNull(true);
+    }
 }

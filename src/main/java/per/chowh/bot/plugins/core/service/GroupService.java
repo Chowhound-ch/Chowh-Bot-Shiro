@@ -50,7 +50,7 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
     @CachePut(key = "#groupId")
     public Group updateState(Long groupId, GroupStatusEnum statusEnum) {
         Group group = self.getByGroupId(groupId);
-        if (group == Group.NULL) {
+        if (group.isNull()) {
             group = new Group();
             group.setGroupId(groupId);
         }
