@@ -1,4 +1,4 @@
-package per.chowh.bot.plugins;
+package per.chowh.bot.plugins.img;
 
 import cn.hutool.http.HttpUtil;
 import com.fasterxml.jackson.databind.JsonNode;

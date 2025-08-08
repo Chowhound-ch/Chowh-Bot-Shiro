@@ -1,4 +1,4 @@
-package per.chowh.bot.plugins.core.config;
+package per.chowh.bot.plugins.core.aop;
 
 import cn.hutool.core.util.StrUtil;
 import com.mikuac.shiro.dto.event.Event;

@@ -26,7 +26,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-cache")
     // https://mvnrepository.com/artifact/javax.cache/cache-api
     implementation("javax.cache:cache-api:1.1.1")
-
+// https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation("com.squareup.okhttp3:okhttp:5.1.0")
 //    mysql驱动
     implementation("com.mysql:mysql-connector-j")
     implementation("org.ehcache:ehcache:3.10.8"){
