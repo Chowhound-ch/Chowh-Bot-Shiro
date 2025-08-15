@@ -1,4 +1,4 @@
-package per.chowh.bot.plugins.core.aop;
+package per.chowh.bot.core.aop;
 
 import cn.hutool.core.util.StrUtil;
 import com.mikuac.shiro.dto.event.Event;
@@ -11,13 +11,13 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import per.chowh.bot.plugins.core.annotation.EventFilter;
-import per.chowh.bot.plugins.core.domain.Group;
-import per.chowh.bot.plugins.core.domain.User;
-import per.chowh.bot.plugins.core.enums.GroupStatusEnum;
-import per.chowh.bot.plugins.core.enums.PermissionEnum;
-import per.chowh.bot.plugins.core.service.GroupService;
-import per.chowh.bot.plugins.core.service.UserService;
+import per.chowh.bot.core.annotation.EventListener;
+import per.chowh.bot.core.domain.Group;
+import per.chowh.bot.core.domain.User;
+import per.chowh.bot.core.enums.GroupStatusEnum;
+import per.chowh.bot.core.enums.PermissionEnum;
+import per.chowh.bot.core.service.GroupService;
+import per.chowh.bot.core.service.UserService;
 
 /**
  * @author : Chowhound
@@ -33,12 +33,12 @@ public class EventAspect {
     private GroupService groupService;
 
 
-    @Pointcut("@annotation(per.chowh.bot.plugins.core.annotation.EventFilter)")
+    @Pointcut("@annotation(per.chowh.bot.core.annotation.EventListener)")
     public void pointCut() {
     }
 
     @Around(value = "pointCut() && @annotation(filter)")
-    public Object around(ProceedingJoinPoint joinPoint, EventFilter filter) throws Throwable {
+    public Object around(ProceedingJoinPoint joinPoint, EventListener filter) throws Throwable {
         Object[] args = joinPoint.getArgs();
         Event event = null;
         for (Object arg : args) {
@@ -60,7 +60,7 @@ public class EventAspect {
         return null;
     }
 
-    boolean isEventEmit(Event event, EventFilter filter, String methodName){
+    boolean isEventEmit(Event event, EventListener filter, String methodName){
         // 判断Event类型
         if (event instanceof MessageEvent msgEvent) {
             // 消息类型先判断用户权限

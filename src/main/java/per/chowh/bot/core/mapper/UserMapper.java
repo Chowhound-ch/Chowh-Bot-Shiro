@@ -1,6 +1,6 @@
-package per.chowh.bot.plugins.core.mapper;
+package per.chowh.bot.core.mapper;
 
-import per.chowh.bot.plugins.core.domain.User;
+import per.chowh.bot.core.domain.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

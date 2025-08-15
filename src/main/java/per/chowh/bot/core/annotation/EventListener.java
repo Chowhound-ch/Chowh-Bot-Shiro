@@ -1,7 +1,7 @@
-package per.chowh.bot.plugins.core.annotation;
+package per.chowh.bot.core.annotation;
 
-import per.chowh.bot.plugins.core.enums.GroupStatusEnum;
-import per.chowh.bot.plugins.core.enums.PermissionEnum;
+import per.chowh.bot.core.enums.GroupStatusEnum;
+import per.chowh.bot.core.enums.PermissionEnum;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
-public @interface EventFilter {
+public @interface EventListener {
     // 权限
     PermissionEnum permit() default PermissionEnum.COMMON;
     // 需要的群状态

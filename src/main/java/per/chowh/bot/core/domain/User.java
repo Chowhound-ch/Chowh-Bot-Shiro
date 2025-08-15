@@ -1,11 +1,11 @@
-package per.chowh.bot.plugins.core.domain;
+package per.chowh.bot.core.domain;
 
 import com.baomidou.mybatisplus.annotation.*;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import per.chowh.bot.common.domain.BaseEntity;
-import per.chowh.bot.plugins.core.enums.PermissionEnum;
+import per.chowh.bot.core.enums.PermissionEnum;
 
 /**
  *

@@ -1,4 +1,4 @@
-package per.chowh.bot.plugins.core;
+package per.chowh.bot.core;
 
 import com.mikuac.shiro.annotation.AnyMessageHandler;
 import com.mikuac.shiro.annotation.GroupMessageHandler;
@@ -14,12 +14,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import per.chowh.bot.plugins.core.annotation.EventFilter;
-import per.chowh.bot.plugins.core.domain.User;
-import per.chowh.bot.plugins.core.enums.GroupStatusEnum;
-import per.chowh.bot.plugins.core.enums.PermissionEnum;
-import per.chowh.bot.plugins.core.service.GroupService;
-import per.chowh.bot.plugins.core.service.UserService;
+import per.chowh.bot.core.annotation.EventListener;
+import per.chowh.bot.core.domain.User;
+import per.chowh.bot.core.enums.GroupStatusEnum;
+import per.chowh.bot.core.enums.PermissionEnum;
+import per.chowh.bot.core.service.GroupService;
+import per.chowh.bot.core.service.UserService;
 import per.chowh.bot.utils.BotUtils;
 
 import java.util.List;
@@ -52,7 +52,7 @@ public class PermissionPlugins {
 
     @AnyMessageHandler
     @MessageHandlerFilter(cmd = "/?(设置|permit)\\s*(?<permit>[A-Za-z]+)\\s*(?<user>\\d{5,12})?.*")
-    @EventFilter(permit = PermissionEnum.OWNER, name = "用户权限设置")
+    @EventListener(permit = PermissionEnum.OWNER, name = "用户权限设置")
     public void updatePermission(Bot bot, AnyMessageEvent event, Matcher matcher) {
         List<ArrayMsg> arrayMsg = event.getArrayMsg();
         List<Long> list = ShiroUtils.getAtList(arrayMsg);
@@ -81,7 +81,7 @@ public class PermissionPlugins {
 
     @GroupMessageHandler
     @MessageHandlerFilter(cmd = "/?(设置群|state)\\s*(?<state>[A-Za-z]+)\\s*")
-    @EventFilter(permit = PermissionEnum.ADMIN, groupStatus = GroupStatusEnum.CLOSED, name = "群聊状态设置")
+    @EventListener(permit = PermissionEnum.ADMIN, groupStatus = GroupStatusEnum.CLOSED, name = "群聊状态设置")
     public void updateGroupState(Bot bot, GroupMessageEvent event, Matcher matcher) {
         Long groupId = event.getGroupId();
 

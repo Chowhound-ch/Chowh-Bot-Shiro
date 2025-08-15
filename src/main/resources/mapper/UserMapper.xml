@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="per.chowh.bot.plugins.core.mapper.UserMapper">
 
-    <resultMap id="BaseResultMap" type="per.chowh.bot.plugins.core.domain.User">
+    <resultMap id="BaseResultMap" type="per.chowh.bot.core.domain.User">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="userId" column="user_id" jdbcType="BIGINT"/>
             <result property="role" column="role" jdbcType="INTEGER"/>
