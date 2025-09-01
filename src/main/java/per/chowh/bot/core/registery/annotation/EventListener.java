@@ -1,7 +1,7 @@
-package per.chowh.bot.core.annotation;
+package per.chowh.bot.core.registery.annotation;
 
-import per.chowh.bot.core.enums.GroupStatusEnum;
-import per.chowh.bot.core.enums.PermissionEnum;
+import per.chowh.bot.core.permit.enums.GroupStatusEnum;
+import per.chowh.bot.core.permit.enums.PermissionEnum;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

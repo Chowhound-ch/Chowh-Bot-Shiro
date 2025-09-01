@@ -1,19 +1,18 @@
-package per.chowh.bot.utils;
+package per.chowh.bot.core.utils;
 
 import cn.hutool.core.util.StrUtil;
-import com.mikuac.shiro.core.Bot;
-import com.mikuac.shiro.core.BotContainer;
 import com.mikuac.shiro.dto.action.common.ActionData;
 import com.mikuac.shiro.dto.action.common.ActionList;
 import com.mikuac.shiro.dto.action.response.FriendInfoResp;
 import com.mikuac.shiro.dto.action.response.GroupMemberInfoResp;
 import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
-import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
+import per.chowh.bot.core.bot.domain.ChowhBot;
+import per.chowh.bot.core.bot.domain.ChowhBotContainer;
 
 import java.util.Objects;
 
@@ -25,9 +24,9 @@ import java.util.Objects;
 public class BotUtils implements ApplicationRunner {
     private static final BotWrapper botWrapper = new BotWrapper();
     @Resource
-    private BotContainer  botContainer;
+    private ChowhBotContainer botContainer;
 
-    public static Bot getBot(){
+    public static ChowhBot getBot(){
         return botWrapper.getBot();
     }
 
@@ -39,8 +38,9 @@ public class BotUtils implements ApplicationRunner {
     public static String getUserCard(Long userId) {
         return getUserCard(userId, null);
     }
+
     public static String getUserCard(Long userId, Long groupId) {
-        Bot bot = getBot();
+        ChowhBot bot = getBot();
         if (bot == null) return "";
         if (groupId != null) {
             ActionData<GroupMemberInfoResp> memberInfo = bot.getGroupMemberInfo(groupId, userId, true);
@@ -53,7 +53,7 @@ public class BotUtils implements ApplicationRunner {
     }
 
     public static FriendInfoResp getFriend(Long userId) {
-        Bot bot = BotUtils.getBot();
+        ChowhBot bot = BotUtils.getBot();
         if (bot == null) return null;
         ActionList<FriendInfoResp> friendList = bot.getFriendList();
         for (FriendInfoResp resp : friendList.getData()) {
@@ -66,7 +66,7 @@ public class BotUtils implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        botContainer.robots.forEach((k, v) ->{
+        botContainer.forEach((k, v) ->{
             botWrapper.setBot(v);
         });
     }

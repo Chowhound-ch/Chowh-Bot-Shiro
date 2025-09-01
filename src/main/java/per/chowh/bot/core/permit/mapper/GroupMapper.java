@@ -1,6 +1,6 @@
-package per.chowh.bot.core.mapper;
+package per.chowh.bot.core.permit.mapper;
 
-import per.chowh.bot.core.domain.Group;
+import per.chowh.bot.core.permit.domain.Group;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

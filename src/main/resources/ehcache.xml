@@ -20,13 +20,13 @@
     </cache-template>
 
     <cache alias="group" uses-template="defaults">
-        <value-type>per.chowh.bot.core.domain.Group</value-type>
+        <value-type>per.chowh.bot.core.permit.domain.Group</value-type>
     </cache>
     <cache alias="groupList" uses-template="defaults">
         <value-type>java.util.List</value-type>
     </cache>
     <cache alias="user" uses-template="defaults">
-        <value-type>per.chowh.bot.core.domain.User</value-type>
+        <value-type>per.chowh.bot.core.permit.domain.User</value-type>
     </cache>
 
 </config>

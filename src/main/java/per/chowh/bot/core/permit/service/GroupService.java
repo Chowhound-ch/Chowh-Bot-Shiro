@@ -1,4 +1,4 @@
-package per.chowh.bot.core.service;
+package per.chowh.bot.core.permit.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -8,9 +8,9 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-import per.chowh.bot.core.domain.Group;
-import per.chowh.bot.core.enums.GroupStatusEnum;
-import per.chowh.bot.core.mapper.GroupMapper;
+import per.chowh.bot.core.permit.domain.Group;
+import per.chowh.bot.core.permit.enums.GroupStatusEnum;
+import per.chowh.bot.core.permit.mapper.GroupMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

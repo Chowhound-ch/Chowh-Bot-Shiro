@@ -1,6 +1,11 @@
 package per.chowh.bot.core.registery;
 
 import org.springframework.context.annotation.Configuration;
+import per.chowh.bot.core.model.event.Event;
+import per.chowh.bot.core.registery.domain.EventMethod;
+
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author : Chowhound
@@ -8,10 +13,20 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class EventRegister {
+    private final List<EventMethod> eventMethods = new CopyOnWriteArrayList<>();
 
-
-    static {
-
+    public void register(EventMethod eventMethod) {
+        eventMethods.add(eventMethod);
     }
 
+    /**
+     * 获取eventClass可以触发的EventMethod
+     * @param eventClass 待处理事件类型
+     * @return 待执行的EventMethod
+     */
+    public List<EventMethod> getEventMethods(Class<? extends Event> eventClass) {
+        return eventMethods.parallelStream()
+                .filter(eventMethod -> eventMethod.getEventClass().isAssignableFrom(eventClass))
+                .toList();
+    }
 }

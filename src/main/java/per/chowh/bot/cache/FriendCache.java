@@ -15,7 +15,7 @@
 //import org.springframework.boot.ApplicationRunner;
 //import org.springframework.context.annotation.DependsOn;
 //import org.springframework.stereotype.Component;
-//import per.chowh.bot.utils.BotUtils;
+//import per.chowh.bot.core.utils.BotUtils;
 //
 //import java.time.Duration;
 //import java.util.List;

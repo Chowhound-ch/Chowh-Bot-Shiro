@@ -1,4 +1,4 @@
-package per.chowh.bot.core.enums;
+package per.chowh.bot.core.permit.enums;
 
 import com.baomidou.mybatisplus.annotation.EnumValue;
 import lombok.AllArgsConstructor;

@@ -7,7 +7,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @EnableCaching
-@MapperScan("per.chowh.bot.core.mapper")
+@MapperScan("per.chowh.bot.core.permit.mapper")
 @SpringBootApplication
 @EnableAspectJAutoProxy
 public class ChowhBotApplication {

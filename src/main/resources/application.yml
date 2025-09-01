@@ -14,6 +14,8 @@ per:
     img-path: ${dev.img-path}
   bot:
     owner: 825352674
+  listener:
+    impl: Shiro
 
 server:
   port: 8002

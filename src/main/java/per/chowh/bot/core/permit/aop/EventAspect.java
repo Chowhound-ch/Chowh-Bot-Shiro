@@ -1,4 +1,4 @@
-package per.chowh.bot.core.aop;
+package per.chowh.bot.core.permit.aop;
 
 import cn.hutool.core.util.StrUtil;
 import com.mikuac.shiro.dto.event.Event;
@@ -11,13 +11,13 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import per.chowh.bot.core.annotation.EventListener;
-import per.chowh.bot.core.domain.Group;
-import per.chowh.bot.core.domain.User;
-import per.chowh.bot.core.enums.GroupStatusEnum;
-import per.chowh.bot.core.enums.PermissionEnum;
-import per.chowh.bot.core.service.GroupService;
-import per.chowh.bot.core.service.UserService;
+import per.chowh.bot.core.registery.annotation.EventListener;
+import per.chowh.bot.core.permit.domain.Group;
+import per.chowh.bot.core.permit.domain.User;
+import per.chowh.bot.core.permit.enums.GroupStatusEnum;
+import per.chowh.bot.core.permit.enums.PermissionEnum;
+import per.chowh.bot.core.permit.service.GroupService;
+import per.chowh.bot.core.permit.service.UserService;
 
 /**
  * @author : Chowhound
@@ -33,7 +33,7 @@ public class EventAspect {
     private GroupService groupService;
 
 
-    @Pointcut("@annotation(per.chowh.bot.core.annotation.EventListener)")
+    @Pointcut("@annotation(per.chowh.bot.core.registery.annotation.EventListener)")
     public void pointCut() {
     }
 
