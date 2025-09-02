@@ -1,8 +1,8 @@
 package per.chowh.bot.core.registery.api;
 
+import com.mikuac.shiro.dto.event.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import per.chowh.bot.core.bot.domain.ChowhBot;
-import per.chowh.bot.core.model.event.Event;
 import per.chowh.bot.core.registery.ListenerRunner;
 
 /**

@@ -1,7 +1,7 @@
 package per.chowh.bot.core.registery.api;
 
+import com.mikuac.shiro.dto.event.Event;
 import per.chowh.bot.core.bot.domain.ChowhBot;
-import per.chowh.bot.core.model.event.Event;
 
 /**
  * @author : Chowhound

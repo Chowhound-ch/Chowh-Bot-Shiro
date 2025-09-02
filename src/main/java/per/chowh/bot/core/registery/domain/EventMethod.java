@@ -1,10 +1,10 @@
 package per.chowh.bot.core.registery.domain;
 
+import com.mikuac.shiro.dto.event.Event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import per.chowh.bot.core.registery.annotation.EventListener;
-import per.chowh.bot.core.model.event.Event;
 
 import java.lang.reflect.Method;
 import java.util.List;

@@ -3,12 +3,13 @@ package per.chowh.bot.core.registery.api.shiro;
 import com.mikuac.shiro.annotation.AnyMessageHandler;
 import com.mikuac.shiro.annotation.common.Shiro;
 import com.mikuac.shiro.core.Bot;
+import com.mikuac.shiro.dto.event.Event;
 import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
-import per.chowh.bot.core.model.event.Event;
+import per.chowh.bot.core.registery.api.AbstractListenerApi;
 
 /**
  * @author : Chowhound
@@ -18,10 +19,10 @@ import per.chowh.bot.core.model.event.Event;
 @Shiro
 @Component
 @ConditionalOnProperty()
-public class ShiroApi extends AbstractShiroApi {
+public class ShiroApi extends AbstractListenerApi {
 
     @AnyMessageHandler
     public void anyMessageHandler(Bot bot, AnyMessageEvent event) {
-        execute((ChowhBot) bot, (Event) event);
+        execute((ChowhBot) bot, event);
     }
 }

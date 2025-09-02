@@ -14,6 +14,8 @@ import java.lang.reflect.Parameter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventParam {
+    private EventMethod method;
+
     private Parameter parameter;
 
     private String name;

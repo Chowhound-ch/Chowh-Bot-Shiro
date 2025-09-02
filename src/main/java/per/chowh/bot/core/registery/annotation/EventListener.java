@@ -21,4 +21,8 @@ public @interface EventListener {
     GroupStatusEnum groupStatus() default GroupStatusEnum.NORMAL;
     // Name
     String name() default "";
+    // 异步
+    boolean async() default true;
+
+    int order() default Integer.MAX_VALUE;
 }

@@ -1,6 +1,7 @@
 package per.chowh.bot.core.utils;
 
 import per.chowh.bot.core.registery.annotation.EventListener;
+import per.chowh.bot.core.registery.domain.EventMethod;
 
 import java.lang.reflect.Method;
 
@@ -14,5 +15,9 @@ public class ListenerUtils {
         return  "".equals(eventListener.name()) ?
                 (method.getDeclaringClass() + "#" + method.getName()) :
                 eventListener.name() ;
+    }
+
+    public static String getListenerName(EventMethod eventMethod) {
+        return  getListenerName(eventMethod.getEventListener(), eventMethod.getMethod());
     }
 }

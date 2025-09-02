@@ -8,9 +8,9 @@ import per.chowh.bot.core.registery.domain.EventParam;
  * @author : Chowhound
  * @since : 2025/8/29 - 13:45
  */
-public interface ListenerArgumentResolver{
+public interface ListenerReturnResolver {
 
-    boolean supportsParameter(EventParam parameter);
+    boolean supportsReturn(Object returnValue);
 
-    Object resolveArgument(ChowhBot bot, Event event, EventParam parameter) throws Exception;
+    Object resolveReturn(ChowhBot bot, Event event, Object returnValue) throws Exception;
 }

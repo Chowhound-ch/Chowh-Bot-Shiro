@@ -1,7 +1,7 @@
 package per.chowh.bot.core.registery;
 
+import com.mikuac.shiro.dto.event.Event;
 import org.springframework.context.annotation.Configuration;
-import per.chowh.bot.core.model.event.Event;
 import per.chowh.bot.core.registery.domain.EventMethod;
 
 import java.util.List;

@@ -5,7 +5,6 @@ import com.mikuac.shiro.core.BotContainer;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * @author : Chowhound
