@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.registery.api.AbstractListenerApi;
+import per.chowh.bot.core.utils.EventWrapper;
 
 /**
  * @author : Chowhound
@@ -23,6 +24,6 @@ public class ShiroApi extends AbstractListenerApi {
 
     @AnyMessageHandler
     public void anyMessageHandler(Bot bot, AnyMessageEvent event) {
-        execute((ChowhBot) bot, event);
+        execute((ChowhBot) bot, new EventWrapper(event));
     }
 }

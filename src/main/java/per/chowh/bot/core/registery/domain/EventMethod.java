@@ -1,6 +1,5 @@
 package per.chowh.bot.core.registery.domain;
 
-import com.mikuac.shiro.dto.event.Event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EventMethod {
-    private Class<? extends Event> eventClass;
+    private Class<?> eventClass;
 
     private String beanName;
 

@@ -1,6 +1,5 @@
 package per.chowh.bot.core.registery;
 
-import com.mikuac.shiro.dto.event.Event;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
@@ -10,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import per.chowh.bot.core.registery.annotation.EventListener;
 import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.registery.domain.EventParam;
+import per.chowh.bot.core.utils.EventUtils;
 import per.chowh.bot.core.utils.ListenerUtils;
 
 import java.lang.reflect.Method;
@@ -41,13 +41,13 @@ public class ListenerBeanPostProcessor implements BeanPostProcessor {
                 Parameter[] parameters = method.getParameters();
                 for (Parameter methodParameter : parameters) {
                     Class<?> type = methodParameter.getType();
-                    if (type.isAssignableFrom(Event.class)) {
+                    if (EventUtils.isEvent(type)) {
                         if (eventMethod != null) {
                             throw new IllegalArgumentException("每个监听器仅支持监听一种Event");
                         }
                         // 检测到具体要监听的事件
                         //noinspection unchecked
-                        eventMethod = new EventMethod((Class<? extends Event>) type, beanName, method, bean, methodParameters, eventListener);
+                        eventMethod = new EventMethod(type, beanName, method, bean, methodParameters, eventListener);
                     }
                     // 除Event的参数，跟据Name解析，无法识别再从IOC获取
                     EventParam eventParam = new EventParam();

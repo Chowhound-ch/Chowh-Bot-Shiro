@@ -2,11 +2,14 @@ package per.chowh.bot.core.registery.support;
 
 import com.mikuac.shiro.dto.event.Event;
 import lombok.Getter;
-import org.springframework.core.MethodParameter;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.OrderComparator;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.registery.domain.EventParam;
+import per.chowh.bot.core.utils.EventWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +20,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author : Chowhound
  * @since : 2025/9/2 - 11:16
  */
-public class ListenerArgumentResolverComposite implements ListenerArgumentResolver{
+@Configuration
+public class ListenerArgumentResolverComposite implements ListenerArgumentResolver, BeanPostProcessor {
 
     @Getter
     private final List<ListenerArgumentResolver> argumentResolvers = new ArrayList<>();
@@ -39,11 +43,6 @@ public class ListenerArgumentResolverComposite implements ListenerArgumentResolv
         this.argumentResolvers.addAll(argumentResolvers);
         OrderComparator.sort(this.argumentResolvers);
         return this;
-    }
-
-    public void clear() {
-        this.argumentResolvers.clear();
-        this.argumentResolverCache.clear();
     }
 
     public ListenerArgumentResolver getArgumentResolver(EventParam parameter) {
@@ -68,16 +67,23 @@ public class ListenerArgumentResolverComposite implements ListenerArgumentResolv
     }
 
     @Override
-    public Object resolveArgument(ChowhBot bot, Event event, EventParam parameter) throws Exception {
+    public Object resolveArgument(ChowhBot bot, EventWrapper eventWrapper, EventParam parameter) throws Exception {
         ListenerArgumentResolver resolver = getArgumentResolver(parameter);
         if (resolver == null) {
             throw new IllegalArgumentException("无法解析的参数[" + parameter.getName() + "]");
         }
-        return resolver.resolveArgument(bot, event, parameter);
+        return resolver.resolveArgument(bot, eventWrapper, parameter);
     }
 
     public void sort() {
         OrderComparator.sort(this.argumentResolvers);
     }
 
+    @Override
+    public Object postProcessAfterInitialization(@NotNull Object bean, @NotNull String beanName) throws BeansException {
+        if (bean instanceof ListenerArgumentResolver resolver) {
+            this.addResolver(resolver);
+        }
+        return bean;
+    }
 }

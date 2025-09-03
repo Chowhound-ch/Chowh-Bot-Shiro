@@ -1,16 +1,10 @@
 package per.chowh.bot.core.registery.support;
 
 import cn.hutool.core.util.ClassUtil;
-import com.mikuac.shiro.dto.event.Event;
 import org.springframework.core.annotation.Order;
 import per.chowh.bot.core.bot.domain.ChowhBot;
-import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.registery.domain.EventParam;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import per.chowh.bot.core.utils.EventWrapper;
 
 /**
  * 基础类型的ListenerArgumentResolver
@@ -27,7 +21,7 @@ public class BaseTypeListenerArgumentResolver implements ListenerArgumentResolve
     }
 
     @Override
-    public Object resolveArgument(ChowhBot bot, Event event, EventParam parameter) {
+    public Object resolveArgument(ChowhBot bot, EventWrapper eventWrapper, EventParam parameter) {
         return null;
     }
 }

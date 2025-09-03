@@ -1,6 +1,5 @@
 package per.chowh.bot.core.registery;
 
-import com.mikuac.shiro.dto.event.Event;
 import org.springframework.context.annotation.Configuration;
 import per.chowh.bot.core.registery.domain.EventMethod;
 
@@ -24,7 +23,7 @@ public class EventRegister {
      * @param eventClass 待处理事件类型
      * @return 待执行的EventMethod
      */
-    public List<EventMethod> getEventMethods(Class<? extends Event> eventClass) {
+    public List<EventMethod> getEventMethods(Class<?> eventClass) {
         return eventMethods.parallelStream()
                 .filter(eventMethod -> eventMethod.getEventClass().isAssignableFrom(eventClass))
                 .toList();

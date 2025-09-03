@@ -1,10 +1,9 @@
 package per.chowh.bot.core.registery.support;
 
-import com.mikuac.shiro.dto.event.Event;
 import org.springframework.core.annotation.Order;
 import per.chowh.bot.core.bot.domain.ChowhBot;
-import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.registery.domain.EventParam;
+import per.chowh.bot.core.utils.EventWrapper;
 
 /**
  * @author : Chowhound
@@ -18,7 +17,7 @@ public class ChowhBotArgumentResolver implements ListenerArgumentResolver{
     }
 
     @Override
-    public Object resolveArgument(ChowhBot bot, Event event, EventParam parameter) {
+    public Object resolveArgument(ChowhBot bot, EventWrapper eventWrapper, EventParam parameter) {
         return bot;
     }
 }

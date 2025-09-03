@@ -1,6 +1,5 @@
 package per.chowh.bot.core.registery;
 
-import com.mikuac.shiro.dto.event.Event;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,7 +7,9 @@ import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.registery.config.EventListenerConfig;
 import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.registery.domain.EventParam;
+import per.chowh.bot.core.registery.interceptor.EventHandlerInterceptorComposite;
 import per.chowh.bot.core.registery.support.ListenerArgumentResolverComposite;
+import per.chowh.bot.core.utils.EventWrapper;
 import per.chowh.bot.core.utils.ListenerUtils;
 
 import java.util.Comparator;
@@ -30,38 +31,38 @@ public class ListenerRunner {
             0L, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<>(512), new ThreadPoolExecutor.CallerRunsPolicy());
 
-    public void run(ChowhBot bot, Event event) {
-        List<EventMethod> eventMethods = eventRegister.getEventMethods(event.getClass());
+    public void run(ChowhBot bot, EventWrapper eventWrapper) {
+        List<EventMethod> eventMethods = eventRegister.getEventMethods(eventWrapper.getEvent().getClass());
         eventMethods.stream()
+                // 按顺序执行（异步方法仅保证开始时间）
                 .sorted(Comparator.comparingInt(e -> e.getEventListener().order()))
                 .forEach(eventMethod -> {
                     if (eventMethod.getEventListener().async()) {
-                        runAsync(bot, eventMethod, event);
+                        runAsync(bot, eventMethod, eventWrapper);
                     } else {
-                        run(bot, eventMethod, event);
+                        run(bot, eventMethod, eventWrapper);
                     }
                 });
     }
 
-    private void runAsync(ChowhBot bot, EventMethod eventMethod, Event event){
-        executor.execute(()-> runAsync(bot, eventMethod, event));
+    private void runAsync(ChowhBot bot, EventMethod eventMethod, EventWrapper eventWrapper){
+        executor.execute(()-> runAsync(bot, eventMethod, eventWrapper));
     }
 
-    private void run(ChowhBot bot, EventMethod eventMethod, Event event){
-        long start = System.currentTimeMillis();
+    private void run(ChowhBot bot, EventMethod eventMethod, EventWrapper eventWrapper){
+        EventHandlerInterceptorComposite interceptors = config.getInterceptors();
         try {
-            Object[] args = getArgs(bot, eventMethod, event);
+            Object[] args = getArgs(bot, eventMethod, eventWrapper);
+            interceptors.preHandle(bot, eventMethod, eventWrapper); // 前置操作
             Object res = eventMethod.getMethod().invoke(args);
-            listenerPostProcessor(res, bot, eventMethod, event);
-            long end = System.currentTimeMillis();
-            log.info("监听器[{}]执行成功，耗时：{}s", ListenerUtils.getListenerName(eventMethod), (start - end) / 1000.0);
+            interceptors.postHandle(bot, eventMethod, eventWrapper, res); // 后置操作
         } catch (Exception e) {
             log.error("[{}]执行失败：{}", ListenerUtils.getListenerName(eventMethod), e.getMessage(), e);
         }
     }
 
 
-    private Object[] getArgs(ChowhBot bot, EventMethod eventMethod, Event event) throws Exception {
+    private Object[] getArgs(ChowhBot bot, EventMethod eventMethod, EventWrapper eventWrapper) throws Exception {
         List<EventParam> params = eventMethod.getParams();
         Object[] args = new Object[params.size() + 1];
         ListenerArgumentResolverComposite argumentResolvers = config.getArgumentResolvers();
@@ -69,15 +70,12 @@ public class ListenerRunner {
         for (int i = 0; i < params.size(); i++) {
             EventParam parameter = params.get(i);
             if (argumentResolvers.supportsParameter(parameter)) {
-                args[i] = argumentResolvers.resolveArgument(bot, event, parameter);
+                args[i] = argumentResolvers.resolveArgument(bot, eventWrapper, parameter);
             } else {
                 args[i] = null;
                 log.warn("监听器[{}]不支持的参数：{}", ListenerUtils.getListenerName(eventMethod), parameter);
             }
         }
         return args;
-    }
-
-    protected void listenerPostProcessor(Object res, ChowhBot bot, EventMethod eventMethod, Event event) {
     }
 }

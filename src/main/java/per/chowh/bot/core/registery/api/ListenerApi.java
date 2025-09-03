@@ -1,7 +1,7 @@
 package per.chowh.bot.core.registery.api;
 
-import com.mikuac.shiro.dto.event.Event;
 import per.chowh.bot.core.bot.domain.ChowhBot;
+import per.chowh.bot.core.utils.EventWrapper;
 
 /**
  * @author : Chowhound
@@ -9,6 +9,6 @@ import per.chowh.bot.core.bot.domain.ChowhBot;
  */
 public interface ListenerApi {
 
-    void execute(ChowhBot bot, Event event);
+    void execute(ChowhBot bot, EventWrapper eventWrapper);
 
 }

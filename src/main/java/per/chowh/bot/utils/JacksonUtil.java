@@ -11,7 +11,7 @@ import java.util.List;
 
 
 /**
- * Jackson工具类,其中objectMapper是从容器中获取
+ * Jackson工具类
  *
  * @author : Chowhound
  */
