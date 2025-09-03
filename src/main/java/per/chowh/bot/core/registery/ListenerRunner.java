@@ -69,8 +69,8 @@ public class ListenerRunner {
         args[0] = eventMethod.getBean();
         for (int i = 0; i < params.size(); i++) {
             EventParam parameter = params.get(i);
-            if (argumentResolvers.supportsParameter(parameter)) {
-                args[i] = argumentResolvers.resolveArgument(bot, eventWrapper, parameter);
+            if (argumentResolvers.supportsParameter(bot, eventMethod, parameter)) {
+                args[i] = argumentResolvers.resolveArgument(bot, eventMethod, parameter, eventWrapper);
             } else {
                 args[i] = null;
                 log.warn("监听器[{}]不支持的参数：{}", ListenerUtils.getListenerName(eventMethod), parameter);

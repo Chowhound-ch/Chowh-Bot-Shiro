@@ -1,6 +1,5 @@
 package per.chowh.bot.ext;
 
-import com.mikuac.shiro.dto.event.Event;
 import jakarta.annotation.Priority;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;

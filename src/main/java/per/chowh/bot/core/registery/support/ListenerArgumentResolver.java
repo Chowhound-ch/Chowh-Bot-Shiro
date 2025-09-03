@@ -1,6 +1,7 @@
 package per.chowh.bot.core.registery.support;
 
 import per.chowh.bot.core.bot.domain.ChowhBot;
+import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.registery.domain.EventParam;
 import per.chowh.bot.core.utils.EventWrapper;
 
@@ -10,7 +11,7 @@ import per.chowh.bot.core.utils.EventWrapper;
  */
 public interface ListenerArgumentResolver{
 
-    boolean supportsParameter(EventParam parameter);
+    boolean supportsParameter(ChowhBot bot, EventMethod method, EventParam parameter);
 
-    Object resolveArgument(ChowhBot bot, EventWrapper eventWrapper, EventParam parameter) throws Exception;
+    Object resolveArgument(ChowhBot bot, EventMethod method, EventParam parameter, EventWrapper eventWrapper) throws Exception;
 }

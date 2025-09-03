@@ -1,6 +1,5 @@
 package per.chowh.bot.core.registery.support;
 
-import com.mikuac.shiro.dto.event.Event;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
@@ -8,6 +7,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.OrderComparator;
 import per.chowh.bot.core.bot.domain.ChowhBot;
+import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.registery.domain.EventParam;
 import per.chowh.bot.core.utils.EventWrapper;
 
@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author : Chowhound
  * @since : 2025/9/2 - 11:16
  */
+@SuppressWarnings({"UnusedReturnValue", "unused"})
 @Configuration
 public class ListenerArgumentResolverComposite implements ListenerArgumentResolver, BeanPostProcessor {
 
@@ -45,12 +46,12 @@ public class ListenerArgumentResolverComposite implements ListenerArgumentResolv
         return this;
     }
 
-    public ListenerArgumentResolver getArgumentResolver(EventParam parameter) {
+    public ListenerArgumentResolver getArgumentResolver(ChowhBot bot, EventMethod method, EventParam parameter) {
         // 先取缓存
         ListenerArgumentResolver result = this.argumentResolverCache.get(parameter);
         if (result == null) {
             for (ListenerArgumentResolver resolver : this.argumentResolvers) {
-                if (resolver.supportsParameter(parameter)) {
+                if (resolver.supportsParameter(bot, method, parameter)) {
                     result = resolver;
                     this.argumentResolverCache.put(parameter, result);
                     break;
@@ -62,17 +63,17 @@ public class ListenerArgumentResolverComposite implements ListenerArgumentResolv
 
 
     @Override
-    public boolean supportsParameter(EventParam parameter) {
-        return getArgumentResolver(parameter) != null;
+    public boolean supportsParameter(ChowhBot bot, EventMethod method, EventParam parameter) {
+        return getArgumentResolver(bot, method, parameter) != null;
     }
 
     @Override
-    public Object resolveArgument(ChowhBot bot, EventWrapper eventWrapper, EventParam parameter) throws Exception {
-        ListenerArgumentResolver resolver = getArgumentResolver(parameter);
+    public Object resolveArgument(ChowhBot bot, EventMethod method, EventParam parameter, EventWrapper eventWrapper) throws Exception {
+        ListenerArgumentResolver resolver = getArgumentResolver(bot, method, parameter);
         if (resolver == null) {
             throw new IllegalArgumentException("无法解析的参数[" + parameter.getName() + "]");
         }
-        return resolver.resolveArgument(bot, eventWrapper, parameter);
+        return resolver.resolveArgument(bot,  method, parameter, eventWrapper);
     }
 
     public void sort() {

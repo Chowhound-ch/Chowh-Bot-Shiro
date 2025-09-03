@@ -6,10 +6,11 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.AnnotationUtils;
 import per.chowh.bot.core.registery.annotation.EventListener;
 import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.registery.domain.EventParam;
-import per.chowh.bot.core.utils.EventUtils;
+import per.chowh.bot.core.utils.EventWrapper;
 import per.chowh.bot.core.utils.ListenerUtils;
 
 import java.lang.reflect.Method;
@@ -33,7 +34,7 @@ public class ListenerBeanPostProcessor implements BeanPostProcessor {
         Method[] methods = aClass.getDeclaredMethods();
         for (Method method : methods) {
             method.setAccessible(true);
-            EventListener eventListener = method.getDeclaredAnnotation(EventListener.class);
+            EventListener eventListener = AnnotationUtils.findAnnotation(method, EventListener.class);
             if (eventListener != null) {
                 // 开始注册监听器
                 List<EventParam> methodParameters = new ArrayList<>();
@@ -41,7 +42,7 @@ public class ListenerBeanPostProcessor implements BeanPostProcessor {
                 Parameter[] parameters = method.getParameters();
                 for (Parameter methodParameter : parameters) {
                     Class<?> type = methodParameter.getType();
-                    if (EventUtils.isEvent(type)) {
+                    if (EventWrapper.isEvent(type)) {
                         if (eventMethod != null) {
                             throw new IllegalArgumentException("每个监听器仅支持监听一种Event");
                         }
@@ -49,7 +50,7 @@ public class ListenerBeanPostProcessor implements BeanPostProcessor {
                         //noinspection unchecked
                         eventMethod = new EventMethod(type, beanName, method, bean, methodParameters, eventListener);
                     }
-                    // 除Event的参数，跟据Name解析，无法识别再从IOC获取
+                    // 除Event的参数，跟据Name解析
                     EventParam eventParam = new EventParam();
                     eventParam.setName(methodParameter.getName());
                     eventParam.setParameter(methodParameter);
