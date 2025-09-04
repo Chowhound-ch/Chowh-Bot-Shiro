@@ -1,6 +1,5 @@
 package per.chowh.bot.core.registery.support;
 
-import com.mikuac.shiro.dto.event.Event;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,7 @@ import per.chowh.bot.core.utils.EventWrapper;
 public class EventArgumentResolver implements ListenerArgumentResolver{
     @Override
     public boolean supportsParameter(ChowhBot bot, EventMethod method, EventParam parameter) {
-        return parameter.getParameter().getType().isAssignableFrom(Event.class);
+        return EventWrapper.isEvent(parameter.getParameter().getType());
     }
 
     @Override

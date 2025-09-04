@@ -1,10 +1,6 @@
 package per.chowh.bot.core.registery.support;
 
-import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReUtil;
-import cn.hutool.core.util.StrUtil;
-import com.mikuac.shiro.common.utils.RegexUtils;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
@@ -12,9 +8,9 @@ import per.chowh.bot.core.registery.annotation.EventListener;
 import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.registery.domain.EventParam;
 import per.chowh.bot.core.utils.EventWrapper;
+import per.chowh.bot.utils.StringUtils;
 
 import java.lang.reflect.Parameter;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
@@ -49,37 +45,7 @@ public class CmdListenerArgumentResolver implements ListenerArgumentResolver{
         Parameter param = parameter.getParameter();
         String arg = matcher.group(parameter.getName());
 
-        return null;
+        return StringUtils.convertStringToType(arg, param.getType());
     }
 
-    public static Object convertStringToType(String str, Class<?> targetType) {
-        if (str == null) {
-            return null;
-        }
-        if (targetType == Integer.class || targetType == int.class) {
-            return Integer.parseInt(str);
-        } else if (targetType == Double.class || targetType == double.class) {
-            return Double.parseDouble(str);
-        } else if (targetType == Boolean.class || targetType == boolean.class) {
-            return Boolean.parseBoolean(str);
-        } else if (targetType == Long.class || targetType == long.class) {
-            return Long.parseLong(str);
-        } else if (targetType == Float.class || targetType == float.class) {
-            return Float.parseFloat(str);
-        } else if (targetType == Short.class || targetType == short.class) {
-            return Short.parseShort(str);
-        } else if (targetType == Byte.class || targetType == byte.class) {
-            return Byte.parseByte(str);
-        } else if (targetType == Character.class || targetType == char.class) {
-            if (str.length() == 1) {
-                return str.charAt(0);
-            } else {
-                throw new IllegalArgumentException("String must be exactly 1 character long for char conversion");
-            }
-        } else if (targetType == String.class) {
-            return str;
-        } else {
-            throw new IllegalArgumentException("Unsupported target type: " + targetType);
-        }
-    }
 }

@@ -3,7 +3,8 @@ package per.chowh.bot.core.registery.annotation;
 import org.springframework.core.annotation.AliasFor;
 import per.chowh.bot.core.permit.enums.GroupStatusEnum;
 import per.chowh.bot.core.permit.enums.PermissionEnum;
-import per.chowh.bot.core.registery.cmd.enums.MatchType;
+import per.chowh.bot.core.registery.domain.enums.EventType;
+import per.chowh.bot.core.registery.domain.enums.MatchType;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -29,6 +30,8 @@ public @interface EventListener {
     boolean async() default true;
     // 执行顺序
     int order() default Integer.MAX_VALUE;
+    // 类型
+    EventType type() default EventType.MESSAGE;
     // 待匹配命令
     @AliasFor("value")
     String cmd() default "";
@@ -36,4 +39,5 @@ public @interface EventListener {
     MatchType  matchType() default MatchType.REGEX;
     // 是否拿rawMessage匹配
     boolean isRaw() default false;
+
 }

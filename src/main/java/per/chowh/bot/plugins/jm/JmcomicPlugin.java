@@ -1,9 +1,6 @@
 package per.chowh.bot.plugins.jm;
 
 import cn.hutool.core.util.StrUtil;
-import com.mikuac.shiro.annotation.AnyMessageHandler;
-import com.mikuac.shiro.annotation.MessageHandlerFilter;
-import com.mikuac.shiro.annotation.common.Shiro;
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.common.utils.ShiroUtils;
 import com.mikuac.shiro.core.Bot;
@@ -11,6 +8,7 @@ import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import per.chowh.bot.core.registery.annotation.EventListener;
 import per.chowh.bot.plugins.jm.domain.JmAlbum;
 import per.chowh.bot.plugins.jm.domain.JmPhoto;
 import per.chowh.bot.plugins.jm.domain.JmRelated;
@@ -28,7 +26,6 @@ import java.util.regex.Matcher;
  * @since : 2025/7/29 - 15:28
  */
 @Slf4j
-@Shiro
 @Component
 public class JmcomicPlugin{
     @Value("${per.python.path}")
@@ -61,8 +58,7 @@ public class JmcomicPlugin{
 //        });
 //    }
 
-    @AnyMessageHandler
-    @MessageHandlerFilter( cmd = "/?[jJ][mM]\\s*(?<jmCode>\\d{5,6})")
+    @EventListener( cmd = "/?[jJ][mM]\\s*(?<jmCode>\\d{5,6})")
     public void jmcomic(Bot bot, AnyMessageEvent event, Matcher matcher) {
         String jmCode = matcher.group("jmCode");
         boolean group = "group".equals(event.getMessageType());

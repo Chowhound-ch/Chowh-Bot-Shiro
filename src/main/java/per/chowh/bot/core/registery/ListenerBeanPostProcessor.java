@@ -47,7 +47,6 @@ public class ListenerBeanPostProcessor implements BeanPostProcessor {
                             throw new IllegalArgumentException("每个监听器仅支持监听一种Event");
                         }
                         // 检测到具体要监听的事件
-                        //noinspection unchecked
                         eventMethod = new EventMethod(type, beanName, method, bean, methodParameters, eventListener);
                     }
                     // 除Event的参数，跟据Name解析

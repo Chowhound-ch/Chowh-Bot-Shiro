@@ -1,4 +1,4 @@
-package per.chowh.bot.core.registery.cmd.enums;
+package per.chowh.bot.core.registery.domain.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

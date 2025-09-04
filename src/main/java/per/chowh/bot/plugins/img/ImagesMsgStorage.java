@@ -2,16 +2,15 @@ package per.chowh.bot.plugins.img;
 
 import cn.hutool.http.HttpUtil;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.mikuac.shiro.annotation.MessageHandlerFilter;
-import com.mikuac.shiro.annotation.PrivateMessageHandler;
-import com.mikuac.shiro.annotation.common.Shiro;
-import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 import com.mikuac.shiro.enums.MsgTypeEnum;
 import com.mikuac.shiro.model.ArrayMsg;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import per.chowh.bot.core.bot.domain.ChowhBot;
+import per.chowh.bot.core.registery.annotation.EventListener;
+import per.chowh.bot.core.registery.domain.enums.EventType;
 import per.chowh.bot.utils.JacksonUtil;
 
 import java.io.File;
@@ -24,7 +23,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 @Slf4j
-@Shiro
 @Component
 public class ImagesMsgStorage {
     @Value("${per.file-location}")
@@ -35,9 +33,8 @@ public class ImagesMsgStorage {
     private String VIDEO_PATH;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    @PrivateMessageHandler
-    @MessageHandlerFilter(types = {MsgTypeEnum.image, MsgTypeEnum.forward, MsgTypeEnum.video})
-    public void test(Bot bot, PrivateMessageEvent event, Matcher matcher) {
+    @EventListener(type = EventType.PRIVATE_MSG)
+    public void test(ChowhBot bot, PrivateMessageEvent event, Matcher matcher) {
         List<ArrayMsg> arrayMsg = event.getArrayMsg();
         for (ArrayMsg msg : arrayMsg) {
             JsonNode data = msg.getData();
