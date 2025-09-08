@@ -1,4 +1,4 @@
-package per.chowh.bot.ext;
+package per.chowh.bot.ext.log;
 
 import jakarta.annotation.Priority;
 import lombok.extern.slf4j.Slf4j;

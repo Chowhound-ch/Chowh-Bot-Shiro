@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.registery.annotation.EventListener;
-import per.chowh.bot.core.registery.domain.enums.EventType;
+import per.chowh.bot.ext.filter.annotation.EventFilter;
 import per.chowh.bot.utils.JacksonUtil;
 
 import java.io.File;
@@ -33,7 +33,8 @@ public class ImagesMsgStorage {
     private String VIDEO_PATH;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    @EventListener(type = EventType.PRIVATE_MSG)
+    @EventListener
+    @EventFilter(types = {MsgTypeEnum.image, MsgTypeEnum.video, MsgTypeEnum.forward})
     public void test(ChowhBot bot, PrivateMessageEvent event, Matcher matcher) {
         List<ArrayMsg> arrayMsg = event.getArrayMsg();
         for (ArrayMsg msg : arrayMsg) {

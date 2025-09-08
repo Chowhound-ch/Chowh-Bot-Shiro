@@ -39,28 +39,8 @@ public class JmcomicPlugin{
         PYTHON_SCRIPTS_PATH = ConfigUtils.CONFIG_PATH + "scripts/python/jmcomic/";
     }
 
-//
-//    @Override
-//    public void run(ApplicationArguments args) {
-//        botContainer.robots.forEach((k, v) -> {
-//            File file = FileUtil.file(pdfPath + File.separator + 100866 + ".pdf");
-//            if (file.exists()){
-//                String fileStr = "file://" + pdfPath + "/100866.pdf";
-//                ActionRaw actionRaw = v.uploadPrivateFile(2177621094L, fileStr, "100866[密码：123].pdf");
-//                v.uploadGroupFile(811545265, fileStr,  "100866[密码：123].pdf");
-//                List<String> msgList = new ArrayList<>();
-//                OneBotMedia img = OneBotMedia.builder().file(fileStr).cache(false);
-//                msgList.add(MsgUtils.builder().img(img).build());
-//                List<Map<String, Object>> forwardMsg = ShiroUtils.generateForwardMsg(825352674L, "ddd", msgList);
-//                v.sendGroupForwardMsg(811545265, forwardMsg);
-//            }
-//
-//        });
-//    }
-
-    @EventListener( cmd = "/?[jJ][mM]\\s*(?<jmCode>\\d{5,6})")
-    public void jmcomic(Bot bot, AnyMessageEvent event, Matcher matcher) {
-        String jmCode = matcher.group("jmCode");
+    @EventListener( cmd = "/?[jJ][mM]\\s*(?<jmCode>\\d{5,6})", async = false)
+    public void jmcomic(Bot bot, AnyMessageEvent event, String jmCode) {
         boolean group = "group".equals(event.getMessageType());
         String res = getRes(jmCode, password);
 

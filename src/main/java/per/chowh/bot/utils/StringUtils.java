@@ -8,8 +8,8 @@ public class StringUtils {
 
     @SuppressWarnings("unchecked")
     public static <T> T convertStringToType(String str, Class<T> targetType) {
-        if (str == null) {
-            return null;
+        if (str == null || targetType == String.class) {
+            return (T) str;
         }
         if (targetType == Integer.class || targetType == int.class) {
             return (T) Integer.valueOf(str);
@@ -31,8 +31,6 @@ public class StringUtils {
             } else {
                 throw new IllegalArgumentException("String must be exactly 1 character long for char conversion");
             }
-        } else if (targetType == String.class) {
-            return (T) str;
         } else {
             throw new IllegalArgumentException("Unsupported target type: " + targetType);
         }

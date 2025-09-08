@@ -12,9 +12,8 @@ import java.lang.reflect.Method;
 public class ListenerUtils {
 
     public static String getListenerName(EventListener eventListener, Method method) {
-        return  "".equals(eventListener.name()) ?
-                (method.getDeclaringClass() + "#" + method.getName()) :
-                eventListener.name() ;
+        return  (method.getDeclaringClass() + "#" + method.getName()) +( "".equals(eventListener.name()) ?
+                 "": ("(" + eventListener.name() + ")")) ;
     }
 
     public static String getListenerName(EventMethod eventMethod) {

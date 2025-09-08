@@ -16,6 +16,7 @@ per:
     owner: 825352674
   listener:
     impl: Shiro
+    package: per.chowh
 
 server:
   port: 8002

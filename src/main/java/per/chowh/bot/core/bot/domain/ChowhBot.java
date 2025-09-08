@@ -7,6 +7,10 @@ import com.mikuac.shiro.core.BotFactory;
 import com.mikuac.shiro.core.BotMessageEventInterceptor;
 import com.mikuac.shiro.core.BotPlugin;
 import com.mikuac.shiro.dto.action.common.ActionData;
+import com.mikuac.shiro.dto.action.common.MsgId;
+import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
+import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
+import com.mikuac.shiro.dto.event.message.MessageEvent;
 import com.mikuac.shiro.handler.ActionHandler;
 
 import lombok.Getter;
@@ -41,5 +45,15 @@ public class ChowhBot extends Bot implements NapcatExtendApi {
         JsonObjectWrapper result = super.getActionHandler().action(super.getSession(), ExtActionPath.GET_RECENT_CONTACT, params);
         return result != null ? JacksonUtil.readValue(result,
                 JacksonUtil.getGenericJavaType(ActionData.class, List.class, LatestMsgResp.class)) : null;
+    }
+
+    public ActionData<MsgId> sendMsg(MessageEvent event, String msg, boolean autoEscape) {
+        if (ActionParams.PRIVATE.equals(event.getMessageType())) {
+            return sendPrivateMsg(event.getUserId(), msg, autoEscape);
+        }
+        if (ActionParams.GROUP.equals(event.getMessageType())) {
+            return sendGroupMsg(((GroupMessageEvent) event).getGroupId(), msg, autoEscape);
+        }
+        return null;
     }
 }

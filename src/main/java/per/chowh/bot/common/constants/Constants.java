@@ -5,4 +5,5 @@ package per.chowh.bot.common.constants;
  * @since : 2025/8/6 - 10:29
  */
 public class Constants {
+    public static final String EVENT_FILTER = "eventFilter";
 }

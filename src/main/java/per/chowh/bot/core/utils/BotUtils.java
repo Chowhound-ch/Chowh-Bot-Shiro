@@ -1,13 +1,17 @@
 package per.chowh.bot.core.utils;
 
 import cn.hutool.core.util.StrUtil;
+import com.mikuac.shiro.constant.ActionParams;
 import com.mikuac.shiro.dto.action.common.ActionData;
 import com.mikuac.shiro.dto.action.common.ActionList;
 import com.mikuac.shiro.dto.action.response.FriendInfoResp;
 import com.mikuac.shiro.dto.action.response.GroupMemberInfoResp;
 import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
+import com.mikuac.shiro.dto.event.message.MessageEvent;
+import com.mikuac.shiro.enums.MsgTypeEnum;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -23,7 +27,7 @@ import java.util.Objects;
 @Component
 public class BotUtils implements ApplicationRunner {
     private static final BotWrapper botWrapper = new BotWrapper();
-    @Resource
+    @Autowired
     private ChowhBotContainer botContainer;
 
     public static ChowhBot getBot(){
@@ -52,6 +56,12 @@ public class BotUtils implements ApplicationRunner {
         return resp.getRemark() == null ? resp.getNickname() : resp.getRemark();
     }
 
+    public static String getUserCard(MessageEvent event) {
+        Long userId = event.getUserId();
+        Long groupId = MsgUtils.getGroupId(event);
+        return getUserCard(userId, groupId);
+    }
+
     public static FriendInfoResp getFriend(Long userId) {
         ChowhBot bot = BotUtils.getBot();
         if (bot == null) return null;
@@ -63,6 +73,7 @@ public class BotUtils implements ApplicationRunner {
         }
         return null;
     }
+
 
     @Override
     public void run(ApplicationArguments args) {

@@ -10,7 +10,7 @@ import per.chowh.bot.core.bot.domain.ChowhBotContainer;
  * @since : 2025/7/9 - 15:19
  */
 @Configuration
-public class ChowhBotConfig {
+public class ChowhBotProxyConfig {
     @Bean
     public ChowhBotContainer chowhBotContainer(BotContainer  botContainer) {
         return new ChowhBotContainer(botContainer.robots);

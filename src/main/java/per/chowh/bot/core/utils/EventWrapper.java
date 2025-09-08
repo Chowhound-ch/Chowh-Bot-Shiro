@@ -2,6 +2,7 @@ package per.chowh.bot.core.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mikuac.shiro.dto.event.Event;
+import com.mikuac.shiro.dto.event.message.MessageEvent;
 import lombok.Data;
 import per.chowh.bot.utils.JacksonUtil;
 
@@ -52,6 +53,10 @@ public class EventWrapper {
     }
 
     public static boolean isEvent(Class<?> event) {
-        return event.isAssignableFrom(Event.class);
+        return Event.class.isAssignableFrom(event);
+    }
+
+    public MessageEvent toMessageEvent() {
+        return event instanceof MessageEvent ? (MessageEvent) event : null;
     }
 }
