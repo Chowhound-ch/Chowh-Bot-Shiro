@@ -46,16 +46,17 @@ public class ListenerRunner {
     }
 
     private void runAsync(ChowhBot bot, EventMethod eventMethod, EventWrapper eventWrapper){
-        executor.execute(()-> runAsync(bot, eventMethod, eventWrapper));
+        executor.execute(()-> run(bot, eventMethod, eventWrapper));
     }
 
     private void run(ChowhBot bot, EventMethod eventMethod, EventWrapper eventWrapper){
         EventHandlerInterceptorComposite interceptors = config.getInterceptors();
         try {
-            Object[] args = getArgs(bot, eventMethod, eventWrapper);
-            interceptors.preHandle(bot, eventMethod, eventWrapper); // 前置操作
-            Object res = eventMethod.getMethod().invoke(args);
-            interceptors.postHandle(bot, eventMethod, eventWrapper, res); // 后置操作
+            if (interceptors.preHandle(bot, eventMethod, eventWrapper)) {
+                Object[] args = getArgs(bot, eventMethod, eventWrapper);
+                Object res = eventMethod.getMethod().invoke(eventMethod.getBean(), args);
+                interceptors.postHandle(bot, eventMethod, eventWrapper, res); // 后置操作
+            }
         } catch (Exception e) {
             log.error("[{}]执行失败：{}", ListenerUtils.getListenerName(eventMethod), e.getMessage(), e);
         }
@@ -64,9 +65,8 @@ public class ListenerRunner {
 
     private Object[] getArgs(ChowhBot bot, EventMethod eventMethod, EventWrapper eventWrapper) throws Exception {
         List<EventParam> params = eventMethod.getParams();
-        Object[] args = new Object[params.size() + 1];
+        Object[] args = new Object[params.size()];
         ListenerArgumentResolverComposite argumentResolvers = config.getArgumentResolvers();
-        args[0] = eventMethod.getBean();
         for (int i = 0; i < params.size(); i++) {
             EventParam parameter = params.get(i);
             if (argumentResolvers.supportsParameter(bot, eventMethod, parameter)) {

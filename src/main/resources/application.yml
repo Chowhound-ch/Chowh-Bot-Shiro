@@ -25,10 +25,11 @@ spring:
   profiles:
     active: dev
   datasource:
-    url: jdbc:mysql://${dev.server-ip}:3306/chowh_bot?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    username: ${dev.database.username}
-    password: ${dev.database.password}
-    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://${dev.server-ip}:3306/chowh_bot?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    url: jdbc:sqlite:bot.db
+#    username: ${dev.database.username}
+#    password: ${dev.database.password}
+    driver-class-name: org.sqlite.JDBC
     hikari:
       connection-timeout: 10000
       validation-timeout: 3000

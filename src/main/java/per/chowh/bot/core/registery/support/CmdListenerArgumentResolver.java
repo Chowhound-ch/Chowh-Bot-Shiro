@@ -28,7 +28,8 @@ public class CmdListenerArgumentResolver implements ListenerArgumentResolver{
 
     @Override
     public boolean supportsParameter(ChowhBot bot, EventMethod method, EventParam parameter) {
-        return ClassUtil.isBasicType(parameter.getParameter().getType());
+        return ClassUtil.isBasicType(parameter.getParameter().getType())
+                || String.class.equals(parameter.getParameter().getType());
     }
 
     @Override
@@ -40,6 +41,9 @@ public class CmdListenerArgumentResolver implements ListenerArgumentResolver{
         if (matcher == null) {
             matcher = pattern.matcher(msg);
             eventWrapper.setMatcher(matcher);
+            if (!matcher.find()) {
+                return null;
+            }
         }
 
         Parameter param = parameter.getParameter();

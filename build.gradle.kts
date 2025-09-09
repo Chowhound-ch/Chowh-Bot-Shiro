@@ -29,7 +29,9 @@ dependencies {
 // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     implementation("com.squareup.okhttp3:okhttp:5.1.0")
 //    mysql驱动
-    implementation("com.mysql:mysql-connector-j")
+//    implementation("com.mysql:mysql-connector-j")
+    // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
+    implementation("org.xerial:sqlite-jdbc:3.50.3.0")
     implementation("org.ehcache:ehcache:3.10.8"){
         capabilities {
             requireCapability("org.ehcache:ehcache-jakarta")

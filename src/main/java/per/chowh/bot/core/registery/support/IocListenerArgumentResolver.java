@@ -30,7 +30,7 @@ public class IocListenerArgumentResolver implements ListenerArgumentResolver{
     @Override
     public boolean supportsParameter(ChowhBot bot, EventMethod method, EventParam parameter) {
         // 非基础类型再获取
-        return !ClassUtil.isBasicType(parameter.getParameter().getType());
+        return !ClassUtil.isBasicType(parameter.getParameter().getType()) && !String.class.equals(parameter.getParameter().getType());
     }
 
     @Override

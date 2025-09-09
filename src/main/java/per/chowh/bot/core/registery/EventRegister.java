@@ -36,7 +36,7 @@ public class EventRegister {
      */
     public List<EventMethod> getEventMethods(Class<?> eventClass) {
         return eventMethods.stream()
-                .filter(eventMethod -> eventClass.isAssignableFrom(eventMethod.getEventClass()))
+                .filter(eventMethod -> eventMethod.getEventClass().isAssignableFrom(eventClass))
                 .toList();
     }
 }
