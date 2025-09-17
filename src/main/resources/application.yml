@@ -7,7 +7,6 @@ shiro:
 per:
   file-location: ${dev.file-location}
   video-location: ${dev.video-location}
-  video-location-raw: ${dev.video-location-raw}
   python:
     path: ${dev.python.path}
   jm:
