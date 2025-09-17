@@ -34,6 +34,6 @@ public class LogInterceptor implements EventHandlerInterceptor {
     public void postHandle(ChowhBot bot, EventMethod method, EventWrapper eventWrapper, Object returnValue) {
         Long start = this.startTime.get();
         long end = System.currentTimeMillis();
-        log.info("监听器[{}]执行成功，耗时：{}s", ListenerUtils.getListenerName(method), (start - end) / 1000.0);
+        log.info("监听器[{}]执行成功，耗时：{}s", ListenerUtils.getListenerName(method), (end - start) / 1000.0);
     }
 }

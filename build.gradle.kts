@@ -19,7 +19,7 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    implementation("com.mikuac:shiro:2.4.6")
+    implementation("com.mikuac:shiro:2.4.7")
     implementation("cn.hutool:hutool-all:5.7.10")
     implementation("com.baomidou:mybatis-plus-spring-boot3-starter:3.5.12")
     implementation("org.springframework.boot:spring-boot-starter-aop")

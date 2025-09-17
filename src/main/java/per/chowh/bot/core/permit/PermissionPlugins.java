@@ -1,12 +1,7 @@
 package per.chowh.bot.core.permit;
 
-import com.mikuac.shiro.annotation.AnyMessageHandler;
-import com.mikuac.shiro.annotation.GroupMessageHandler;
-import com.mikuac.shiro.annotation.MessageHandlerFilter;
 import com.mikuac.shiro.annotation.common.Shiro;
 import com.mikuac.shiro.common.utils.ShiroUtils;
-import com.mikuac.shiro.core.Bot;
-import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
 import com.mikuac.shiro.model.ArrayMsg;
@@ -23,12 +18,11 @@ import per.chowh.bot.core.permit.enums.PermissionEnum;
 import per.chowh.bot.core.permit.service.GroupService;
 import per.chowh.bot.core.permit.service.UserService;
 import per.chowh.bot.core.utils.BotUtils;
-import per.chowh.bot.core.utils.EventWrapper;
+import per.chowh.bot.core.utils.MsgBuilder;
 import per.chowh.bot.core.utils.MsgUtils;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
 
 /**
  * @author : Chowhound
@@ -65,7 +59,7 @@ public class PermissionPlugins {
             PermissionEnum permission = PermissionEnum.valueOf(permit.toUpperCase());
             // 开始更新
             userService.updateRole(userId, permission);
-            bot.sendMsg(event, "成功将" + BotUtils.getUserCard(event)
+            bot.sendMsg(event, "成功将" + BotUtils.getUserCard(userId, MsgUtils.getGroupId(event))
                     + "[" + userId +  "]的权限设置为" + permit.toUpperCase(), true);
         } catch (IllegalArgumentException e) {
             log.warn("错误的权限标志：{}", permit.toUpperCase());

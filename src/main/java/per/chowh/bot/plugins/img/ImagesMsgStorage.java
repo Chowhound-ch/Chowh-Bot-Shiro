@@ -2,6 +2,9 @@ package per.chowh.bot.plugins.img;
 
 import cn.hutool.http.HttpUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.mikuac.shiro.dto.action.common.ActionData;
+import com.mikuac.shiro.dto.action.response.GetForwardMsgResp;
+import com.mikuac.shiro.dto.action.response.MsgResp;
 import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 import com.mikuac.shiro.enums.MsgTypeEnum;
 import com.mikuac.shiro.model.ArrayMsg;
@@ -10,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.registery.annotation.EventListener;
+import per.chowh.bot.core.utils.FileInfo;
+import per.chowh.bot.core.utils.MsgUtils;
 import per.chowh.bot.ext.filter.annotation.EventFilter;
 import per.chowh.bot.utils.JacksonUtil;
 
@@ -18,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -33,21 +39,18 @@ public class ImagesMsgStorage {
     private String VIDEO_PATH;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    @EventListener
+    @EventListener(name = "批量存图")
     @EventFilter(types = {MsgTypeEnum.image, MsgTypeEnum.video, MsgTypeEnum.forward})
-    public void test(ChowhBot bot, PrivateMessageEvent event, Matcher matcher) {
-        List<ArrayMsg> arrayMsg = event.getArrayMsg();
-        for (ArrayMsg msg : arrayMsg) {
-            JsonNode data = msg.getData();
-            if (MsgTypeEnum.image.equals(msg.getType())) {
-                saveImage(data.get("url").asText(), data.get("file").asText());
-            } else if (MsgTypeEnum.video.equals(msg.getType())) {
-                saveVideo(data.get("url").asText(), data.get("file").asText());
-            } else if (MsgTypeEnum.forward.equals(msg.getType())) {
-                JsonNode node = JacksonUtil.readTree(data.get("content"));
-                saveMedia(node);
+    public void storageImages(ChowhBot bot, PrivateMessageEvent event) {
+        List<FileInfo> fileInfos = MsgUtils.getImageUrlFromMsg(bot, event, true);
+
+        fileInfos.forEach(imageInfo -> {
+            if (imageInfo.isVideo()) {
+                saveVideo(imageInfo.getUrl(), imageInfo.getFileName());
+            }else {
+                saveImage(imageInfo.getUrl(), imageInfo.getFileName());
             }
-        }
+        });
     }
 
 

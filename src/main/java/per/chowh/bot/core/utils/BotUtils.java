@@ -1,7 +1,6 @@
 package per.chowh.bot.core.utils;
 
 import cn.hutool.core.util.StrUtil;
-import com.mikuac.shiro.constant.ActionParams;
 import com.mikuac.shiro.dto.action.common.ActionData;
 import com.mikuac.shiro.dto.action.common.ActionList;
 import com.mikuac.shiro.dto.action.response.FriendInfoResp;
@@ -9,8 +8,6 @@ import com.mikuac.shiro.dto.action.response.GroupMemberInfoResp;
 import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
-import com.mikuac.shiro.enums.MsgTypeEnum;
-import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
