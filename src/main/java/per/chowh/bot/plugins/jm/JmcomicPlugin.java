@@ -1,14 +1,17 @@
 package per.chowh.bot.plugins.jm;
 
 import cn.hutool.core.util.StrUtil;
-import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.common.utils.ShiroUtils;
 import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
+import com.mikuac.shiro.dto.event.message.MessageEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.registery.annotation.EventListener;
+import per.chowh.bot.core.utils.ListenerUtils;
+import per.chowh.bot.core.utils.MsgBuilder;
+import per.chowh.bot.core.utils.MsgUtils;
 import per.chowh.bot.plugins.jm.domain.JmAlbum;
 import per.chowh.bot.plugins.jm.domain.JmPhoto;
 import per.chowh.bot.plugins.jm.domain.JmRelated;
@@ -39,11 +42,9 @@ public class JmcomicPlugin{
         PYTHON_SCRIPTS_PATH = ConfigUtils.CONFIG_PATH + "scripts/python/jmcomic/";
     }
 
-    @EventListener( cmd = "/?[jJ][mM]\\s*(?<jmCode>\\d{5,6})", async = false)
-    public void jmcomic(Bot bot, AnyMessageEvent event, String jmCode) {
-        boolean group = "group".equals(event.getMessageType());
+    @EventListener("/?[jJ][mM]\\s*(?<jmCode>\\d{5,6})")
+    public void jmcomic(Bot bot, MessageEvent event, String jmCode) {
         String res = getRes(jmCode, password);
-
 
         JmPhoto node = JacksonUtil.readValue(res, JmPhoto.class);
         if (node == null){
@@ -51,7 +52,7 @@ public class JmcomicPlugin{
         }
         String title = node.getName();
         List<String> msgList = new ArrayList<>();
-        msgList.add(MsgUtils.builder()
+        msgList.add(MsgBuilder.builder()
                 .img("file://" + imageBlur(jmPath + "img/" + title + "/00001.jpg",
                         jmPath + "img/" + title + "/view.jpg")).build()
         );
@@ -63,7 +64,7 @@ public class JmcomicPlugin{
             List<JmRelated> relatedList = fromAlbum.getRelatedList();
             if (relatedList != null){
                 relatedList.forEach(related -> {
-                    MsgUtils builder = MsgUtils.builder();
+                    MsgBuilder builder = MsgBuilder.builder();
 //                    不发图片
 //                    if (StrUtil.isNotBlank(related.getImage())){
 //                        builder.img(related.getImage());
@@ -79,18 +80,19 @@ public class JmcomicPlugin{
         }
 
         List<Map<String, Object>> forwardMsg = ShiroUtils.generateForwardMsg(
-                event.getSender().getUserId(),
-                event.getSender().getNickname(),
+                event.getUserId(),
+                MsgUtils.getNickName(event),
                 msgList
         );
         String pdfFile = "file://" + jmPath + "pdf/" + jmCode + ".pdf";
         String pdfName = jmCode + "[pwd：" + password +"].pdf";
 
-        if (group) {
-            bot.uploadGroupFile(event.getGroupId(), pdfFile, pdfName);
-            bot.sendGroupForwardMsg(event.getGroupId(), forwardMsg);
-        }else {
-            bot.uploadGroupFile(event.getUserId(), pdfFile, pdfName);
+        Long groupId = MsgUtils.getGroupId(event);
+        if (groupId != null) {
+            bot.uploadGroupFile(groupId, pdfFile, pdfName);
+            bot.sendGroupForwardMsg(groupId, forwardMsg);
+        } else {
+            bot.uploadPrivateFile(event.getUserId(), pdfFile, pdfName);
             bot.sendPrivateForwardMsg(event.getUserId(), forwardMsg);
         }
     }

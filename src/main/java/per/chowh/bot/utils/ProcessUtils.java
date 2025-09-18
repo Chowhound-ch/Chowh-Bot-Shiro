@@ -33,13 +33,13 @@ public class ProcessUtils {
             }
             int exitCode = process.waitFor();
             if (exitCode != 0) {
-                log.error("Python script exited with code: {}", exitCode);
-                throw new IOException("Python script exited with code: " + exitCode);
+                log.error("CMD script exited with code: {}", exitCode);
+                throw new IOException("CMD script exited with code: " + exitCode);
             }
         } catch (IOException | InterruptedException e) {
             log.error(e.getMessage(), e);
             if (process != null) {
-                log.error(IoUtil.read(process.getErrorStream(), StandardCharsets.UTF_8));
+                log.error("CMD script exited: {}", IoUtil.read(process.getErrorStream(), StandardCharsets.UTF_8));
             }
         }
         return result;

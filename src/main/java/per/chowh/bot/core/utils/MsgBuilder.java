@@ -8,4 +8,8 @@ import com.mikuac.shiro.common.utils.MsgUtils;
  * @since : 2025/9/4 - 11:45
  */
 public class MsgBuilder extends MsgUtils {
+
+    public static MsgBuilder builder() {
+        return new MsgBuilder();
+    }
 }

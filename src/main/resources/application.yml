@@ -7,8 +7,10 @@ shiro:
 per:
   file-location: ${dev.file-location}
   video-location: ${dev.video-location}
+  config-path: ${dev.config-path}
   python:
     path: ${dev.python.path}
+
   jm:
     img-path: ${dev.img-path}
   bot:

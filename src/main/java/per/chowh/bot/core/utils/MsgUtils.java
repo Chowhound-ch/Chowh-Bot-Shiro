@@ -31,6 +31,16 @@ public class MsgUtils {
         }
         return null;
     }
+
+    public static String getNickName(MessageEvent event) {
+        if (ActionParams.GROUP.equals(event.getMessageType())) {
+            return ((GroupMessageEvent) event).getSender().getNickname();
+        } else if (ActionParams.PRIVATE.equals(event.getMessageType())) {
+            return ((PrivateMessageEvent) event).getPrivateSender().getNickname();
+        }
+        return null;
+    }
+
     public static Integer getMessageId(MessageEvent event) {
         if (ActionParams.GROUP.equals(event.getMessageType())) {
             return ((GroupMessageEvent) event).getMessageId();
