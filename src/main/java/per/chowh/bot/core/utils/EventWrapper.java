@@ -18,10 +18,10 @@ public class EventWrapper {
     private Class<? extends Event> eventClass;
     private JsonNode eventJson;
     private Matcher matcher;
-    public static final String USER_ID = "userId";
-    public static final String GROUP_ID = "groupId";
+    public static final String USER_ID = "user_id";
+    public static final String GROUP_ID = "group_id";
     public static final String MESSAGE = "message";
-    public static final String RAW_MESSAGE = "rawMessage";
+    public static final String RAW_MESSAGE = "raw_message";
 
     public EventWrapper(Object event) {
         this.event = (Event) event;

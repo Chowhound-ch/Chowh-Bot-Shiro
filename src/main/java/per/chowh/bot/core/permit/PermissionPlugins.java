@@ -18,7 +18,6 @@ import per.chowh.bot.core.permit.enums.PermissionEnum;
 import per.chowh.bot.core.permit.service.GroupService;
 import per.chowh.bot.core.permit.service.UserService;
 import per.chowh.bot.core.utils.BotUtils;
-import per.chowh.bot.core.utils.MsgBuilder;
 import per.chowh.bot.core.utils.MsgUtils;
 
 import java.util.List;
@@ -62,7 +61,9 @@ public class PermissionPlugins {
             bot.sendMsg(event, "成功将" + BotUtils.getUserCard(userId, MsgUtils.getGroupId(event))
                     + "[" + userId +  "]的权限设置为" + permit.toUpperCase(), true);
         } catch (IllegalArgumentException e) {
-            log.warn("错误的权限标志：{}", permit.toUpperCase());
+            String errMsg = "错误的权限标志：" +  permit.toUpperCase();
+            log.warn(errMsg);
+            bot.sendMsg(event, errMsg, true);
         }
     }
 
@@ -77,7 +78,9 @@ public class PermissionPlugins {
             groupService.updateState(groupId, statusEnum);
             bot.sendGroupMsg(event.getGroupId(), "已将群状态设置为" + state.toUpperCase(), true);
         } catch (IllegalArgumentException e) {
-            log.warn("错误的群状态标志：{}", state.toUpperCase());
+            String errMsg = "错误的群状态标志：" + state.toUpperCase();
+            log.warn(errMsg);
+            bot.sendGroupMsg(event.getGroupId(), errMsg, true);
         }
     }
 }

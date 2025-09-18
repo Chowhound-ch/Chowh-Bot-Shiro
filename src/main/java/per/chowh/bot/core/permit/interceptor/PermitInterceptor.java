@@ -39,7 +39,7 @@ public class PermitInterceptor implements EventHandlerInterceptor {
             return true;
         }
         User user = userService.getByUserId(userId);
-        PermissionEnum curPermit = user.isNull() ? PermissionEnum.COMMON: user.getRole();
+        PermissionEnum curPermit = user.isNull() ? PermissionEnum.NORMAL : user.getRole();
         EventListener listener = method.getEventListener();
         if (listener.permit().getValue() > curPermit.getValue()) {
             log.info("监听器：[{}]执行失败，用户[{}]权限不足", ListenerUtils.getListenerName(method), userId);

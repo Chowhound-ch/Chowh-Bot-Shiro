@@ -43,7 +43,7 @@ public class UserService extends ServiceImpl<UserMapper, User>{
     public void updateOwner(Long userId) {
         LambdaUpdateWrapper<User> wrapper = new LambdaUpdateWrapper<>();
         wrapper.eq(User::getRole, PermissionEnum.OWNER)
-                .set(User::getRole, PermissionEnum.COMMON);
+                .set(User::getRole, PermissionEnum.NORMAL);
         baseMapper.update(wrapper);
         self.updateRole(userId, PermissionEnum.OWNER);
     }

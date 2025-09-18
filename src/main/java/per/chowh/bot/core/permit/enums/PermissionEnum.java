@@ -13,7 +13,7 @@ import lombok.Getter;
 public enum PermissionEnum {
     OWNER(5),
     ADMIN(3),
-    COMMON(0);
+    NORMAL(0);
 
     @EnumValue
     private final int value;

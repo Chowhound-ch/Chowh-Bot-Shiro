@@ -20,7 +20,7 @@ public @interface EventListener {
     @AliasFor("cmd")
     String value() default "";
     // 权限
-    PermissionEnum permit() default PermissionEnum.COMMON;
+    PermissionEnum permit() default PermissionEnum.NORMAL;
     // 需要的群状态
     GroupStatusEnum groupStatus() default GroupStatusEnum.NORMAL;
     // Name

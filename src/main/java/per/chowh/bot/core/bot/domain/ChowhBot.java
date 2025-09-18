@@ -1,12 +1,14 @@
 package per.chowh.bot.core.bot.domain;
 
 import com.mikuac.shiro.common.utils.JsonObjectWrapper;
+import com.mikuac.shiro.common.utils.ShiroUtils;
 import com.mikuac.shiro.constant.ActionParams;
 import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.core.BotFactory;
 import com.mikuac.shiro.core.BotMessageEventInterceptor;
 import com.mikuac.shiro.core.BotPlugin;
 import com.mikuac.shiro.dto.action.common.ActionData;
+import com.mikuac.shiro.dto.action.common.ActionRaw;
 import com.mikuac.shiro.dto.action.common.MsgId;
 import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
@@ -19,6 +21,7 @@ import org.springframework.web.servlet.mvc.LastModified;
 import org.springframework.web.socket.WebSocketSession;
 import per.chowh.bot.core.bot.action.NapcatExtendApi;
 import per.chowh.bot.core.bot.response.LatestMsgResp;
+import per.chowh.bot.core.utils.MsgUtils;
 import per.chowh.bot.utils.JacksonUtil;
 
 import java.util.HashMap;
@@ -32,7 +35,7 @@ import java.util.Map;
  */
 @Getter
 @Setter
-@SuppressWarnings({"unused", "Duplicates"})
+@SuppressWarnings({"unused", "Duplicates", "UnusedReturnValue"})
 public class ChowhBot extends Bot implements NapcatExtendApi {
     public ChowhBot(long selfId, WebSocketSession session, ActionHandler actionHandler, List<Class<? extends BotPlugin>> pluginList, BotFactory.AnnotationMethodContainer annotationMethodContainer, Class<? extends BotMessageEventInterceptor> botMessageEventInterceptor) {
         super(selfId, session, actionHandler, pluginList, annotationMethodContainer, botMessageEventInterceptor);
@@ -53,6 +56,30 @@ public class ChowhBot extends Bot implements NapcatExtendApi {
         }
         if (ActionParams.GROUP.equals(event.getMessageType())) {
             return sendGroupMsg(((GroupMessageEvent) event).getGroupId(), msg, autoEscape);
+        }
+        return null;
+    }
+    public ActionRaw uploadFile(MessageEvent event, String file, String name) {
+        if (ActionParams.PRIVATE.equals(event.getMessageType())) {
+            return uploadPrivateFile(event.getUserId(), file, file);
+        }
+        if (ActionParams.GROUP.equals(event.getMessageType())) {
+            return uploadGroupFile(((GroupMessageEvent) event).getGroupId(), file, file);
+        }
+        return null;
+    }
+
+    public ActionData<MsgId> sendForwardMsg(MessageEvent event, List<String> msgList) {
+        List<Map<String, Object>> forwardMsg = ShiroUtils.generateForwardMsg(
+                event.getUserId(),
+                MsgUtils.getNickName(event),
+                msgList
+        );
+        if (ActionParams.PRIVATE.equals(event.getMessageType())) {
+            return sendPrivateForwardMsg(event.getUserId(), forwardMsg);
+        }
+        if (ActionParams.GROUP.equals(event.getMessageType())) {
+            return sendGroupForwardMsg(((GroupMessageEvent) event).getGroupId(), forwardMsg);
         }
         return null;
     }

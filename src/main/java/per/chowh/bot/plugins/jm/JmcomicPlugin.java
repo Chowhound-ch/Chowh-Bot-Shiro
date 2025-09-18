@@ -3,13 +3,13 @@ package per.chowh.bot.plugins.jm;
 import cn.hutool.core.util.StrUtil;
 import com.mikuac.shiro.common.utils.ShiroUtils;
 import com.mikuac.shiro.core.Bot;
-import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import per.chowh.bot.core.bot.domain.ChowhBot;
+import per.chowh.bot.core.permit.enums.GroupStatusEnum;
 import per.chowh.bot.core.registery.annotation.EventListener;
-import per.chowh.bot.core.utils.ListenerUtils;
 import per.chowh.bot.core.utils.MsgBuilder;
 import per.chowh.bot.core.utils.MsgUtils;
 import per.chowh.bot.plugins.jm.domain.JmAlbum;
@@ -22,7 +22,6 @@ import per.chowh.bot.utils.ProcessUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 
 /**
  * @author : Chowhound
@@ -42,24 +41,46 @@ public class JmcomicPlugin{
         PYTHON_SCRIPTS_PATH = ConfigUtils.CONFIG_PATH + "scripts/python/jmcomic/";
     }
 
-    @EventListener("/?[jJ][mM]\\s*(?<jmCode>\\d{5,6})")
-    public void jmcomic(Bot bot, MessageEvent event, String jmCode) {
+    @EventListener(value = "/?[jJ][mM]\\s*(?<jmCode>\\d{3,9})", groupStatus = GroupStatusEnum.FULL)
+    public void jmcomic(ChowhBot bot, MessageEvent event, String jmCode) {
         String res = getRes(jmCode, password);
-
         JmPhoto node = JacksonUtil.readValue(res, JmPhoto.class);
         if (node == null){
             return;
         }
-        String title = node.getName();
+
+        String pdfFile = "file://" + jmPath + "pdf/" + jmCode + ".pdf";
+        String pdfName = jmCode + "[密码" + password +"].pdf";
+        bot.uploadFile(event,  pdfFile, pdfName);
+        bot.sendForwardMsg(event, getJmMsgList(node));
+    }
+
+    @EventListener(value = "(?<jmCode>\\d{5,7})", groupStatus =  GroupStatusEnum.FULL)
+    public void jmcomicSimple(ChowhBot bot, MessageEvent event, String jmCode) {
+        String res = getRes(jmCode, password);
+        JmPhoto node = JacksonUtil.readValue(res, JmPhoto.class);
+        if (node == null){
+            bot.sendMsg(event, "jm没搜到", true);
+            return;
+        }
+        String pdfFile = "file://" + jmPath + "pdf/" + jmCode + ".pdf";
+        String pdfName = jmCode + "[密码" + password +"].pdf";
+
+        bot.uploadFile(event,  pdfFile, pdfName);
+        bot.sendForwardMsg(event, getJmMsgList(node));
+    }
+
+    private List<String> getJmMsgList(JmPhoto photo) {
+        String title = photo.getName();
         List<String> msgList = new ArrayList<>();
         msgList.add(MsgBuilder.builder()
                 .img("file://" + imageBlur(jmPath + "img/" + title + "/00001.jpg",
                         jmPath + "img/" + title + "/view.jpg")).build()
         );
-        msgList.add("标题：" + "[" + node.getPhotoId() + "]" + title);
-        msgList.add("标签：" + String.join(", ",  node.getTags()));
+        msgList.add("标题：" + "[" + photo.getPhotoId() + "]" + title);
+        msgList.add("标签：" + String.join(", ",  photo.getTags()));
         msgList.add("相关推荐：");
-        JmAlbum fromAlbum = node.getFromAlbum();
+        JmAlbum fromAlbum = photo.getFromAlbum();
         if (fromAlbum != null){
             List<JmRelated> relatedList = fromAlbum.getRelatedList();
             if (relatedList != null){
@@ -78,24 +99,9 @@ public class JmcomicPlugin{
             }
 
         }
-
-        List<Map<String, Object>> forwardMsg = ShiroUtils.generateForwardMsg(
-                event.getUserId(),
-                MsgUtils.getNickName(event),
-                msgList
-        );
-        String pdfFile = "file://" + jmPath + "pdf/" + jmCode + ".pdf";
-        String pdfName = jmCode + "[pwd：" + password +"].pdf";
-
-        Long groupId = MsgUtils.getGroupId(event);
-        if (groupId != null) {
-            bot.uploadGroupFile(groupId, pdfFile, pdfName);
-            bot.sendGroupForwardMsg(groupId, forwardMsg);
-        } else {
-            bot.uploadPrivateFile(event.getUserId(), pdfFile, pdfName);
-            bot.sendPrivateForwardMsg(event.getUserId(), forwardMsg);
-        }
+        return msgList;
     }
+
 
     private String getRes(String jmCode, String password) {
         ProcessBuilder processBuilder = new ProcessBuilder(PYTHON_PATH, PYTHON_SCRIPTS_PATH + "main.py", jmCode);
