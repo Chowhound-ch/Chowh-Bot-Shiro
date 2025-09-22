@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.OrderComparator;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.utils.EventWrapper;
@@ -27,7 +27,7 @@ public class EventHandlerInterceptorComposite implements EventHandlerInterceptor
 
     public EventHandlerInterceptorComposite addInterceptor(EventHandlerInterceptor argumentResolver) {
         interceptors.add(argumentResolver);
-        OrderComparator.sort(this.interceptors);
+        AnnotationAwareOrderComparator.sort(this.interceptors);
         return this;
     }
     public EventHandlerInterceptorComposite addInterceptorLast(EventHandlerInterceptor argumentResolver) {
@@ -37,7 +37,7 @@ public class EventHandlerInterceptorComposite implements EventHandlerInterceptor
 
     public EventHandlerInterceptorComposite addInterceptor(List<? extends EventHandlerInterceptor> argumentResolvers) {
         this.interceptors.addAll(argumentResolvers);
-        OrderComparator.sort(this.interceptors);
+        AnnotationAwareOrderComparator.sort(this.interceptors);
         return this;
     }
 
@@ -60,7 +60,7 @@ public class EventHandlerInterceptorComposite implements EventHandlerInterceptor
     }
 
     public void sort() {
-        OrderComparator.sort(this.interceptors);
+        AnnotationAwareOrderComparator.sort(this.interceptors);
     }
 
     @Override

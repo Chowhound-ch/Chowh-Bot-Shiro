@@ -47,7 +47,8 @@ public class PermissionPlugins {
         }
     }
 
-    @EventListener(permit = PermissionEnum.OWNER,
+    @EventListener(
+            permit = PermissionEnum.OWNER,
             cmd = "/?(设置|permit)\\s*(?<permit>[A-Za-z]+)\\s*(?<user>\\d{5,12})?.*",
             name = "用户权限设置")
     public void updatePermission(ChowhBot bot, MessageEvent event, String permit, Long user) {
@@ -67,7 +68,9 @@ public class PermissionPlugins {
         }
     }
 
-    @EventListener(permit = PermissionEnum.ADMIN, groupStatus = GroupStatusEnum.CLOSED,
+    @EventListener(
+            permit = PermissionEnum.ADMIN,
+            groupStatus = GroupStatusEnum.CLOSED,
             cmd = "/?(设置群|state)\\s*(?<state>[A-Za-z]+)\\s*",
             name = "群聊状态设置")
     public void updateGroupState(ChowhBot bot, GroupMessageEvent event, String state) {

@@ -1,8 +1,8 @@
 package per.chowh.bot.ext.log;
 
-import jakarta.annotation.Priority;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.registery.domain.EventMethod;
@@ -15,8 +15,7 @@ import per.chowh.bot.core.utils.ListenerUtils;
  * @author : Chowhound
  * @since : 2025/9/3 - 14:11
  */
-// 使用Priority保证优先级最高
-@Priority(Ordered.HIGHEST_PRECEDENCE)
+@Order(Ordered.HIGHEST_PRECEDENCE + 101)
 @Slf4j
 @Component
 public class LogInterceptor implements EventHandlerInterceptor {
