@@ -1,8 +1,6 @@
 package per.chowh.bot.plugins.jm;
 
 import cn.hutool.core.util.StrUtil;
-import com.mikuac.shiro.common.utils.ShiroUtils;
-import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,7 +9,6 @@ import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.permit.enums.GroupStatusEnum;
 import per.chowh.bot.core.registery.annotation.EventListener;
 import per.chowh.bot.core.utils.MsgBuilder;
-import per.chowh.bot.core.utils.MsgUtils;
 import per.chowh.bot.plugins.jm.domain.JmAlbum;
 import per.chowh.bot.plugins.jm.domain.JmPhoto;
 import per.chowh.bot.plugins.jm.domain.JmRelated;
