@@ -18,7 +18,6 @@ import java.util.Map;
  * @author : Chowhound
  * @since : 2025/8/29 - 13:49
  */
-@Order
 @Component
 public class IocListenerArgumentResolver implements ListenerArgumentResolver{
     private final ApplicationContext applicationContext;

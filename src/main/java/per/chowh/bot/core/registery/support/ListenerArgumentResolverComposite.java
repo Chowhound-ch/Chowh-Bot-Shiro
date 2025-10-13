@@ -6,6 +6,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.OrderComparator;
+import org.springframework.core.annotation.AnnotationAwareOrderComparator;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.registery.domain.EventParam;
@@ -32,7 +33,7 @@ public class ListenerArgumentResolverComposite implements ListenerArgumentResolv
 
     public ListenerArgumentResolverComposite addResolver(ListenerArgumentResolver argumentResolver) {
         argumentResolvers.add(argumentResolver);
-        OrderComparator.sort(this.argumentResolvers);
+        AnnotationAwareOrderComparator.sort(this.argumentResolvers);
         return this;
     }
     public ListenerArgumentResolverComposite addResolverLast(ListenerArgumentResolver argumentResolver) {
@@ -42,7 +43,7 @@ public class ListenerArgumentResolverComposite implements ListenerArgumentResolv
 
     public ListenerArgumentResolverComposite addResolver(List<? extends ListenerArgumentResolver> argumentResolvers) {
         this.argumentResolvers.addAll(argumentResolvers);
-        OrderComparator.sort(this.argumentResolvers);
+        AnnotationAwareOrderComparator.sort(this.argumentResolvers);
         return this;
     }
 
@@ -77,7 +78,7 @@ public class ListenerArgumentResolverComposite implements ListenerArgumentResolv
     }
 
     public void sort() {
-        OrderComparator.sort(this.argumentResolvers);
+        AnnotationAwareOrderComparator.sort(this.argumentResolvers);
     }
 
     @Override
