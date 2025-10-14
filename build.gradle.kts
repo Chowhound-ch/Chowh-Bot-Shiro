@@ -24,6 +24,7 @@ dependencies {
     implementation("com.baomidou:mybatis-plus-spring-boot3-starter:3.5.12")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-cache")
+    implementation("org.springframework.boot:spring-boot-starter-quartz")
     // https://mvnrepository.com/artifact/javax.cache/cache-api
     implementation("javax.cache:cache-api:1.1.1")
 // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
@@ -32,6 +33,7 @@ dependencies {
 //    implementation("com.mysql:mysql-connector-j")
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
     implementation("org.xerial:sqlite-jdbc:3.50.3.0")
+    // https://mvnrepository.com/artifact/org.quartz-scheduler/quartz
     implementation("org.ehcache:ehcache:3.10.8"){
         capabilities {
             requireCapability("org.ehcache:ehcache-jakarta")

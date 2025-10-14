@@ -28,4 +28,8 @@ public class ChowhBotContainer extends BotContainer {
         robots.forEach((id, bot) -> consumer.accept(id, (ChowhBot) bot));
     }
 
+    public ChowhBot getDefaultBot(){
+        return (ChowhBot) robots.values().iterator().next();
+    }
+
 }

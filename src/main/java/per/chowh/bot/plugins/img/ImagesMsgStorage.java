@@ -30,7 +30,7 @@ public class ImagesMsgStorage {
     public void storageImages(PrivateMessageEvent event, ArrayMsgFlatList arrayMsgFlatList) {
         for (List<ArrayMsg> arrayMsgs : arrayMsgFlatList) {
             arrayMsgs.forEach(arrayMsg -> {
-                String path = null;
+                String path;
                 if (MsgTypeEnum.image.equals(arrayMsg.getType())) {
                     path = IMAGE_PATH;
                 } else if (MsgTypeEnum.video.equals(arrayMsg.getType())) {
@@ -42,7 +42,6 @@ public class ImagesMsgStorage {
                 if (!"[动画表情]".equals(data.get("summary").asText())) {
                     HttpUtil.downloadFile(data.get("url").asText(), FileUtils.getPathWithDate(path) + File.separatorChar + data.get("file").asText());
                 }
-
             });
         }
     }
