@@ -17,6 +17,10 @@ per:
   listener:
     impl: Shiro
     package: per.chowh
+  network:
+    proxy:
+      host: ${dev.network.proxy.host}
+      port: ${dev.network.proxy.port}
 
 server:
   port: 8002
