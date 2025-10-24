@@ -16,7 +16,7 @@ client:
       # proxies: clash
       # proxies: v2ray
       # proxies: 127.0.0.1:7890
-       proxies: 127.0.0.1:7890
+       proxies: 127.0.0.1:20172
 # 下载配置
 download:
   image:
