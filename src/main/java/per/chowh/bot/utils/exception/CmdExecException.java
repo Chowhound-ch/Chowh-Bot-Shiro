@@ -1,4 +1,4 @@
-package per.chowh.bot.exception;
+package per.chowh.bot.utils.exception;
 
 /**
  * @author : Chowhound

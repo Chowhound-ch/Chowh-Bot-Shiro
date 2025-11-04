@@ -9,10 +9,9 @@ import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.registery.domain.EventParam;
 import per.chowh.bot.core.registery.interceptor.EventHandlerInterceptorComposite;
 import per.chowh.bot.core.registery.support.ListenerArgumentResolverComposite;
-import per.chowh.bot.core.utils.BotUtils;
 import per.chowh.bot.core.utils.EventWrapper;
 import per.chowh.bot.core.utils.ListenerUtils;
-import per.chowh.bot.exception.CmdExecException;
+import per.chowh.bot.utils.exception.CmdExecException;
 
 import javax.net.ssl.SSLHandshakeException;
 import java.lang.reflect.InvocationTargetException;
