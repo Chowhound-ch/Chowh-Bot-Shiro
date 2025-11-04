@@ -2,6 +2,7 @@ package per.chowh.bot.utils;
 
 import cn.hutool.core.io.IoUtil;
 import lombok.extern.slf4j.Slf4j;
+import per.chowh.bot.exception.CmdExecException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +22,7 @@ public class ProcessUtils {
         return String.join("", execLines(processBuilder));
     }
 
-    public static List<String> execLines(ProcessBuilder processBuilder){
+    public static List<String> execLines(ProcessBuilder processBuilder) {
         List<String> result = new ArrayList<>();
         Process process = null;
         try {
@@ -40,7 +41,9 @@ public class ProcessUtils {
         } catch (IOException | InterruptedException e) {
             log.error(e.getMessage(), e);
             if (process != null) {
-                log.error("CMD script exited: {}", IoUtil.read(process.getErrorStream(), Charset.forName("GBK")));
+                String errMsg = IoUtil.read(process.getErrorStream(), Charset.forName("GBK"));
+                log.error("CMD script exited: {}", errMsg);
+                throw new CmdExecException(errMsg);
             }
         }
         return result;

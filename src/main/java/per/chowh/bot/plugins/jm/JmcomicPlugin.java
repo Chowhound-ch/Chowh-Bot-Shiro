@@ -18,6 +18,7 @@ import per.chowh.bot.utils.ConfigUtils;
 import per.chowh.bot.utils.JacksonUtil;
 import per.chowh.bot.utils.ProcessUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -102,15 +103,15 @@ public class JmcomicPlugin{
     }
 
 
-    private String getRes(String jmCode, String password) {
+    private String getRes(String jmCode, String password){
         ProcessBuilder processBuilder = new ProcessBuilder(PYTHON_PATH, PYTHON_SCRIPTS_PATH + "main.py", jmCode);
         Map<String, String> environment = processBuilder.environment();
         environment.put("JM_DIR", jmPath);
         environment.put("JM_PASSWORD", password);
         environment.put("JM_CONFIG", PYTHON_SCRIPTS_PATH + "option.yml");
-       return ProcessUtils.exec(processBuilder);
+        return ProcessUtils.exec(processBuilder);
     }
-    private String imageBlur(String from, String to){
+    private String imageBlur(String from, String to) {
         ProcessBuilder processBuilder = new ProcessBuilder(PYTHON_PATH, PYTHON_SCRIPTS_PATH + "image_blur.py", from, to);
         return ProcessUtils.exec(processBuilder);
     }

@@ -12,6 +12,7 @@ import per.chowh.bot.core.registery.support.ListenerArgumentResolverComposite;
 import per.chowh.bot.core.utils.BotUtils;
 import per.chowh.bot.core.utils.EventWrapper;
 import per.chowh.bot.core.utils.ListenerUtils;
+import per.chowh.bot.exception.CmdExecException;
 
 import javax.net.ssl.SSLHandshakeException;
 import java.lang.reflect.InvocationTargetException;
@@ -93,7 +94,14 @@ public class ListenerRunner {
             }
             if (targetException.getClass() == SSLHandshakeException.class) {
                 return "SSL连接异常，请检查网络及代理配置";
+            } else if (targetException.getClass() == CmdExecException.class) {
+                String errMsg = targetException.getMessage();
+                int i;
+                if ((i = errMsg.indexOf("jmcomic.jm_exception.")) > 0) { // jm脚本报错
+                    return errMsg.substring(i);
+                }
             }
+            return targetException.getMessage();
         }
         return msg;
     }
