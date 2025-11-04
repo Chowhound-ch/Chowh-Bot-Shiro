@@ -7,6 +7,7 @@ import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.dto.action.common.ActionData;
 import com.mikuac.shiro.dto.action.response.GetForwardMsgResp;
 import com.mikuac.shiro.dto.action.response.MsgResp;
+import com.mikuac.shiro.dto.event.Event;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
 import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
@@ -126,6 +127,14 @@ public class MsgUtils {
             return new FileInfo(data.get("file").asText(), data.get("url").asText(), true, false);
         }
         return null;
+    }
+
+    public static <T> void handleErrorMsg(ChowhBot bot, Event event, ActionData<T> actionData) {
+        if (actionData != null && "failed".equals(actionData.getStatus())) {
+            if (MessageEvent.class.isAssignableFrom(event.getClass())) {
+                bot.sendMsg((MessageEvent) event, "消息发送失败", true);
+            }
+        }
     }
 
 

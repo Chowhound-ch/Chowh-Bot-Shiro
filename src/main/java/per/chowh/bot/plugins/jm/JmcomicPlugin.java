@@ -1,6 +1,8 @@
 package per.chowh.bot.plugins.jm;
 
 import cn.hutool.core.util.StrUtil;
+import com.mikuac.shiro.dto.action.common.ActionData;
+import com.mikuac.shiro.dto.action.common.MsgId;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

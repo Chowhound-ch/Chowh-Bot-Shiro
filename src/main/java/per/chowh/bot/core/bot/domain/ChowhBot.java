@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.LastModified;
 import org.springframework.web.socket.WebSocketSession;
 import per.chowh.bot.core.bot.action.NapcatExtendApi;
 import per.chowh.bot.core.bot.response.LatestMsgResp;
+import per.chowh.bot.core.utils.EventWrapper;
 import per.chowh.bot.core.utils.MsgUtils;
 import per.chowh.bot.utils.JacksonUtil;
 
@@ -50,14 +51,28 @@ public class ChowhBot extends Bot implements NapcatExtendApi {
                 JacksonUtil.getGenericJavaType(ActionData.class, List.class, LatestMsgResp.class)) : null;
     }
 
+    public ActionData<MsgId> sendMsg(EventWrapper event, String msg, boolean autoEscape) {
+        Long groupId = event.getGroupId();
+        Long userId = event.getUserId();
+        ActionData<MsgId> msgIdActionData = null;
+        if (groupId != null) {
+            msgIdActionData = sendGroupMsg(groupId, msg, autoEscape);
+        } else if (userId != null) {
+            msgIdActionData =  sendPrivateMsg(userId, msg, autoEscape);
+        }
+        MsgUtils.handleErrorMsg(this, event.getEvent(), msgIdActionData);
+        return msgIdActionData;
+    }
+
     public ActionData<MsgId> sendMsg(MessageEvent event, String msg, boolean autoEscape) {
+        ActionData<MsgId> msgIdActionData = null;
         if (ActionParams.PRIVATE.equals(event.getMessageType())) {
-            return sendPrivateMsg(event.getUserId(), msg, autoEscape);
+            msgIdActionData = sendPrivateMsg(event.getUserId(), msg, autoEscape);
+        } else if (ActionParams.GROUP.equals(event.getMessageType())) {
+            msgIdActionData = sendGroupMsg(((GroupMessageEvent) event).getGroupId(), msg, autoEscape);
         }
-        if (ActionParams.GROUP.equals(event.getMessageType())) {
-            return sendGroupMsg(((GroupMessageEvent) event).getGroupId(), msg, autoEscape);
-        }
-        return null;
+        MsgUtils.handleErrorMsg(this, event, msgIdActionData);
+        return msgIdActionData;
     }
     public ActionRaw uploadFile(MessageEvent event, String file, String name) {
         if (ActionParams.PRIVATE.equals(event.getMessageType())) {
@@ -75,12 +90,13 @@ public class ChowhBot extends Bot implements NapcatExtendApi {
                 MsgUtils.getNickName(event),
                 msgList
         );
+        ActionData<MsgId> msgIdActionData = null;
         if (ActionParams.PRIVATE.equals(event.getMessageType())) {
-            return sendPrivateForwardMsg(event.getUserId(), forwardMsg);
+            msgIdActionData = sendPrivateForwardMsg(event.getUserId(), forwardMsg);
+        } else if (ActionParams.GROUP.equals(event.getMessageType())) {
+            msgIdActionData = sendGroupForwardMsg(((GroupMessageEvent) event).getGroupId(), forwardMsg);
         }
-        if (ActionParams.GROUP.equals(event.getMessageType())) {
-            return sendGroupForwardMsg(((GroupMessageEvent) event).getGroupId(), forwardMsg);
-        }
-        return null;
+        MsgUtils.handleErrorMsg(this, event, msgIdActionData);
+        return msgIdActionData;
     }
 }

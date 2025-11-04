@@ -9,9 +9,12 @@ import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.registery.domain.EventParam;
 import per.chowh.bot.core.registery.interceptor.EventHandlerInterceptorComposite;
 import per.chowh.bot.core.registery.support.ListenerArgumentResolverComposite;
+import per.chowh.bot.core.utils.BotUtils;
 import per.chowh.bot.core.utils.EventWrapper;
 import per.chowh.bot.core.utils.ListenerUtils;
 
+import javax.net.ssl.SSLHandshakeException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.*;
@@ -58,7 +61,9 @@ public class ListenerRunner {
                 interceptors.postHandle(bot, eventMethod, eventWrapper, res); // 后置操作
             }
         } catch (Exception e) {
-            log.error("[{}]执行失败：{}", ListenerUtils.getListenerName(eventMethod), e.getMessage(), e);
+            String msg = getErrorMsg(e);
+            bot.sendMsg(eventWrapper, "执行失败：" + msg, false);
+            log.error("[{}]执行失败：{}", ListenerUtils.getListenerName(eventMethod), msg, e);
         }
     }
 
@@ -77,5 +82,19 @@ public class ListenerRunner {
             }
         }
         return args;
+    }
+
+    private String getErrorMsg(Exception e) {
+        String msg =  (e.getMessage() == null ? "" : e.getMessage());
+        if (e instanceof InvocationTargetException invException) { // 反射被调用方法中抛出的异常
+            Throwable targetException = invException.getTargetException();
+            if (targetException == null) {
+                return msg;
+            }
+            if (targetException.getClass() == SSLHandshakeException.class) {
+                return "SSL连接异常，请检查网络及代理配置";
+            }
+        }
+        return msg;
     }
 }

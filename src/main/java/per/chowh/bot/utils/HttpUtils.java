@@ -6,6 +6,7 @@ import okhttp3.*;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.time.Duration;
 import java.util.Map;
 
 /**
@@ -14,9 +15,15 @@ import java.util.Map;
  */
 @SuppressWarnings("unused")
 public class HttpUtils {
-    private static final OkHttpClient BASE_CLIENT = new OkHttpClient();
+    private static final OkHttpClient BASE_CLIENT;
     public static final MediaType JSON = MediaType.get("application/json");
-
+    static {
+        BASE_CLIENT = new OkHttpClient.Builder()
+                .callTimeout(Duration.ofSeconds(60))
+                .connectTimeout(Duration.ofSeconds(60))
+                .readTimeout(Duration.ofSeconds(60))
+                .writeTimeout(Duration.ofSeconds(60)).build();
+    }
 
 
     public static String doGetStr(String url) throws IOException {
