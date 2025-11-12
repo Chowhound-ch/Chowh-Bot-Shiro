@@ -15,7 +15,7 @@ public class MidRemindJob {
     @Autowired
     private ChowhBotContainer chowhBotContainer;
 
-    @Scheduled(cron ="0,30 25,26,27 13 * * ?")
+    @Scheduled(cron ="0,30 26,27,28 13 * * ?")
     public void sayMidRemind() {
         ChowhBot bot = chowhBotContainer.getDefaultBot();
         bot.sendPrivateMsg(825352674L, "1", true);

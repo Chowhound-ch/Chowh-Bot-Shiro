@@ -37,7 +37,7 @@ public class ListenerBeanPostProcessor implements BeanPostProcessor {
         Class<?> aClass = bean.getClass();
         if (aClass.getPackageName().startsWith(basePackage)) {
             Method[] methods = aClass.getDeclaredMethods();
-            for (Method method : methods) {
+            for (Method method : methods) { //遍历方法
                 method.setAccessible(true);
                 EventListener eventListener = AnnotationUtils.findAnnotation(method, EventListener.class);
                 if (eventListener != null) {
@@ -45,7 +45,7 @@ public class ListenerBeanPostProcessor implements BeanPostProcessor {
                     List<EventParam> methodParameters = new ArrayList<>();
                     EventMethod eventMethod = null;
                     Parameter[] parameters = method.getParameters();
-                    for (Parameter methodParameter : parameters) {
+                    for (Parameter methodParameter : parameters) { // 遍历参数
                         Class<?> type = methodParameter.getType();
                         if (EventWrapper.isEvent(type)) {
                             if (eventMethod != null) {
