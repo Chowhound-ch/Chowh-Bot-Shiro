@@ -15,7 +15,7 @@ import per.chowh.bot.core.permit.enums.GroupStatusEnum;
 import per.chowh.bot.core.registery.annotation.EventListener;
 import per.chowh.bot.core.utils.MsgBuilder;
 import per.chowh.bot.ext.filter.annotation.EventFilter;
-import per.chowh.bot.ext.msgarr.domain.ArrayMsgFlatList;
+import per.chowh.bot.ext.support.msgarr.domain.ArrayMsgFlatList;
 import per.chowh.bot.plugins.img.api.PixivApi;
 import per.chowh.bot.plugins.img.entity.PixivImg;
 import per.chowh.bot.utils.FileUtils;

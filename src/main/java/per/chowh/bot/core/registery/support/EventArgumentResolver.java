@@ -16,7 +16,7 @@ import per.chowh.bot.core.utils.EventWrapper;
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class EventArgumentResolver implements ListenerArgumentResolver{
+public class EventArgumentResolver extends CoreListenerArgumentResolver{
     @Override
     public boolean supportsParameter(ChowhBot bot, EventMethod method, EventParam parameter) {
         return EventWrapper.isEvent(parameter.getParameter().getType());

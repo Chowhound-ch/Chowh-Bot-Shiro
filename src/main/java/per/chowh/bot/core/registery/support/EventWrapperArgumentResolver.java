@@ -11,7 +11,7 @@ import per.chowh.bot.core.utils.EventWrapper;
  * @since : 2025/9/8 - 16:51
  */
 @Component
-public class EventWrapperArgumentResolver implements ListenerArgumentResolver{
+public class EventWrapperArgumentResolver extends CoreListenerArgumentResolver{
     @Override
     public boolean supportsParameter(ChowhBot bot, EventMethod method, EventParam parameter) {
         return parameter.getParameter().getType().isAssignableFrom(EventWrapper.class);

@@ -21,7 +21,7 @@ import per.chowh.bot.core.utils.EventWrapper;
  */
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @Component
-public class CmdEventHandlerInterceptor implements EventHandlerInterceptor{
+public class CmdEventHandlerInterceptor extends CoreEventHandlerInterceptor{
 
     @Override
     public boolean preHandle(ChowhBot bot, EventMethod method, EventWrapper event) {

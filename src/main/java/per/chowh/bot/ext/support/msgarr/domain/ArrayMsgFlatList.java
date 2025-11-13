@@ -1,4 +1,4 @@
-package per.chowh.bot.ext.msgarr.domain;
+package per.chowh.bot.ext.support.msgarr.domain;
 
 import com.mikuac.shiro.model.ArrayMsg;
 

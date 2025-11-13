@@ -1,4 +1,4 @@
-package per.chowh.bot.ext.msgarr;
+package per.chowh.bot.ext.support.msgarr;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mikuac.shiro.dto.action.common.ActionData;
@@ -16,7 +16,7 @@ import per.chowh.bot.core.registery.domain.EventParam;
 import per.chowh.bot.core.registery.support.ListenerArgumentResolver;
 import per.chowh.bot.core.utils.EventWrapper;
 import per.chowh.bot.core.utils.MsgUtils;
-import per.chowh.bot.ext.msgarr.domain.ArrayMsgFlatList;
+import per.chowh.bot.ext.support.msgarr.domain.ArrayMsgFlatList;
 import per.chowh.bot.utils.JacksonUtil;
 
 import java.util.ArrayList;

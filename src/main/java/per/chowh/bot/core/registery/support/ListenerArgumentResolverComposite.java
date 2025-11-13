@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 参数解析器的组合，也是加载其他参数解析器的地方和参数解析实际调用的地方
  * @author : Chowhound
  * @since : 2025/9/2 - 11:16
  */
@@ -27,6 +28,8 @@ public class ListenerArgumentResolverComposite implements ListenerArgumentResolv
 
     @Getter
     private final List<ListenerArgumentResolver> argumentResolvers = new ArrayList<>();
+    @Getter
+    private final List<CoreListenerArgumentResolver> coreArgumentResolvers = new ArrayList<>();
 
     private final Map<EventParam, ListenerArgumentResolver> argumentResolverCache =
             new ConcurrentHashMap<>(256);
@@ -47,15 +50,42 @@ public class ListenerArgumentResolverComposite implements ListenerArgumentResolv
         return this;
     }
 
+    public ListenerArgumentResolverComposite addCoreResolver(CoreListenerArgumentResolver argumentResolver) {
+        coreArgumentResolvers.add(argumentResolver);
+        AnnotationAwareOrderComparator.sort(this.coreArgumentResolvers);
+        return this;
+    }
+    public ListenerArgumentResolverComposite addCoreResolverLast(CoreListenerArgumentResolver argumentResolver) {
+        coreArgumentResolvers.add(argumentResolver);
+        return this;
+    }
+
+    public ListenerArgumentResolverComposite addCoreResolver(List<? extends CoreListenerArgumentResolver> argumentResolvers) {
+        this.coreArgumentResolvers.addAll(argumentResolvers);
+        AnnotationAwareOrderComparator.sort(this.coreArgumentResolvers);
+        return this;
+    }
+
     public ListenerArgumentResolver getArgumentResolver(ChowhBot bot, EventMethod method, EventParam parameter) {
         // 先取缓存
         ListenerArgumentResolver result = this.argumentResolverCache.get(parameter);
         if (result == null) {
-            for (ListenerArgumentResolver resolver : this.argumentResolvers) {
+            // 先取核心参数解析器
+            for (ListenerArgumentResolver resolver : this.coreArgumentResolvers) {
                 if (resolver.supportsParameter(bot, method, parameter)) {
                     result = resolver;
                     this.argumentResolverCache.put(parameter, result);
                     break;
+                }
+            }
+            if (result == null) {
+                // 再取普通参数解析器
+                for (ListenerArgumentResolver resolver : this.argumentResolvers) {
+                    if (resolver.supportsParameter(bot, method, parameter)) {
+                        result = resolver;
+                        this.argumentResolverCache.put(parameter, result);
+                        break;
+                    }
                 }
             }
         }
@@ -83,7 +113,9 @@ public class ListenerArgumentResolverComposite implements ListenerArgumentResolv
 
     @Override
     public Object postProcessAfterInitialization(@NotNull Object bean, @NotNull String beanName) throws BeansException {
-        if (bean instanceof ListenerArgumentResolver resolver) {
+        if (bean instanceof CoreListenerArgumentResolver resolver) {
+            this.addCoreResolver(resolver);
+        } else if (bean instanceof ListenerArgumentResolver resolver) {
             this.addResolver(resolver);
         }
         return bean;

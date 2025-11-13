@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
  */
 @Order(10000)
 @Component
-public class CmdListenerArgumentResolver implements ListenerArgumentResolver{
+public class CmdListenerArgumentResolver extends CoreListenerArgumentResolver{
     private static final Map<String, Pattern> patternCache = new ConcurrentHashMap<>();
 
     @Override

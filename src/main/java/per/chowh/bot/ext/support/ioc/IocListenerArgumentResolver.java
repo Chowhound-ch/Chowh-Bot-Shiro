@@ -1,13 +1,12 @@
-package per.chowh.bot.core.registery.support;
+package per.chowh.bot.ext.support.ioc;
 
 import cn.hutool.core.util.ClassUtil;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.registery.domain.EventParam;
+import per.chowh.bot.core.registery.support.ListenerArgumentResolver;
 import per.chowh.bot.core.utils.EventWrapper;
 
 import java.lang.reflect.Parameter;
@@ -19,7 +18,7 @@ import java.util.Map;
  * @since : 2025/8/29 - 13:49
  */
 @Component
-public class IocListenerArgumentResolver implements ListenerArgumentResolver{
+public class IocListenerArgumentResolver implements ListenerArgumentResolver {
     private final ApplicationContext applicationContext;
 
     public IocListenerArgumentResolver(ApplicationContext applicationContext) {

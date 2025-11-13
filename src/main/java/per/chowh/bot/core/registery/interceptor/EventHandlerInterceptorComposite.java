@@ -24,6 +24,7 @@ import java.util.List;
 @Configuration
 public class EventHandlerInterceptorComposite implements EventHandlerInterceptor, BeanPostProcessor {
     private final List<EventHandlerInterceptor> interceptors = new ArrayList<>();
+    private final List<EventHandlerInterceptor> coreInterceptors = new ArrayList<>();
 
     public EventHandlerInterceptorComposite addInterceptor(EventHandlerInterceptor argumentResolver) {
         interceptors.add(argumentResolver);
@@ -41,8 +42,29 @@ public class EventHandlerInterceptorComposite implements EventHandlerInterceptor
         return this;
     }
 
+    public EventHandlerInterceptorComposite addCoreInterceptor(CoreEventHandlerInterceptor argumentResolver) {
+        coreInterceptors.add(argumentResolver);
+        AnnotationAwareOrderComparator.sort(this.coreInterceptors);
+        return this;
+    }
+    public EventHandlerInterceptorComposite addCoreInterceptorLast(CoreEventHandlerInterceptor argumentResolver) {
+        coreInterceptors.add(argumentResolver);
+        return this;
+    }
+
+    public EventHandlerInterceptorComposite addCoreInterceptor(List<? extends CoreEventHandlerInterceptor> argumentResolvers) {
+        this.coreInterceptors.addAll(argumentResolvers);
+        AnnotationAwareOrderComparator.sort(this.coreInterceptors);
+        return this;
+    }
     @Override
     public boolean preHandle(ChowhBot bot, EventMethod method, EventWrapper event) {
+        // 先遍历核心拦截器
+        for (EventHandlerInterceptor interceptor : coreInterceptors) {
+            if (!interceptor.preHandle(bot, method, event)) {
+                return false;
+            }
+        }
         for (EventHandlerInterceptor interceptor : interceptors) {
             if (!interceptor.preHandle(bot, method, event)) {
                 return false;
@@ -57,6 +79,10 @@ public class EventHandlerInterceptorComposite implements EventHandlerInterceptor
         for (int i = interceptors.size() - 1; i >= 0; i--) {
             interceptors.get(i).postHandle(bot, method, event, returnValue);
         }
+        // 后遍历核心拦截器
+        for (int i = coreInterceptors.size() - 1; i >= 0; i--) {
+            coreInterceptors.get(i).postHandle(bot, method, event, returnValue);
+        }
     }
 
     public void sort() {
@@ -65,7 +91,9 @@ public class EventHandlerInterceptorComposite implements EventHandlerInterceptor
 
     @Override
     public Object postProcessAfterInitialization(@NotNull Object bean, @NotNull String beanName) throws BeansException {
-        if (bean instanceof EventHandlerInterceptor interceptor) {
+        if (bean instanceof CoreEventHandlerInterceptor interceptor) {
+            this.addCoreInterceptor(interceptor);
+        } else if (bean instanceof EventHandlerInterceptor interceptor) {
             this.addInterceptor(interceptor);
         }
         return bean;

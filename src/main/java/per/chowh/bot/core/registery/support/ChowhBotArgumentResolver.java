@@ -13,7 +13,7 @@ import per.chowh.bot.core.utils.EventWrapper;
  */
 @Order(1)
 @Component
-public class ChowhBotArgumentResolver implements ListenerArgumentResolver{
+public class ChowhBotArgumentResolver extends CoreListenerArgumentResolver{
     @Override
     public boolean supportsParameter(ChowhBot bot, EventMethod method, EventParam parameter) {
         return parameter.getParameter().getType().isAssignableFrom(ChowhBot.class);
