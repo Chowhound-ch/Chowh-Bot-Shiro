@@ -25,6 +25,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-quartz")
+    implementation("org.springframework.boot:spring-boot-starter-web")
     // https://mvnrepository.com/artifact/javax.cache/cache-api
     implementation("javax.cache:cache-api:1.1.1")
 // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
