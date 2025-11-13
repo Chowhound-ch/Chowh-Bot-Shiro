@@ -18,7 +18,7 @@ import java.util.List;
  * @author : Chowhound
  * @since : 2025/9/3 - 13:44
  */
-@SuppressWarnings("UnusedReturnValue")
+@SuppressWarnings({"UnusedReturnValue", "unused"})
 @Getter
 @Slf4j
 @Configuration

@@ -7,7 +7,7 @@ plugins {
 
 }
 
-group = "per.chowhound.bot"
+group = "per.chowh.bot"
 version = "0.0.1"
 
 
