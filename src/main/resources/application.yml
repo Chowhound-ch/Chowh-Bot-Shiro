@@ -35,12 +35,12 @@ spring:
 #    password: ${dev.database.password}
     driver-class-name: org.sqlite.JDBC
     hikari:
+      maximum-pool-size: 10
+      idle-timeout: 600000    # 10分钟
+      max-lifetime: 1200000   # 20分钟，显著大于idle-timeout
       connection-timeout: 10000
       validation-timeout: 3000
-      idle-timeout: 60000
       login-timeout: 5
-      max-lifetime: 60000
-      maximum-pool-size: 10
       minimum-idle: 5
       read-only: false
   cache:

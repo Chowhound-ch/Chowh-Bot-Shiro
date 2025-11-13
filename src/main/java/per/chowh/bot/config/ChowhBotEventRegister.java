@@ -2,6 +2,8 @@ package per.chowh.bot.config;
 
 import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Role;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.common.constants.Constants;
@@ -15,6 +17,7 @@ import java.lang.reflect.Method;
  * @author : Chowhound
  * @since : 2025/9/5 - 9:50
  */
+@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @Component
 public class ChowhBotEventRegister extends EventRegister {
 
