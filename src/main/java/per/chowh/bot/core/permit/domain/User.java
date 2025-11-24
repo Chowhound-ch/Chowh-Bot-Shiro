@@ -7,6 +7,8 @@ import lombok.EqualsAndHashCode;
 import per.chowh.bot.common.domain.BaseEntity;
 import per.chowh.bot.core.permit.enums.PermissionEnum;
 
+import java.util.Date;
+
 /**
  *
  * @TableName user
@@ -19,6 +21,8 @@ public class User extends BaseEntity {
     private Long id;
 
     private Long userId;
+
+    private String password;
 
     @TableField("role")
     private PermissionEnum role;

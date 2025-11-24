@@ -11,11 +11,13 @@
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
             <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+            <result property="password" column="password" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="user_fields">
         id, user_id, role, 
-        create_time, modify_time, is_delete
+        create_time, modify_time, is_delete, 
+        password
     </sql>
 
     <sql id="user_as_fields">
@@ -24,7 +26,8 @@
         role as "${prefix}role", 
         create_time as "${prefix}create_time", 
         modify_time as "${prefix}modify_time", 
-        is_delete as "${prefix}is_delete"
+        is_delete as "${prefix}is_delete", 
+        password as "${prefix}password"
     </sql>
     <sql id="user_t_as_fields">
         ${tb_alias}.id as "${prefix}id", 
@@ -32,6 +35,7 @@
         ${tb_alias}.role as "${prefix}role", 
         ${tb_alias}.create_time as "${prefix}create_time", 
         ${tb_alias}.modify_time as "${prefix}modify_time", 
-        ${tb_alias}.is_delete as "${prefix}is_delete"
+        ${tb_alias}.is_delete as "${prefix}is_delete", 
+        ${tb_alias}.password as "${prefix}password"
     </sql>
 </mapper>
