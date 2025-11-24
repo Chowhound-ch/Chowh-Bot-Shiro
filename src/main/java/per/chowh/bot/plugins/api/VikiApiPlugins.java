@@ -25,7 +25,7 @@ import java.util.List;
 @Component
 public class VikiApiPlugins {
 
-    public static final String BASE_API = "http://wolves.vip:4399/v2";
+    public static final String BASE_API = "http://chowh.top:4399/v2";
 
     @Autowired
     private ChowhBotContainer chowhBotContainer;
