@@ -59,14 +59,14 @@ public class ImagesMsgStorage {
         }
     }
 
-    @EventListener(name = "pixiv图r18", cmd = "/?来?点?\\s*(?<tags>.*)?\\s*(?<type>(涩|色|瑟))图", groupStatus = GroupStatusEnum.FULL)
+    @EventListener(name = "pixiv图r18", cmd = "/?来点\\s*(?<tags>.*)?\\s*(?<type>(涩|色|瑟))图", groupStatus = GroupStatusEnum.FULL)
     public void sendImagesR18(ChowhBot bot, MessageEvent event, String tags) throws IOException {
         List<String> tagList = StrUtil.isBlank(tags) ? Collections.emptyList() : Arrays.asList(tags.split("[,，]"));
         List<PixivImg> image = PixivApi.getImage(tagList, true);
         bot.sendForwardMsg(event, getPixivMsg(image));
     }
 
-    @EventListener(name = "pixiv图", cmd = "/?来?点?\\s*(?<tags>.*[^(涩|色|瑟)])\\s*图")
+    @EventListener(name = "pixiv图", cmd = "/?来点\\s*(?<tags>.*[^(涩|色|瑟)])\\s*图")
     public void sendImages(ChowhBot bot, MessageEvent event, String tags) throws IOException {
         List<String> tagList = StrUtil.isBlank(tags) ? Collections.emptyList() : Arrays.asList(tags.split("[,，]"));
         List<PixivImg> image = PixivApi.getImage(tagList, false);

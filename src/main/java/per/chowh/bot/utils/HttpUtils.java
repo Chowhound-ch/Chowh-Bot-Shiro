@@ -19,10 +19,10 @@ public class HttpUtils {
     public static final MediaType JSON = MediaType.get("application/json");
     static {
         BASE_CLIENT = new OkHttpClient.Builder()
-                .callTimeout(Duration.ofSeconds(60))
-                .connectTimeout(Duration.ofSeconds(60))
-                .readTimeout(Duration.ofSeconds(60))
-                .writeTimeout(Duration.ofSeconds(60)).build();
+                .callTimeout(Duration.ofSeconds(120))
+                .connectTimeout(Duration.ofSeconds(120))
+                .readTimeout(Duration.ofSeconds(120))
+                .writeTimeout(Duration.ofSeconds(120)).build();
     }
 
 
