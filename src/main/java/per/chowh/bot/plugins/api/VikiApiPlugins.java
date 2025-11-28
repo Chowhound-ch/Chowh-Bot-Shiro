@@ -1,7 +1,6 @@
 package per.chowh.bot.plugins.api;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.mikuac.shiro.common.utils.OneBotMedia;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -10,12 +9,15 @@ import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.bot.domain.ChowhBotContainer;
 import per.chowh.bot.core.registery.annotation.EventListener;
 import per.chowh.bot.core.utils.MsgBuilder;
+import per.chowh.bot.plugins.api.entity.EpicFreeGameInfo;
+import per.chowh.bot.utils.DateUtils;
 import per.chowh.bot.utils.HttpProxyUtils;
 import per.chowh.bot.utils.HttpUtils;
 import per.chowh.bot.utils.JacksonUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,7 +33,7 @@ public class VikiApiPlugins {
     private ChowhBotContainer chowhBotContainer;
 
     @Scheduled(cron ="0 0 9 * * ?")
-    public void sayMidRemind() throws IOException {
+    public void getGroupTitle() throws IOException {
         ChowhBot bot = chowhBotContainer.getDefaultBot();
         bot.sendGroupMsg(812199522L, getTheNewsMsg(), false);
     }
@@ -44,8 +46,7 @@ public class VikiApiPlugins {
 
     private String getTheNewsMsg() throws IOException {
         //        byte[] bytes = HttpUtils.doGetBytes(BASE_API + "/60s?encoding=image-proxy");
-        String resStr = HttpUtils.doGetStr(BASE_API + "/60s");
-        JsonNode node = JacksonUtil.readTree(resStr);
+        JsonNode node = HttpUtils.doGetJson(BASE_API + "/60s");
         byte[] bytes = null;
         if (node != null && !node.isEmpty()) {
             int code = node.get("code").intValue();
@@ -62,5 +63,54 @@ public class VikiApiPlugins {
                 .build();
     }
 
+    @Scheduled(cron ="0 0 10 * * 5")
+    public void getEpicWeekFree() throws IOException {
+        ChowhBot bot = chowhBotContainer.getDefaultBot();
+        bot.sendGroupForwardMsg(812199522L, getEpicWeekFreeMsg(), "Epic周免");
+    }
+    @EventListener(cmd = "epic周免", name = "epic周免")
+    public void getEpicWeekFree(ChowhBot bot, GroupMessageEvent event) throws IOException {
+        List<String> epicWeekFreeMsg = getEpicWeekFreeMsg();
+        if (epicWeekFreeMsg.isEmpty()) {
+            bot.sendGroupMsg(event.getGroupId(), "查询失败", false);
+        }
+        bot.sendForwardMsg(event, epicWeekFreeMsg);
+    }
 
+
+    private List<String> getEpicWeekFreeMsg() throws IOException {
+        JsonNode node = HttpUtils.doGetJson(BASE_API + "/epic");
+        List<String> msgList = new ArrayList<>();
+        if (node != null && !node.isEmpty()) {
+            int code = node.get("code").intValue();
+            if (code == 200) {
+                List<EpicFreeGameInfo> epicFrees = JacksonUtil.readListValue(node.get("data"), EpicFreeGameInfo.class);
+                if (epicFrees != null && !epicFrees.isEmpty()) {
+                    int curWeek = 0, lastWeek = 0;
+                    long time = new Date().getTime();
+                    for (EpicFreeGameInfo epicFree : epicFrees) {
+                        MsgBuilder builder = new MsgBuilder();
+                        builder.img(HttpUtils.doGetBytes(epicFree.getCover()))
+                                .text("◉ 名称：").text(epicFree.getTitle()).text("\n")
+                                .text("◉ 原价：").text(epicFree.getOriginalPriceDesc()).text("\n")
+                                .text("◉ 限免开始：").text(DateUtils.formatCN(epicFree.getFreeStart())).text("\n")
+                                .text("◉ 限免结束：").text(DateUtils.formatCN(epicFree.getFreeEnd())).text("\n")
+                                .text("◉ 发行：").text(epicFree.getSeller()).text("\n")
+                                .text("◉ 简介：").text(epicFree.getDescription()).text("\n")
+                                .text("◉ 链接：").text(epicFree.getLink());
+                        msgList.add(builder.build());
+                        // 统计总共限免游戏数量
+                        if (time > epicFree.getFreeStart().getTime() && time < epicFree.getFreeEnd().getTime()) {
+                            curWeek++;
+                        } else {
+                            lastWeek++;
+                        }
+                    }
+                    msgList.add(0, "本周Epic限时免费" + curWeek + "款游戏，此外还有" + lastWeek +"款游戏即将限免");
+                    return msgList;
+                }
+            }
+        }
+        return msgList;
+    }
 }

@@ -2,6 +2,7 @@ package per.chowh.bot.utils;
 
 import cn.hutool.core.util.URLUtil;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
 import okhttp3.*;
 
 import java.io.IOException;
@@ -25,12 +26,11 @@ public class HttpUtils {
                 .writeTimeout(Duration.ofSeconds(120)).build();
     }
 
-
+    public static JsonNode doGetJson(String url) throws IOException {
+        return JacksonUtil.readTree(doGetStr(BASE_CLIENT, url, null));
+    }
     public static String doGetStr(String url) throws IOException {
         return doGetStr(BASE_CLIENT, url, null);
-    }
-    public static byte[] doGetBytes(String url) throws IOException {
-        return doGetBytes(BASE_CLIENT, url, null);
     }
     public static String doGetStr(OkHttpClient client, String url) throws IOException {
         return doGetStr(client, url, null);
@@ -39,6 +39,9 @@ public class HttpUtils {
         try (Response resp = doGet(client, url, params)) {
             return resp.body().string();
         }
+    }
+    public static byte[] doGetBytes(String url) throws IOException {
+        return doGetBytes(BASE_CLIENT, url, null);
     }
 
     public static byte[] doGetBytes(OkHttpClient client, String url, Map<String, ?> params) throws IOException {
