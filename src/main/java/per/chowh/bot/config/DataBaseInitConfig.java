@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.utils.ConfigUtils;
 import per.chowh.bot.utils.FileUtils;
 
