@@ -1,5 +1,7 @@
 package per.chowh.bot.utils;
 
+import cn.hutool.core.util.StrUtil;
+
 /**
  * @author : Chowhound
  * @since : 2025/9/4 - 11:12
@@ -10,6 +12,9 @@ public class StringUtils {
     public static <T> T convertStringToType(String str, Class<T> targetType) {
         if (str == null || targetType == String.class) {
             return (T) str;
+        }
+        if (StrUtil.isBlank(str)) {
+            return null;
         }
         if (targetType == Integer.class || targetType == int.class) {
             return (T) Integer.valueOf(str);

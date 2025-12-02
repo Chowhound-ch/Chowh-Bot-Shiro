@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.chowh.bot.ext.distribute.mapper.EventPermitMapper">
+
+    <resultMap id="BaseResultMap" type="per.chowh.bot.ext.distribute.domain.EventPermit">
+            <id property="permitId" column="permit_id" jdbcType="INTEGER"/>
+            <result property="eventFlag" column="event_flag" jdbcType="VARCHAR"/>
+            <result property="permitType" column="permit_type" jdbcType="INTEGER"/>
+            <result property="target" column="target" jdbcType="BIGINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="eventPermit_fields">
+        permit_id, event_flag, permit_type, 
+        target, create_time, modify_time, 
+        is_delete
+    </sql>
+
+    <sql id="eventPermit_as_fields">
+        permit_id as "${prefix}permit_id", 
+        event_flag as "${prefix}event_flag", 
+        permit_type as "${prefix}permit_type", 
+        target as "${prefix}target", 
+        create_time as "${prefix}create_time", 
+        modify_time as "${prefix}modify_time", 
+        is_delete as "${prefix}is_delete"
+    </sql>
+    <sql id="eventPermit_t_as_fields">
+        ${tb_alias}.permit_id as "${prefix}permit_id", 
+        ${tb_alias}.event_flag as "${prefix}event_flag", 
+        ${tb_alias}.permit_type as "${prefix}permit_type", 
+        ${tb_alias}.target as "${prefix}target", 
+        ${tb_alias}.create_time as "${prefix}create_time", 
+        ${tb_alias}.modify_time as "${prefix}modify_time", 
+        ${tb_alias}.is_delete as "${prefix}is_delete"
+    </sql>
+</mapper>

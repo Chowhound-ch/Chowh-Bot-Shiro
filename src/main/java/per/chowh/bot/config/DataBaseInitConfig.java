@@ -13,6 +13,7 @@ import per.chowh.bot.utils.ConfigUtils;
 import per.chowh.bot.utils.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -32,6 +33,17 @@ public class DataBaseInitConfig {
     public static final String SQL_BASE_PATH;
     static {
         SQL_BASE_PATH = ConfigUtils.CONFIG_PATH + "db/";
+        String dbFile = ChowhBotConfig.getConfig("dev.db-file");
+        File file = new File(dbFile);
+        if (!file.exists()) {
+            try {
+                if (file.createNewFile()) {
+                    log.info("创建数据库文件：{}", dbFile);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @PostConstruct

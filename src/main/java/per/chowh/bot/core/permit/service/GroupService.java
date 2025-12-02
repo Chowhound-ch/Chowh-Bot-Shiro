@@ -27,7 +27,6 @@ public class GroupService extends ServiceImpl<GroupMapper, Group> {
     @Autowired
     private GroupService self;
 
-    @Cacheable(cacheNames = "groupList", key = "#statusEnum")
     public List<Group> getByGroupStateGe(GroupStatusEnum statusEnum) {
         LambdaQueryWrapper<Group> wrapper = new LambdaQueryWrapper<>();
         wrapper.ge(Group::getGroupStatus, statusEnum);

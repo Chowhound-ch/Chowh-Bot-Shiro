@@ -92,6 +92,14 @@ public class ChowhBot extends Bot implements NapcatExtendApi {
         );
         return sendGroupForwardMsg(groupId, forwardMsg);
     }
+    public ActionData<MsgId> sendPrivateForwardMsg(long userId, List<String> msgList, String nickName) {
+        List<Map<String, Object>> forwardMsg = ShiroUtils.generateForwardMsg(
+                this.getSelfId(),
+                nickName,
+                msgList
+        );
+        return sendPrivateForwardMsg(userId, forwardMsg);
+    }
     public ActionData<MsgId> sendForwardMsg(MessageEvent event, List<String> msgList) {
         List<Map<String, Object>> forwardMsg = ShiroUtils.generateForwardMsg(
                 event.getUserId(),

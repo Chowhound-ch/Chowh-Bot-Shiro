@@ -22,11 +22,21 @@
     <cache alias="group" uses-template="defaults">
         <value-type>per.chowh.bot.core.permit.domain.Group</value-type>
     </cache>
-    <cache alias="groupList" uses-template="defaults">
-        <value-type>java.util.List</value-type>
-    </cache>
+<!--    <cache alias="groupList" uses-template="defaults">-->
+<!--        <value-type>java.util.List</value-type>-->
+<!--    </cache>-->
     <cache alias="user" uses-template="defaults">
         <value-type>per.chowh.bot.core.permit.domain.User</value-type>
     </cache>
+    <cache alias="eventPermit" uses-template="defaults">
+        <value-type>per.chowh.bot.ext.distribute.domain.EventPermit</value-type>
+    </cache>
+    <cache alias="dataDict" uses-template="defaults">
+        <key-type>java.lang.String</key-type>
+        <value-type>per.chowh.bot.ext.dict.domain.DataDict</value-type>
+    </cache>
+<!--    <cache alias="dataDict" uses-template="defaults">-->
+<!--        <value-type>per.chowh.bot.ext.dict.</value-type>-->
+<!--    </cache>-->
 
 </config>

@@ -15,13 +15,20 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom("com.baomidou:mybatis-plus-bom:3.5.12")
+    }
+}
+
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
     implementation("com.mikuac:shiro:2.5.0")
     implementation("cn.hutool:hutool-all:5.7.10")
-    implementation("com.baomidou:mybatis-plus-spring-boot3-starter:3.5.12")
+    implementation("com.baomidou:mybatis-plus-spring-boot3-starter")
+    implementation("com.baomidou:mybatis-plus-jsqlparser")
     implementation("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-quartz")

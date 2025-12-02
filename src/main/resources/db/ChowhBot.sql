@@ -26,7 +26,7 @@ create table if not exists `user`
 
 create table if not exists `event_permit`
 (
-    permit_id   bigint
+    permit_id   INTEGER
         constraint event_permit_pk
             primary key autoincrement,
     event_flag  TEXT,
@@ -37,3 +37,15 @@ create table if not exists `event_permit`
     is_delete   integer default 0 not null
 );
 
+create table if not exists `data_dict`
+(
+    dict_id     INTEGER
+    constraint data_dict_pk
+    primary key autoincrement,
+    dict_code   TEXT,
+    dict_name   TEXT,
+    create_time datetime,
+    modify_time datetime,
+    is_delete   integer default 0,
+    dict_value TEXT
+)

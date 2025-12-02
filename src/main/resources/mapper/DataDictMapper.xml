@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.chowh.bot.ext.dict.mapper.DataDictMapper">
+
+    <resultMap id="BaseResultMap" type="per.chowh.bot.ext.dict.domain.DataDict">
+            <id property="dictId" column="dict_id" jdbcType="INTEGER"/>
+            <result property="dictCode" column="dict_code" jdbcType="VARCHAR"/>
+            <result property="dictName" column="dict_name" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+            <result property="dictValue" column="dict_value" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="dataDict_fields">
+        dict_id, dict_code, dict_name, 
+        create_time, modify_time, is_delete, 
+        dict_value
+    </sql>
+
+    <sql id="dataDict_as_fields">
+        dict_id as "${prefix}dict_id", 
+        dict_code as "${prefix}dict_code", 
+        dict_name as "${prefix}dict_name", 
+        create_time as "${prefix}create_time", 
+        modify_time as "${prefix}modify_time", 
+        is_delete as "${prefix}is_delete", 
+        dict_value as "${prefix}dict_value"
+    </sql>
+    <sql id="dataDict_t_as_fields">
+        ${tb_alias}.dict_id as "${prefix}dict_id", 
+        ${tb_alias}.dict_code as "${prefix}dict_code", 
+        ${tb_alias}.dict_name as "${prefix}dict_name", 
+        ${tb_alias}.create_time as "${prefix}create_time", 
+        ${tb_alias}.modify_time as "${prefix}modify_time", 
+        ${tb_alias}.is_delete as "${prefix}is_delete", 
+        ${tb_alias}.dict_value as "${prefix}dict_value"
+    </sql>
+    <select id="listDictNamePage" resultType="java.lang.String">
+        select t.dict_code from data_dict t where t.is_delete = 0 group by t.dict_name
+    </select>
+</mapper>

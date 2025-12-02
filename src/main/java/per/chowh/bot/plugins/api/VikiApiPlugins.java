@@ -9,6 +9,7 @@ import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.bot.domain.ChowhBotContainer;
 import per.chowh.bot.core.registery.annotation.EventListener;
 import per.chowh.bot.core.utils.MsgBuilder;
+import per.chowh.bot.ext.distribute.MsgDistributeService;
 import per.chowh.bot.plugins.api.entity.EpicFreeGameInfo;
 import per.chowh.bot.utils.DateUtils;
 import per.chowh.bot.utils.HttpProxyUtils;
@@ -28,14 +29,17 @@ import java.util.List;
 public class VikiApiPlugins {
 
     public static final String BASE_API = "http://chowh.top:4399/v2";
+    public static final String EPIC_FREE = "EPIC_FREE";
+    public static final String NEWS = "60S_NEWS";
 
     @Autowired
     private ChowhBotContainer chowhBotContainer;
+    @Autowired
+    private MsgDistributeService distributeService;
 
     @Scheduled(cron ="0 0 9 * * ?")
     public void getGroupTitle() throws IOException {
-        ChowhBot bot = chowhBotContainer.getDefaultBot();
-        bot.sendGroupMsg(812199522L, getTheNewsMsg(), false);
+        distributeService.distributeMsg(getTheNewsMsg(), NEWS);
     }
 
 
@@ -65,9 +69,9 @@ public class VikiApiPlugins {
 
     @Scheduled(cron ="0 0 10 * * 5")
     public void getEpicWeekFree() throws IOException {
-        ChowhBot bot = chowhBotContainer.getDefaultBot();
-        bot.sendGroupForwardMsg(812199522L, getEpicWeekFreeMsg(), "Epic周免");
+        distributeService.distributeForwardMsg(getEpicWeekFreeMsg(), EPIC_FREE, "Epic周免");
     }
+
     @EventListener(cmd = "epic周免", name = "epic周免")
     public void getEpicWeekFree(ChowhBot bot, GroupMessageEvent event) throws IOException {
         List<String> epicWeekFreeMsg = getEpicWeekFreeMsg();
