@@ -1,5 +1,6 @@
 package per.chowh.bot.core.registery.api.shiro;
 
+import com.mikuac.shiro.annotation.AnyMessageHandler;
 import com.mikuac.shiro.annotation.GroupMessageHandler;
 import com.mikuac.shiro.annotation.PrivateMessageHandler;
 import com.mikuac.shiro.annotation.common.Shiro;
@@ -24,15 +25,15 @@ import per.chowh.bot.core.utils.EventWrapper;
 @SuppressWarnings("unused")
 public class ShiroApi extends AbstractListenerApi {
 
-    @GroupMessageHandler
-    public void groupMessageHandler(Bot bot, GroupMessageEvent event) {
+    @AnyMessageHandler
+    public void groupMessageHandler(Bot bot, AnyMessageEvent event) {
         exec(bot, event);
     }
 
-    @PrivateMessageHandler
-    public void privateMessageHandler(Bot bot, PrivateMessageEvent event) {
-        exec(bot, event);
-    }
+//    @PrivateMessageHandler
+//    public void privateMessageHandler(Bot bot, PrivateMessageEvent event) {
+//        exec(bot, event);
+//    }
     protected void exec(Bot bot, Event event) {
         execute((ChowhBot) bot, new EventWrapper(event));
     }

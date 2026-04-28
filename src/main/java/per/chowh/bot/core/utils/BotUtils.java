@@ -9,8 +9,6 @@ import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.bot.domain.ChowhBotContainer;
@@ -22,12 +20,15 @@ import java.util.Objects;
  * @since : 2025/8/6 - 10:36
  */
 @Component
-public class BotUtils implements ApplicationRunner {
+public class BotUtils{
     private static final BotWrapper botWrapper = new BotWrapper();
     @Autowired
     private ChowhBotContainer botContainer;
 
     public static ChowhBot getBot(){
+        if (botWrapper.getBot() == null) {
+            botWrapper.setBot(ChowhBotContainer.getDefaultBot());
+        }
         return botWrapper.getBot();
     }
 
@@ -69,13 +70,5 @@ public class BotUtils implements ApplicationRunner {
             }
         }
         return null;
-    }
-
-
-    @Override
-    public void run(ApplicationArguments args) {
-        botContainer.forEach((k, v) ->{
-            botWrapper.setBot(v);
-        });
     }
 }

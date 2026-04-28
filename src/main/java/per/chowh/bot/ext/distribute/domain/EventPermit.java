@@ -3,11 +3,13 @@ package per.chowh.bot.ext.distribute.domain;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import per.chowh.bot.common.domain.BaseEntity;
 
 /**
  * @TableName event_permit
  */
+@EqualsAndHashCode(callSuper = true)
 @TableName(value ="event_permit")
 @Data
 public class EventPermit extends BaseEntity {

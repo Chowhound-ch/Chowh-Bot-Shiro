@@ -1,5 +1,6 @@
 package per.chowh.bot.ext.distribute;
 
+import cn.hutool.core.util.StrUtil;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +86,12 @@ public class MsgDistributePlugin {
         } else {
             eventPermits = eventPermitService.listByTargetAndType(event.getUserId(), 0);
         }
-        bot.sendMsg(event, getPushListMsg(eventPermits), false);
+        String msg = getPushListMsg(eventPermits);
+        if (StrUtil.isBlank(msg)) {
+            bot.sendMsg(event, "暂未订阅任何消息", true);
+        } else {
+            bot.sendMsg(event, msg, false);
+        }
     }
 
     private String getPushListMsg(List<EventPermit> eventPermits) {

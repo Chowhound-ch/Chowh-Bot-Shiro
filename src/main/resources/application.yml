@@ -47,6 +47,14 @@ spring:
     jcache:
       config: classpath:ehcache.xml
     type: jcache
+  freemarker:
+    # 启用 freemarker 模板
+    enabled: true
+    suffix: .ftl
+    template-loader-path:
+      - classpath:/templates/
+  mvc:
+    static-path-pattern: /static/**
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

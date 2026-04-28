@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author : Chowhound
@@ -18,6 +19,10 @@ import java.util.List;
 @Slf4j
 public class ProcessUtils {
     public static String exec(ProcessBuilder processBuilder){
+        Map<String, String> processEnv = processBuilder.environment();
+        processEnv.put("LANG", "en_US.UTF-8");
+        processEnv.put("LC_ALL", "en_US.UTF-8");
+        processEnv.put("LC_CTYPE", "UTF-8");
         return String.join("", execLines(processBuilder));
     }
 

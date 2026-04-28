@@ -3,6 +3,7 @@ package per.chowh.bot.plugins.img;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.mikuac.shiro.common.utils.ShiroUtils;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
 import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 import com.mikuac.shiro.enums.MsgTypeEnum;
@@ -18,6 +19,7 @@ import per.chowh.bot.ext.filter.annotation.EventFilter;
 import per.chowh.bot.ext.support.msgarr.domain.ArrayMsgFlatList;
 import per.chowh.bot.plugins.img.api.PixivApi;
 import per.chowh.bot.plugins.img.entity.PixivImg;
+import per.chowh.bot.plugins.utils.RespConstants;
 import per.chowh.bot.utils.FileUtils;
 import per.chowh.bot.utils.HttpProxyUtils;
 
@@ -63,14 +65,22 @@ public class ImagesMsgStorage {
     public void sendImagesR18(ChowhBot bot, MessageEvent event, String tags) throws IOException {
         List<String> tagList = StrUtil.isBlank(tags) ? Collections.emptyList() : Arrays.asList(tags.split("[,，]"));
         List<PixivImg> image = PixivApi.getImage(tagList, true);
-        bot.sendForwardMsg(event, getPixivMsg(image));
+        if (image != null && image.isEmpty()) {
+            bot.sendMsg(event, MsgBuilder.replyBuilder(event).text(RespConstants.NOT_FOUND_R).build(), false);
+        } else {
+            bot.sendForwardMsg(event, getPixivMsg(image));
+        }
     }
 
     @EventListener(name = "pixiv图", cmd = "/?来点\\s*(?<tags>.*[^(涩|色|瑟)])\\s*图")
     public void sendImages(ChowhBot bot, MessageEvent event, String tags) throws IOException {
         List<String> tagList = StrUtil.isBlank(tags) ? Collections.emptyList() : Arrays.asList(tags.split("[,，]"));
         List<PixivImg> image = PixivApi.getImage(tagList, false);
-        bot.sendForwardMsg(event, getPixivMsg(image));
+        if (image != null && image.isEmpty()) {
+            bot.sendMsg(event, MsgBuilder.replyBuilder(event).text(RespConstants.NOT_FOUND_R).build(), false);
+        } else {
+            bot.sendForwardMsg(event, getPixivMsg(image));
+        }
     }
 
     private List<String> getPixivMsg(List<PixivImg> image) throws IOException {

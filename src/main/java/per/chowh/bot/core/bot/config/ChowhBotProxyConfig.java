@@ -11,8 +11,8 @@ import per.chowh.bot.core.bot.domain.ChowhBotContainer;
  */
 @Configuration
 public class ChowhBotProxyConfig {
-    @Bean
-    public ChowhBotContainer chowhBotContainer(BotContainer  botContainer) {
-        return new ChowhBotContainer(botContainer.robots);
-    }
+//    @Bean
+//    public ChowhBotContainer chowhBotContainer(BotContainer  botContainer) {
+//        return new ChowhBotContainer();
+//    }
 }

@@ -10,14 +10,12 @@ import com.mikuac.shiro.core.BotPlugin;
 import com.mikuac.shiro.dto.action.common.ActionData;
 import com.mikuac.shiro.dto.action.common.ActionRaw;
 import com.mikuac.shiro.dto.action.common.MsgId;
-import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
 import com.mikuac.shiro.handler.ActionHandler;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.servlet.mvc.LastModified;
 import org.springframework.web.socket.WebSocketSession;
 import per.chowh.bot.core.bot.action.NapcatExtendApi;
 import per.chowh.bot.core.bot.response.LatestMsgResp;
@@ -76,12 +74,16 @@ public class ChowhBot extends Bot implements NapcatExtendApi {
     }
     public ActionRaw uploadFile(MessageEvent event, String file, String name) {
         if (ActionParams.PRIVATE.equals(event.getMessageType())) {
-            return uploadPrivateFile(event.getUserId(), file, file);
+            return uploadPrivateFile(event.getUserId(), file, name);
         }
         if (ActionParams.GROUP.equals(event.getMessageType())) {
-            return uploadGroupFile(((GroupMessageEvent) event).getGroupId(), file, file);
+            return uploadGroupFile(((GroupMessageEvent) event).getGroupId(), file, name);
         }
         return null;
+    }
+
+    public ActionRaw uploadFilePrivate(String file, String name) {
+        return uploadPrivateFile(getSelfId(), file, name);
     }
 
     public ActionData<MsgId> sendGroupForwardMsg(long groupId, List<String> msgList, String nickName) {

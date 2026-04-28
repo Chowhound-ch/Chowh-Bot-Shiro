@@ -1,4 +1,4 @@
-jmcomic~=2.6.4
+jmcomic
 pika~=1.3.2
 img2pdf
 plugin_jm_server

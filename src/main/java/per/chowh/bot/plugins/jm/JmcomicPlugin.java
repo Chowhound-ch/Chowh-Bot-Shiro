@@ -1,16 +1,24 @@
 package per.chowh.bot.plugins.jm;
 
 import cn.hutool.core.util.StrUtil;
+import com.mikuac.shiro.common.utils.EventUtils;
 import com.mikuac.shiro.dto.action.common.ActionData;
+import com.mikuac.shiro.dto.action.common.ActionRaw;
 import com.mikuac.shiro.dto.action.common.MsgId;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
+import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
+import com.mikuac.shiro.enums.MsgTypeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.permit.enums.GroupStatusEnum;
 import per.chowh.bot.core.registery.annotation.EventListener;
+import per.chowh.bot.core.utils.BotUtils;
+import per.chowh.bot.core.utils.ListenerUtils;
 import per.chowh.bot.core.utils.MsgBuilder;
+import per.chowh.bot.core.utils.MsgUtils;
+import per.chowh.bot.ext.filter.annotation.EventFilter;
 import per.chowh.bot.plugins.jm.domain.JmAlbum;
 import per.chowh.bot.plugins.jm.domain.JmPhoto;
 import per.chowh.bot.plugins.jm.domain.JmRelated;
@@ -43,32 +51,41 @@ public class JmcomicPlugin{
 
     @EventListener(value = "/?[jJ][mM]\\s*(?<jmCode>\\d{3,9})", groupStatus = GroupStatusEnum.FULL)
     public void jmcomic(ChowhBot bot, MessageEvent event, String jmCode) {
-        String res = getRes(jmCode, password);
+        String pwd = getPwd(event);
+        String res = getRes(jmCode, pwd);
         JmPhoto node = JacksonUtil.readValue(res, JmPhoto.class);
         if (node == null){
             return;
         }
 
         String pdfFile = "file://" + jmPath + "pdf/" + jmCode + ".pdf";
-        String pdfName = jmCode + "[密码" + password +"].pdf";
+        String pdfName = jmCode + "[密·码" + pwd +"].pdf";
         bot.uploadFile(event,  pdfFile, pdfName);
         bot.sendForwardMsg(event, getJmMsgList(node));
     }
 
     @EventListener(value = "(?<jmCode>\\d{5,7})", groupStatus =  GroupStatusEnum.FULL)
     public void jmcomicSimple(ChowhBot bot, MessageEvent event, String jmCode) {
-        String res = getRes(jmCode, password);
+        String pwd = getPwd(event);
+        String res = getRes(jmCode, pwd);
         JmPhoto node = JacksonUtil.readValue(res, JmPhoto.class);
         if (node == null){
             bot.sendMsg(event, "jm没搜到", true);
             return;
         }
         String pdfFile = "file://" + jmPath + "pdf/" + jmCode + ".pdf";
-        String pdfName = jmCode + "[密码" + password +"].pdf";
+        String pdfName = jmCode + " mm·" + pwd +".pdf";
+//        String pdfName = jmCode + ".pdf";
 
-        bot.uploadFile(event,  pdfFile, pdfName);
+        ActionRaw actionRaw = bot.uploadFilePrivate(pdfFile, pdfName);
         bot.sendForwardMsg(event, getJmMsgList(node));
     }
+
+    @EventListener(value = "(?<jmCode>\\d{3,9})\\[密码:(?<group>\\d{6,12})\\]\\.pdf", name = "上传文件")
+    public void sendPdf(ChowhBot bot, PrivateMessageEvent event, String group) {
+        System.out.println(group);
+    }
+
 
     private List<String> getJmMsgList(JmPhoto photo) {
         String title = photo.getName();
@@ -79,26 +96,26 @@ public class JmcomicPlugin{
         );
         msgList.add("标题：" + "[" + photo.getPhotoId() + "]" + title);
         msgList.add("标签：" + String.join(", ",  photo.getTags()));
-        msgList.add("相关推荐：");
-        JmAlbum fromAlbum = photo.getFromAlbum();
-        if (fromAlbum != null){
-            List<JmRelated> relatedList = fromAlbum.getRelatedList();
-            if (relatedList != null){
-                relatedList.forEach(related -> {
-                    MsgBuilder builder = MsgBuilder.builder();
-//                    不发图片
-//                    if (StrUtil.isNotBlank(related.getImage())){
-//                        builder.img(related.getImage());
+//        msgList.add("相关推荐：");
+//        JmAlbum fromAlbum = photo.getFromAlbum();
+//        if (fromAlbum != null){
+//            List<JmRelated> relatedList = fromAlbum.getRelatedList();
+//            if (relatedList != null){
+//                relatedList.forEach(related -> {
+//                    MsgBuilder builder = MsgBuilder.builder();
+////                    不发图片
+////                    if (StrUtil.isNotBlank(related.getImage())){
+////                        builder.img(related.getImage());
+////                    }
+//                    builder.text("jm号：" + related.getId() + "\n标题：" + related.getName());
+//                    if (StrUtil.isNotBlank(related.getAuthor())){
+//                        builder.text("\n作者：" + related.getAuthor());
 //                    }
-                    builder.text("jm号：" + related.getId() + "\n标题：" + related.getName());
-                    if (StrUtil.isNotBlank(related.getAuthor())){
-                        builder.text("\n作者：" + related.getAuthor());
-                    }
-                    msgList.add(builder.build());
-                });
-            }
-
-        }
+//                    msgList.add(builder.build());
+//                });
+//            }
+//
+//        }
         return msgList;
     }
 
@@ -114,6 +131,15 @@ public class JmcomicPlugin{
     private String imageBlur(String from, String to) {
         ProcessBuilder processBuilder = new ProcessBuilder(PYTHON_PATH, PYTHON_SCRIPTS_PATH + "image_blur.py", from, to);
         return ProcessUtils.exec(processBuilder);
+    }
+
+    private String getPwd(MessageEvent event) {
+        Long groupId = MsgUtils.getGroupId(event);
+        String pwd = "";
+        if (groupId != null) {
+            pwd = groupId.toString();
+        }
+        return pwd;
     }
 
 }

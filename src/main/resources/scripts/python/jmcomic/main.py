@@ -4,6 +4,8 @@ import jmcomic
 import json
 import os
 
+# os.environ['JM_CONFIG'] = './option.yml'
+# os.environ['JM_DIR'] = './pdf'
 # Press the green button in the gutter to run the script.
 # 命令：python main.py download_album
 if __name__ == '__main__':

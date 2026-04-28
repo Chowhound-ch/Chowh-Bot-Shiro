@@ -25,7 +25,7 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    implementation("com.mikuac:shiro:2.5.0")
+    implementation("com.mikuac:shiro:2.5.2")
     implementation("cn.hutool:hutool-all:5.7.10")
     implementation("com.baomidou:mybatis-plus-spring-boot3-starter")
     implementation("com.baomidou:mybatis-plus-jsqlparser")
@@ -33,6 +33,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-quartz")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-freemarker
+    implementation("org.springframework.boot:spring-boot-starter-freemarker")
+    // https://mvnrepository.com/artifact/com.microsoft.playwright/playwright
+    implementation("com.microsoft.playwright:playwright:1.57.0")
     // https://mvnrepository.com/artifact/javax.cache/cache-api
     implementation("javax.cache:cache-api:1.1.1")
 // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp

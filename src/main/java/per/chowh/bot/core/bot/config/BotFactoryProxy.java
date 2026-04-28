@@ -5,9 +5,11 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import per.chowh.bot.core.bot.domain.ChowhBot;
+import per.chowh.bot.core.bot.domain.ChowhBotContainer;
 
 /**
  * @author : Chowhound
@@ -17,6 +19,8 @@ import per.chowh.bot.core.bot.domain.ChowhBot;
 @Aspect
 @Configuration
 public class BotFactoryProxy {
+    @Autowired
+    private ChowhBotContainer chowhBotContainer;
 
     @Pointcut("execution(com.mikuac.shiro.core.Bot com.mikuac.shiro.core.BotFactory.createBot(*,*))")
     public void pointCut(){
@@ -36,7 +40,7 @@ public class BotFactoryProxy {
             throw new RuntimeException(e);
         }
         if (returnVal  instanceof Bot shiroBot){
-            return new ChowhBot(
+            ChowhBot chowhBot = new ChowhBot(
                     shiroBot.getSelfId(),
                     shiroBot.getSession(),
                     shiroBot.getActionHandler(),
@@ -44,6 +48,8 @@ public class BotFactoryProxy {
                     shiroBot.getAnnotationMethodContainer(),
                     shiroBot.getBotMessageEventInterceptor()
             );
+            chowhBotContainer.put(chowhBot);
+            return chowhBot;
         }
         return returnVal;
     }
