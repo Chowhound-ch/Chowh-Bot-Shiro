@@ -1,9 +1,6 @@
 package per.chowh.bot.core.utils;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.mikuac.shiro.common.utils.ShiroUtils;
 import com.mikuac.shiro.constant.ActionParams;
-import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.dto.action.common.ActionData;
 import com.mikuac.shiro.dto.action.response.GetForwardMsgResp;
 import com.mikuac.shiro.dto.action.response.MsgResp;
@@ -15,10 +12,10 @@ import com.mikuac.shiro.enums.MsgTypeEnum;
 import com.mikuac.shiro.model.ArrayMsg;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.utils.JacksonUtil;
+import tools.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author : Chowhound

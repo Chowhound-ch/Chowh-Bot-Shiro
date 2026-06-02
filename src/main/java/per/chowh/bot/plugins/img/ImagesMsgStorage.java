@@ -2,8 +2,6 @@ package per.chowh.bot.plugins.img;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.mikuac.shiro.common.utils.ShiroUtils;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
 import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 import com.mikuac.shiro.enums.MsgTypeEnum;
@@ -22,6 +20,7 @@ import per.chowh.bot.plugins.img.entity.PixivImg;
 import per.chowh.bot.plugins.utils.RespConstants;
 import per.chowh.bot.utils.FileUtils;
 import per.chowh.bot.utils.HttpProxyUtils;
+import tools.jackson.databind.JsonNode;
 
 import java.io.File;
 import java.io.IOException;

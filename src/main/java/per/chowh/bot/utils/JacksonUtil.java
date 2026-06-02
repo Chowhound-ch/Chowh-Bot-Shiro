@@ -1,11 +1,14 @@
 package per.chowh.bot.utils;
 
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.node.NullNode;
-import com.fasterxml.jackson.databind.type.CollectionType;
 import lombok.extern.slf4j.Slf4j;
+import tools.jackson.core.TokenStreamFactory;
+import tools.jackson.core.json.JsonFactory;
+import tools.jackson.databind.*;
+import tools.jackson.databind.cfg.MapperBuilder;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.NullNode;
+import tools.jackson.databind.type.CollectionType;
 
 import java.util.List;
 
@@ -22,10 +25,10 @@ public class JacksonUtil{
     public static ObjectMapper objectMapper;
 
     static {
-        objectMapper = new ObjectMapper();
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
+        objectMapper = JsonMapper.builder()
+                .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .build();
 
     }
 
@@ -73,13 +76,7 @@ public class JacksonUtil{
      * @since : 2023/7/13 - 11:45
      */
     public static JsonNode readTree(Object content){
-        try {
-            String realContent = toJsonString(content);
-            return objectMapper.readTree(realContent);
-        } catch (JsonProcessingException e) {
-            log.error("JsonNode转换失败", e);
-        }
-        return NullNode.getInstance();
+        return objectMapper.readTree(toJsonString(content));
     }
 
     /**

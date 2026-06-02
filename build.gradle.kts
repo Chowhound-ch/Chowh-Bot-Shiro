@@ -1,107 +1,71 @@
 plugins {
     java
-//    添加springboot
     application
-    id("org.springframework.boot") version "3.3.6"
-    id("io.spring.dependency-management") version "1.1.4"
-
+    // 保持你的 Spring Boot 版本
+    id("org.springframework.boot") version "4.0.6"
+    // 移除了 io.spring.dependency-management 插件，改用下文 Gradle 原生的 platform 模式
 }
 
 group = "per.chowh.bot"
 version = "0.0.1"
 
 
+
 repositories {
     mavenCentral()
 }
 
-dependencyManagement {
-    imports {
-        mavenBom("com.baomidou:mybatis-plus-bom:3.5.12")
-    }
-}
-
 dependencies {
+    // 使用 Gradle 原生 platform 引入 Spring Boot 和 MyBatis-Plus 的 BOM 管理版本
+//    implementation(platform("com.baomidou:mybatis-plus-spring-boot4-starter:3.5.15"))
+    implementation(platform("com.baomidou:mybatis-plus-bom:3.5.15"))
+    implementation(platform("org.springframework.boot:spring-boot-dependencies:4.0.6"))
+    annotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:4.0.6"))
+    testAnnotationProcessor(platform("org.springframework.boot:spring-boot-dependencies:4.0.6"))
+
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    implementation("com.mikuac:shiro:2.5.2")
+    implementation("com.mikuac:shiro:2.5.4")
     implementation("cn.hutool:hutool-all:5.7.10")
-    implementation("com.baomidou:mybatis-plus-spring-boot3-starter")
+    // 此时无需手动指定版本，由上方的 BOM 统一控制
+    implementation("com.baomidou:mybatis-plus-spring-boot4-starter")
     implementation("com.baomidou:mybatis-plus-jsqlparser")
-    implementation("org.springframework.boot:spring-boot-starter-aop")
+
+    implementation("org.springframework.boot:spring-boot-starter-aspectj")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-quartz")
     implementation("org.springframework.boot:spring-boot-starter-web")
-    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-freemarker
     implementation("org.springframework.boot:spring-boot-starter-freemarker")
-    // https://mvnrepository.com/artifact/com.microsoft.playwright/playwright
+
     implementation("com.microsoft.playwright:playwright:1.57.0")
-    // https://mvnrepository.com/artifact/javax.cache/cache-api
     implementation("javax.cache:cache-api:1.1.1")
-// https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
     implementation("com.squareup.okhttp3:okhttp:5.1.0")
-//    mysql驱动
-//    implementation("com.mysql:mysql-connector-j")
-    // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
     implementation("org.xerial:sqlite-jdbc:3.50.3.0")
-    // https://mvnrepository.com/artifact/org.quartz-scheduler/quartz
-    implementation("org.ehcache:ehcache:3.10.8"){
+
+    implementation("org.ehcache:ehcache:3.10.8") {
         capabilities {
             requireCapability("org.ehcache:ehcache-jakarta")
         }
     }
 
+// Lombok 的标准引入姿势（无需指定版本号）
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
+
+    // 如果你在写单元测试时也需要用到 Lombok 提供的注解，请加上这两行：
+    testCompileOnly("org.projectlombok:lombok")
+    testAnnotationProcessor("org.projectlombok:lombok")
 }
 
-tasks.test {
+// 确保测试任务使用 JUnit Platform
+tasks.withType<Test>().configureEach {
     useJUnitPlatform()
 }
 
-// 将依赖包复制到lib目录
-tasks.register<Copy>("copyJar") {
-    // 清除现有的lib目录
-    delete(layout.buildDirectory.dir("libs/lib"))
-    from(configurations.runtimeClasspath) // 统一使用 runtimeClasspath
-    into(layout.buildDirectory.dir("libs/lib"))
-
-    // 添加编译类路径依赖（如果需要）
-    from(configurations.compileClasspath)
-    into(layout.buildDirectory.dir("libs/lib"))
-}
-
-// 拷贝配置文件
-tasks.register<Copy>("copyConfigFile") {
-    // 清除现有的配置目录
-    delete(layout.buildDirectory.dir("libs/config"))
-    from("src/main/resources")
-    into(layout.buildDirectory.dir("libs/config"))
-}
-
-// 配置bootJar进行打包
-tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
-    // jar包名称
-    archiveBaseName.set("Chowh-Bot-Shiro")
-    // jar包版本号
-    archiveVersion.set("0.0.1")
-//    // 排除所有的jar
-    setExcludes(listOf("*.jar"))
-
-    // 添加任务依赖
-    dependsOn("copyJar")
-    dependsOn("copyConfigFile")
-
-    // 指定依赖包路径
-    manifest {
-        attributes(
-            "Manifest-Version" to "1.0",
-            "Implementation-Title" to "Halo Application",
-            "Implementation-Version" to archiveVersion.get(),
-            "Class-Path" to
-                    configurations.runtimeClasspath.get().files.joinToString(" ") { "lib/${it.name}" } + " " +
-                    configurations.compileClasspath.get().files.joinToString(" ") { "lib/${it.name}" }
-        )
-    }
+// 如果需要对 Java 编译进行额外配置（例如开启编译参数以支持保留方法参数名）
+tasks.withType<JavaCompile>().configureEach {
+    options.encoding = "UTF-8"
+    // Spring Boot 3.x/4.x 强烈建议开启 -parameters 参数，以便反射能正确获取控制器方法的参数名
+    options.compilerArgs.add("-parameters")
 }

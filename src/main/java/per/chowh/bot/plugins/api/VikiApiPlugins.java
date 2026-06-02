@@ -1,6 +1,5 @@
 package per.chowh.bot.plugins.api;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,6 +14,7 @@ import per.chowh.bot.utils.DateUtils;
 import per.chowh.bot.utils.HttpProxyUtils;
 import per.chowh.bot.utils.HttpUtils;
 import per.chowh.bot.utils.JacksonUtil;
+import tools.jackson.databind.JsonNode;
 
 import java.io.IOException;
 import java.util.ArrayList;

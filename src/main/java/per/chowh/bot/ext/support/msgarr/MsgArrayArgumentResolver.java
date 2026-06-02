@@ -1,6 +1,5 @@
 package per.chowh.bot.ext.support.msgarr;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.mikuac.shiro.dto.action.common.ActionData;
 import com.mikuac.shiro.dto.action.response.GetForwardMsgResp;
 import com.mikuac.shiro.dto.action.response.MsgResp;
@@ -18,6 +17,7 @@ import per.chowh.bot.core.utils.EventWrapper;
 import per.chowh.bot.core.utils.MsgUtils;
 import per.chowh.bot.ext.support.msgarr.domain.ArrayMsgFlatList;
 import per.chowh.bot.utils.JacksonUtil;
+import tools.jackson.databind.JsonNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +46,7 @@ public class MsgArrayArgumentResolver implements ListenerArgumentResolver {
             ArrayMsgFlatList resMsgList = new ArrayMsgFlatList();
             List<ArrayMsg> arrayMsg = msgEvent.getArrayMsg();
             // 合并转发消息只有一条.如果这条消息是转发
-            if (arrayMsg != null && !arrayMsg.isEmpty() && MsgTypeEnum.forward.equals(arrayMsg.get(0).getType())) {
+            if (arrayMsg != null && !arrayMsg.isEmpty() && MsgTypeEnum.forward.equals(arrayMsg.getFirst().getType())) {
                 Integer messageId = MsgUtils.getMessageId(msgEvent);
                 if (messageId == null) return null;
                 ActionData<GetForwardMsgResp> forwardMsg = bot.getForwardMsg(messageId);
@@ -66,7 +66,7 @@ public class MsgArrayArgumentResolver implements ListenerArgumentResolver {
     private static void getMsgArrayRecur(ArrayMsgFlatList arrayMsgList, JsonNode msg) {
         List<ArrayMsg> arrayMsg = new ArrayList<>();
         for (JsonNode msgItem : msg) {
-            String type = msgItem.get("type").asText();
+            String type = msgItem.get("type").asString();
             // 如果是转发消息
             if (MsgTypeEnum.forward.name().equals(type)){
                 JsonNode content = msgItem.get("data").get("content");

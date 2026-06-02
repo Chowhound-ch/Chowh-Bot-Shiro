@@ -1,9 +1,9 @@
 package per.chowh.bot.plugins.img.api;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import per.chowh.bot.plugins.img.entity.PixivImg;
 import per.chowh.bot.utils.HttpProxyUtils;
 import per.chowh.bot.utils.JacksonUtil;
+import tools.jackson.databind.JsonNode;
 
 import java.io.IOException;
 import java.net.URLEncoder;

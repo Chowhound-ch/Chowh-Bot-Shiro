@@ -1,9 +1,9 @@
 package per.chowh.bot.utils;
 
 import cn.hutool.core.util.URLUtil;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonNode;
 import okhttp3.*;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.JsonNode;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
