@@ -2,7 +2,7 @@ package per.chowh.bot.core.permit.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -27,7 +27,7 @@ import java.util.List;
 @Service
 @Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
 @CacheConfig(cacheNames = "user")
-public class UserService extends ServiceImpl<UserMapper, User>{
+public class UserService extends ServiceImpl<UserMapper, User> {
     @Autowired
     private UserService self;
 

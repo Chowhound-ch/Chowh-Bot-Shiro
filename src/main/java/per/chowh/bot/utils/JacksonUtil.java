@@ -1,10 +1,11 @@
 package per.chowh.bot.utils;
 
 import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.node.NullNode;
-import com.fasterxml.jackson.databind.type.CollectionType;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.*;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.NullNode;
+import tools.jackson.databind.type.CollectionType;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -22,11 +23,10 @@ public class JacksonUtil{
     public static ObjectMapper objectMapper;
 
     static {
-        objectMapper = new ObjectMapper();
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-
+        objectMapper = JsonMapper.builder()
+                .propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
+                .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+                .build();
     }
 
     public static JavaType getJavaType(Class<?> javaClass) {
@@ -76,7 +76,7 @@ public class JacksonUtil{
         try {
             String realContent = toJsonString(content);
             return objectMapper.readTree(realContent);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             log.error("JsonNode转换失败", e);
         }
         return NullNode.getInstance();

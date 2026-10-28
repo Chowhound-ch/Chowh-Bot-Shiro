@@ -1,6 +1,6 @@
 package per.chowh.bot.ext.support.msgarr;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mikuac.shiro.dto.action.common.ActionData;
 import com.mikuac.shiro.dto.action.response.GetForwardMsgResp;
 import com.mikuac.shiro.dto.action.response.MsgResp;

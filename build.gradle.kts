@@ -2,9 +2,10 @@ plugins {
     java
 //    添加springboot
     application
-    id("org.springframework.boot") version "3.3.6"
-    id("io.spring.dependency-management") version "1.1.4"
-
+    id("org.jreleaser") version "1.26.0"
+    id("io.freefair.lombok") version "9.5.0"
+    id("org.springframework.boot") version "4.1.1"
+    id("io.spring.dependency-management") version "1.1.7"
 }
 
 group = "per.chowh.bot"
@@ -17,7 +18,9 @@ repositories {
 
 dependencyManagement {
     imports {
-        mavenBom("com.baomidou:mybatis-plus-bom:3.5.12")
+        // 必须和 starter 版本一致：starter 3.5.18 的 AutoConfiguration.imports 中声明了
+        // ShardingAutoConfiguration，而该类只存在于 mybatis-plus-spring-boot-autoconfigure:3.5.18
+        mavenBom("com.baomidou:mybatis-plus-bom:3.5.18")
     }
 }
 
@@ -25,11 +28,12 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 
-    implementation("com.mikuac:shiro:2.5.2")
+    implementation("com.mikuac:shiro:2.5.5")
     implementation("cn.hutool:hutool-all:5.7.10")
-    implementation("com.baomidou:mybatis-plus-spring-boot3-starter")
+    implementation("com.baomidou:mybatis-plus-spring-boot4-starter:3.5.18")
     implementation("com.baomidou:mybatis-plus-jsqlparser")
-    implementation("org.springframework.boot:spring-boot-starter-aop")
+    // Spring Boot 4 中 AOP starter 已重命名为 aspectj
+    implementation("org.springframework.boot:spring-boot-starter-aspectj")
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-quartz")
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -94,14 +98,14 @@ tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
     dependsOn("copyConfigFile")
 
     // 指定依赖包路径
-    manifest {
-        attributes(
-            "Manifest-Version" to "1.0",
-            "Implementation-Title" to "Halo Application",
-            "Implementation-Version" to archiveVersion.get(),
-            "Class-Path" to
-                    configurations.runtimeClasspath.get().files.joinToString(" ") { "lib/${it.name}" } + " " +
-                    configurations.compileClasspath.get().files.joinToString(" ") { "lib/${it.name}" }
-        )
-    }
+//    manifest {
+//        attributes(
+//            "Manifest-Version" to "1.0",
+//            "Implementation-Title" to "Halo Application",
+//            "Implementation-Version" to archiveVersion.get(),
+//            "Class-Path" to
+//                    configurations.runtimeClasspath.get().files.joinToString(" ") { "lib/${it.name}" } + " " +
+//                    configurations.compileClasspath.get().files.joinToString(" ") { "lib/${it.name}" }
+//        )
+//    }
 }

@@ -1,6 +1,6 @@
 package per.chowh.bot.core.utils;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mikuac.shiro.dto.event.Event;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
 import lombok.Data;

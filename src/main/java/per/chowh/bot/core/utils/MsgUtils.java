@@ -1,6 +1,6 @@
 package per.chowh.bot.core.utils;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.mikuac.shiro.common.utils.ShiroUtils;
 import com.mikuac.shiro.constant.ActionParams;
 import com.mikuac.shiro.core.Bot;
