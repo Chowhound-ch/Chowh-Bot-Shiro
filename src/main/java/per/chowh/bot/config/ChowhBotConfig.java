@@ -3,6 +3,7 @@ package per.chowh.bot.config;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
+import per.chowh.bot.utils.ConfigUtils;
 
 import java.io.InputStream;
 import java.util.Collections;
@@ -25,7 +26,7 @@ public class ChowhBotConfig {
      */
     @SuppressWarnings("unchecked")
     private static Map<String, Object> loadYaml(String name) {
-        try (InputStream in = ChowhBotConfig.class.getClassLoader().getResourceAsStream(name)) {
+        try (InputStream in = ChowhBotConfig.class.getClassLoader().getResourceAsStream(ConfigUtils.CONFIG_PATH + name)) {
             if (in == null) {
                 log.error("找不到配置文件：{}", name);
                 return Collections.emptyMap();
