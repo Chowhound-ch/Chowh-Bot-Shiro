@@ -2,6 +2,7 @@ package per.chowh.bot.config;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSession;
@@ -33,8 +34,10 @@ public class DataBaseInitConfig {
     public static final String SQL_BASE_PATH;
     static {
         SQL_BASE_PATH = ConfigUtils.CONFIG_PATH + "db/";
-        log.error("1112w");
         String dbFile = ChowhBotConfig.getConfig("dev.db-file");
+        if (StrUtil.isBlank(dbFile)) {
+            dbFile = SQL_BASE_PATH + "bot.db";
+        }
         File file = new File(dbFile);
         if (!file.exists()) {
             try {
