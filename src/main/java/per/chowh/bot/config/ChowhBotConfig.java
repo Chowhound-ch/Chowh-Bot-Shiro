@@ -31,7 +31,8 @@ public class ChowhBotConfig {
     private static Map<String, Object> loadYaml(String name) {
         try (InputStream in = FileUtil.getInputStream(name)) {
             if (in == null) {
-                log.error("找不到配置文件：{}", name);
+                log.error("找不到配置文件111：{}", name);
+                log.error("找不到配置文件111222：{}", ConfigUtils.CONFIG_PATH);
                 return Collections.emptyMap();
             }
             Object loaded = new Yaml().load(in);
