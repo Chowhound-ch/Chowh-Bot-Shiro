@@ -33,6 +33,7 @@ public class DataBaseInitConfig {
     public static final String SQL_BASE_PATH;
     static {
         SQL_BASE_PATH = ConfigUtils.CONFIG_PATH + "db/";
+        log.error("1112w");
         String dbFile = ChowhBotConfig.getConfig("dev.db-file");
         File file = new File(dbFile);
         if (!file.exists()) {
