@@ -1,5 +1,8 @@
 package per.chowh.bot.config;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.stream.StreamUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
@@ -17,8 +20,8 @@ import java.util.Map;
  */
 @Slf4j
 public class ChowhBotConfig {
-    private static final Map<String, Object> CONFIG = loadYaml("application.yml");
-    private static final Map<String, Object> CONFIG_DEV = loadYaml("application-dev.yml");
+    private static final Map<String, Object> CONFIG = loadYaml(ConfigUtils.CONFIG_PATH + "application.yml");
+    private static final Map<String, Object> CONFIG_DEV = loadYaml(ConfigUtils.CONFIG_PATH + "application-dev.yml");
 
     /**
      * 读取失败时返回空 Map，而不是让静态初始化直接抛异常。
@@ -26,7 +29,7 @@ public class ChowhBotConfig {
      */
     @SuppressWarnings("unchecked")
     private static Map<String, Object> loadYaml(String name) {
-        try (InputStream in = ChowhBotConfig.class.getClassLoader().getResourceAsStream(ConfigUtils.CONFIG_PATH + name)) {
+        try (InputStream in = FileUtil.getInputStream(name)) {
             if (in == null) {
                 log.error("找不到配置文件：{}", name);
                 return Collections.emptyMap();
