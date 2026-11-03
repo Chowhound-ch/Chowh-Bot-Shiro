@@ -4,6 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -14,24 +16,43 @@ import java.util.Map;
  */
 @Slf4j
 public class ChowhBotConfig {
-    private static final Map<String, Object> CONFIG;
-    private static final Map<String, Object> CONFIG_DEV;
-    static {
-        // 读取yml文件
-        Yaml yaml = new Yaml();
-        CONFIG = yaml.load(ChowhBotConfig.class.getClassLoader().getResourceAsStream("application.yml"));
-        CONFIG_DEV = yaml.load(ChowhBotConfig.class.getClassLoader().getResourceAsStream("application-dev.yml"));
+    private static final Map<String, Object> CONFIG = loadYaml("application.yml");
+    private static final Map<String, Object> CONFIG_DEV = loadYaml("application-dev.yml");
+
+    /**
+     * 读取失败时返回空 Map，而不是让静态初始化直接抛异常。
+     * 静态初始化抛异常只会得到 ExceptionInInitializerError，真正的失败原因很难定位。
+     */
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> loadYaml(String name) {
+        try (InputStream in = ChowhBotConfig.class.getClassLoader().getResourceAsStream(name)) {
+            if (in == null) {
+                log.error("找不到配置文件：{}", name);
+                return Collections.emptyMap();
+            }
+            Object loaded = new Yaml().load(in);
+            if (loaded instanceof Map<?, ?> map) {
+                return (Map<String, Object>) map;
+            }
+            log.error("配置文件格式不正确（顶层不是 Map）：{}", name);
+            return Collections.emptyMap();
+        } catch (Exception e) {
+            log.error("读取配置文件失败：{}", name, e);
+            return Collections.emptyMap();
+        }
     }
+
     public static String getConfig(String key){
         if (StrUtil.isBlank(key)) {
             log.warn("无法获取配置项：{}", key);
+            return null;
         }
 
         Object value = getConfigValue(CONFIG, key);
         if (value == null){
             value = getConfigValue(CONFIG_DEV, key);
         }
-        return paraseConfigValue((String) value);
+        return paraseConfigValue(value == null ? null : value.toString());
     }
 
     private static String paraseConfigValue(String value){

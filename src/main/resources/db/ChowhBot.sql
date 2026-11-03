@@ -16,6 +16,7 @@ create table if not exists `user`
     id          bigint auto_increment
     primary key,
     user_id     bigint        not null,
+    password    TEXT          null,
     role        int           null,
     create_time datetime      null,
     modify_time datetime      null,
