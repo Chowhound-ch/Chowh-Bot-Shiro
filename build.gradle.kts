@@ -98,14 +98,14 @@ tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
     dependsOn("copyConfigFile")
 
     // 指定依赖包路径
-//    manifest {
-//        attributes(
-//            "Manifest-Version" to "1.0",
-//            "Implementation-Title" to "Halo Application",
-//            "Implementation-Version" to archiveVersion.get(),
-//            "Class-Path" to
-//                    configurations.runtimeClasspath.get().files.joinToString(" ") { "lib/${it.name}" } + " " +
-//                    configurations.compileClasspath.get().files.joinToString(" ") { "lib/${it.name}" }
-//        )
-//    }
+    manifest {
+        attributes(
+            "Manifest-Version" to "1.0",
+            "Implementation-Title" to "Halo Application",
+            "Implementation-Version" to archiveVersion.get(),
+            "Class-Path" to
+                    configurations.runtimeClasspath.get().files.joinToString(" ") { "lib/${it.name}" } + " " +
+                    configurations.compileClasspath.get().files.joinToString(" ") { "lib/${it.name}" }
+        )
+    }
 }
