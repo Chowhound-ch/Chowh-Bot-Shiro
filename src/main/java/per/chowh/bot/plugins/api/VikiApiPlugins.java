@@ -1,5 +1,6 @@
 package per.chowh.bot.plugins.api;
 
+import lombok.extern.slf4j.Slf4j;
 import tools.jackson.databind.JsonNode;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,11 @@ import java.util.List;
  * @author : Chowhound
  * @since : 2025/11/24 - 15:20
  */
+@Slf4j
 @Component
 public class VikiApiPlugins {
 
-    public static final String BASE_API = "http://chowh.top:4399/v2";
+    public static final String BASE_API = "https://60s.chowh.ink/v2";
     public static final String EPIC_FREE = "EPIC_FREE";
     public static final String NEWS = "60S_NEWS";
 
@@ -56,7 +58,12 @@ public class VikiApiPlugins {
             int code = node.get("code").intValue();
             if (code == 200) {
                 String url = node.get("data").get("image").asText();
-                bytes = HttpProxyUtils.doGetBytes(url);
+                try {
+                    bytes = HttpProxyUtils.doGetBytes(url);
+                } catch (Exception e) {
+                    log.error("60s读懂世界图片获取失败，使用文字版本", e);
+                    return node.get("data").asText();
+                }
             }
         }
         if (bytes == null || bytes.length == 0) {
