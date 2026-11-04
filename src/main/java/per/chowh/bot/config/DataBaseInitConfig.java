@@ -1,7 +1,6 @@
 package per.chowh.bot.config;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -9,14 +8,11 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.utils.ConfigUtils;
-import per.chowh.bot.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -34,7 +30,7 @@ public class DataBaseInitConfig {
     public static final String SQL_BASE_PATH;
     static {
         SQL_BASE_PATH = ConfigUtils.CONFIG_PATH + "db/";
-        String dbFile = ChowhBotConfig.getConfig("dev.db-file");
+        String dbFile = ConfigUtils.getConfig("dev.db-file");
         if (StrUtil.isBlank(dbFile)) {
             dbFile = SQL_BASE_PATH + "bot.db";
         }
