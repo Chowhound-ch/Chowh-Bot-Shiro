@@ -81,6 +81,10 @@ tasks.register<Copy>("copyConfigFile") {
     // 清除现有的配置目录
     delete(layout.buildDirectory.dir("libs/config"))
     from("src/main/resources")
+    // 运行期外部配置（如 db/ 建表脚本）；.env 与数据库文件不随包分发
+    from("config") {
+        exclude(".env", ".env.*", "*.db", "*.db-journal")
+    }
     into(layout.buildDirectory.dir("libs/config"))
 }
 

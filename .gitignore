@@ -41,6 +41,10 @@ bin/
 ### Mac OS ###
 .DS_Store
 application-*.*
+# 环境变量配置（个人/部署环境，禁止入库；模板 .env.example 需要提交）
+.env
+.env.*
+!config/.env.example
 .idea
 *.db
 yarn.lock

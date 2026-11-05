@@ -2,16 +2,16 @@ shiro:
   ws:
     client:
       enable: true
-      url: ${dev.ws.clientUrl}
-    access-token: ${dev.token}
+      url: ${SHIRO_WS_CLIENT_URL}
+    access-token: ${SHIRO_TOKEN}
 per:
-  file-location: ${dev.file-location}
-  video-location: ${dev.video-location}
-  config-path: ${dev.config-path}
+  file-location: ${BOT_FILE_LOCATION}
+  video-location: ${BOT_VIDEO_LOCATION}
+  config-path: ${BOT_CONFIG_PATH}
   python:
-    path: ${dev.python.path}
+    path: ${BOT_PYTHON_PATH}
   jm:
-    img-path: ${dev.img-path}
+    img-path: ${BOT_JM_IMG_PATH}
   bot:
     owner: 825352674
   listener:
@@ -19,8 +19,12 @@ per:
     package: per.chowh
   network:
     proxy:
-      host: ${dev.network.proxy.host}
-      port: ${dev.network.proxy.port}
+      host: ${BOT_PROXY_HOST}
+      port: ${BOT_PROXY_PORT}
+  dotenv:
+    enabled: true
+    profile: ${spring.profiles.active}
+#    files: .env.${spring.profiles.active}
 
 server:
   port: 8002
@@ -29,11 +33,18 @@ spring:
   profiles:
     active: dev
   datasource:
-#    url: jdbc:mysql://${dev.server-ip}:3306/chowh_bot?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
-    url: jdbc:sqlite:${dev.db-file}
-#    username: ${dev.database.username}
-#    password: ${dev.database.password}
+#    url: jdbc:mysql://${SERVER_IP}:3306/chowh_bot?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    url: jdbc:sqlite:${BOT_DB_FILE:bot.db}
+#    username: ${MYSQL_USERNAME}
+#    password: ${MYSQL_PASSWORD}
     driver-class-name: org.sqlite.JDBC
+  sql:
+    init:
+      # 初始化脚本在 DataSource 就绪后、依赖 SqlSessionFactory 的 Bean 之前执行
+      # 脚本自身是 create table if not exists，重复执行无副作用
+      mode: always
+      encoding: UTF-8
+      schema-locations: file:./config/db/*.sql
     hikari:
       maximum-pool-size: 10
       idle-timeout: 600000    # 10分钟

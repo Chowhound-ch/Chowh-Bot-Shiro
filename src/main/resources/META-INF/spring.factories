@@ -1,0 +1,4 @@
+# Spring Boot 4 moved EnvironmentPostProcessor from org.springframework.boot.env to
+# org.springframework.boot, and the key below must use the new fully qualified name.
+org.springframework.boot.EnvironmentPostProcessor=\
+per.chowh.bot.config.DotenvEnvironmentPostProcessor
