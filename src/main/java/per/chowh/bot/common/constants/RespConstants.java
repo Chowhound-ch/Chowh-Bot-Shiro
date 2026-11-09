@@ -1,4 +1,4 @@
-package per.chowh.bot.plugins.utils;
+package per.chowh.bot.common.constants;
 
 /**
  * @author : Chowhound

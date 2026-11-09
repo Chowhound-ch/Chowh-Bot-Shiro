@@ -29,6 +29,9 @@ public class HttpUtils {
     public static JsonNode doGetJson(String url) throws IOException {
         return JacksonUtil.readTree(doGetStr(BASE_CLIENT, url, null));
     }
+    public static JsonNode doGetJson(OkHttpClient client, String url) throws IOException {
+        return JacksonUtil.readTree(doGetStr(client, url, null));
+    }
     public static String doGetStr(String url) throws IOException {
         return doGetStr(BASE_CLIENT, url, null);
     }

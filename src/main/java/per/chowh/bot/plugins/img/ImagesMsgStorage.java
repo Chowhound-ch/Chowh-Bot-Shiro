@@ -3,7 +3,6 @@ package per.chowh.bot.plugins.img;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import tools.jackson.databind.JsonNode;
-import com.mikuac.shiro.common.utils.ShiroUtils;
 import com.mikuac.shiro.dto.event.message.MessageEvent;
 import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 import com.mikuac.shiro.enums.MsgTypeEnum;
@@ -19,7 +18,7 @@ import per.chowh.bot.ext.filter.annotation.EventFilter;
 import per.chowh.bot.ext.support.msgarr.domain.ArrayMsgFlatList;
 import per.chowh.bot.plugins.img.api.PixivApi;
 import per.chowh.bot.plugins.img.entity.PixivImg;
-import per.chowh.bot.plugins.utils.RespConstants;
+import per.chowh.bot.common.constants.RespConstants;
 import per.chowh.bot.utils.FileUtils;
 import per.chowh.bot.utils.HttpProxyUtils;
 

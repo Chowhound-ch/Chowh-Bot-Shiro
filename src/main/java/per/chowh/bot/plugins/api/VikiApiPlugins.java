@@ -1,13 +1,13 @@
 package per.chowh.bot.plugins.api;
 
 import lombok.extern.slf4j.Slf4j;
+import per.chowh.bot.common.constants.Constants;
 import tools.jackson.databind.JsonNode;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
-import per.chowh.bot.core.bot.domain.ChowhBotContainer;
 import per.chowh.bot.core.registery.annotation.EventListener;
 import per.chowh.bot.core.utils.MsgBuilder;
 import per.chowh.bot.ext.distribute.MsgDistributeService;
@@ -29,13 +29,9 @@ import java.util.List;
 @Slf4j
 @Component
 public class VikiApiPlugins {
-
-    public static final String BASE_API = "https://60s.chowh.ink/v2";
     public static final String EPIC_FREE = "EPIC_FREE";
     public static final String NEWS = "60S_NEWS";
 
-    @Autowired
-    private ChowhBotContainer chowhBotContainer;
     @Autowired
     private MsgDistributeService distributeService;
 
@@ -52,17 +48,17 @@ public class VikiApiPlugins {
 
     private String getTheNewsMsg() throws IOException {
         //        byte[] bytes = HttpUtils.doGetBytes(BASE_API + "/60s?encoding=image-proxy");
-        JsonNode node = HttpUtils.doGetJson(BASE_API + "/60s");
+        JsonNode node = HttpProxyUtils.doGetJson(Constants.getVikiUrl() + "/60s");
         byte[] bytes = null;
         if (node != null && !node.isEmpty()) {
             int code = node.get("code").intValue();
             if (code == 200) {
-                String url = node.get("data").get("image").asText();
+                String url = node.get("data").get("image").asString();
                 try {
                     bytes = HttpProxyUtils.doGetBytes(url);
                 } catch (Exception e) {
                     log.error("60s读懂世界图片获取失败，使用文字版本", e);
-                    return node.get("data").asText();
+                    return node.get("data").asString();
                 }
             }
         }
@@ -90,7 +86,7 @@ public class VikiApiPlugins {
 
 
     private List<String> getEpicWeekFreeMsg() throws IOException {
-        JsonNode node = HttpUtils.doGetJson(BASE_API + "/epic");
+        JsonNode node = HttpUtils.doGetJson(Constants.getVikiUrl() + "/epic");
         List<String> msgList = new ArrayList<>();
         if (node != null && !node.isEmpty()) {
             int code = node.get("code").intValue();
@@ -117,7 +113,7 @@ public class VikiApiPlugins {
                             lastWeek++;
                         }
                     }
-                    msgList.add(0, "本周Epic限时免费" + curWeek + "款游戏，此外还有" + lastWeek +"款游戏即将限免");
+                    msgList.addFirst("本周Epic限时免费" + curWeek + "款游戏，此外还有" + lastWeek +"款游戏即将限免");
                     return msgList;
                 }
             }
