@@ -3,6 +3,7 @@ package per.chowh.bot.utils;
 import cn.hutool.core.util.ClassLoaderUtil;
 import lombok.extern.slf4j.Slf4j;
 import per.chowh.bot.ChowhBotApplication;
+import per.chowh.bot.config.ChowhBotConfig;
 
 import java.io.File;
 import java.net.URL;
@@ -41,10 +42,10 @@ public class ConfigUtils {
     }
 
     public static String getConfig(String key) {
-        return ChowhBotApplication.environment.getProperty(key);
+        return ChowhBotConfig.ENVIRONMENT.getProperty(key);
     }
 
     public static String getConfig(String key, String defaultValue) {
-        return ChowhBotApplication.environment.getProperty(key, defaultValue);
+        return ChowhBotConfig.ENVIRONMENT.getProperty(key, defaultValue);
     }
 }

@@ -32,6 +32,19 @@ server:
 spring:
   profiles:
     active: dev
+  ai:
+    mcp:
+      client:
+        enabled: ${BOT_MCP_ENABLED:false}
+        name: chowh-bot-shiro
+        type: SYNC
+        request-timeout: 20s
+        streamable-http:
+          connections:
+            primary:
+              url: ${BOT_MCP_URL:http://localhost:8080}
+              endpoint: ${BOT_MCP_ENDPOINT:/mcp/}
+
   datasource:
 #    url: jdbc:mysql://${SERVER_IP}:3306/chowh_bot?useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
     url: jdbc:sqlite:${BOT_DB_FILE:bot.db}

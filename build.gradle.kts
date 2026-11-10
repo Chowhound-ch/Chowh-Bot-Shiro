@@ -18,6 +18,7 @@ repositories {
 
 dependencyManagement {
     imports {
+        mavenBom("org.springframework.ai:spring-ai-bom:2.0.2")
         // 必须和 starter 版本一致：starter 3.5.18 的 AutoConfiguration.imports 中声明了
         // ShardingAutoConfiguration，而该类只存在于 mybatis-plus-spring-boot-autoconfigure:3.5.18
         mavenBom("com.baomidou:mybatis-plus-bom:3.5.18")
@@ -37,6 +38,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-cache")
     implementation("org.springframework.boot:spring-boot-starter-quartz")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.ai:spring-ai-starter-mcp-client")
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-freemarker
     implementation("org.springframework.boot:spring-boot-starter-freemarker")
     // https://mvnrepository.com/artifact/com.microsoft.playwright/playwright

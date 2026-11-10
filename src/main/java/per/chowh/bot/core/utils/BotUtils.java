@@ -16,6 +16,7 @@ import per.chowh.bot.core.bot.domain.ChowhBotContainer;
 import java.util.Objects;
 
 /**
+ * 初始化shiji
  * @author : Chowhound
  * @since : 2025/8/6 - 10:36
  */
