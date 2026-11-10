@@ -12,3 +12,5 @@ BOT_MCP_API_KEY=填写完整的密钥
 ```
 
 `BOT_MCP_URL` 填写服务的协议、主机和端口，`BOT_MCP_ENDPOINT` 填写以 `/` 开头的 MCP 路径。客户端通过 `X-API-Key` 请求头发送 `BOT_MCP_API_KEY`。启用后，应用会在启动时初始化同步客户端，请求超时为 20 秒。
+
+如果访问 MCP 服务需要 HTTP 代理，在对应的 `.env` 中设置 `BOT_MCP_USE_PROXY=true`，并填写 `BOT_PROXY_HOST` 和 `BOT_PROXY_PORT`。
