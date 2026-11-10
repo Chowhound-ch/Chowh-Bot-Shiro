@@ -9,6 +9,8 @@ import org.springframework.core.env.Environment;
 
 import java.net.InetSocketAddress;
 import java.net.ProxySelector;
+import java.net.URI;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 
 @Configuration(proxyBeanMethods = false)
@@ -25,6 +27,12 @@ public class McpClientConfig {
             }
             if (!apiKey.isBlank()) {
                 builder.requestBuilder(HttpRequest.newBuilder().header("X-API-Key", apiKey));
+            }
+            URI serverUrl = environment.getProperty(
+                    "spring.ai.mcp.client.streamable-http.connections.primary.url", URI.class);
+            if (serverUrl != null && "http".equalsIgnoreCase(serverUrl.getScheme())) {
+                // 避免明文 HTTP 的 h2c 升级触发服务端丢失 POST 请求体。
+                builder.customizeClient(client -> client.version(HttpClient.Version.HTTP_1_1));
             }
             if (useProxy) {
                 String host = environment.getRequiredProperty("BOT_PROXY_HOST");
