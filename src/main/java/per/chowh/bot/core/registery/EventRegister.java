@@ -1,5 +1,7 @@
 package per.chowh.bot.core.registery;
 
+import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
+import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Configuration;
 import per.chowh.bot.core.registery.domain.EventMethod;

@@ -53,7 +53,7 @@ public class PermitInterceptor implements EventHandlerInterceptor {
             return false;
         }
         Long groupId = event.getGroupId();
-        if (groupId != null) {
+        if (groupId != null && groupId != 0) {
             Group group = groupService.getByGroupId(groupId);
             GroupStatusEnum curStatus = group.isNull() ? GroupStatusEnum.CLOSED : group.getGroupStatus();
             if (listener.groupStatus().getValue() > curStatus.getValue()) {

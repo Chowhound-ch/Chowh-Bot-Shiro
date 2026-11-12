@@ -64,6 +64,7 @@ public class ListenerRunner {
             String msg = getErrorMsg(e);
             bot.sendMsg(eventWrapper, "执行失败：" + msg, false);
             log.error("[{}]执行失败：{}", ListenerUtils.getListenerName(eventMethod), msg, e);
+            throw new RuntimeException(e);
         }
     }
 
