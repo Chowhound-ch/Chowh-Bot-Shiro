@@ -1,0 +1,85 @@
+package per.chowh.bot.core.event.message;
+
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.mikuac.shiro.common.utils.JsonUtils;
+import com.mikuac.shiro.common.utils.MessageConverser;
+import com.mikuac.shiro.model.ArrayMsg;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import per.chowh.bot.core.event.Event;
+import tools.jackson.databind.JsonNode;
+
+import java.util.List;
+
+/**
+ * <p>MessageEvent class.</p>
+ *
+ * @author zero
+ * @version $Id: $Id
+ */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder(toBuilder = true)
+@EqualsAndHashCode(callSuper = true)
+public class MessageEvent extends Event {
+
+    @JsonProperty("message_type")
+    private String messageType;
+
+    @JsonProperty("user_id")
+    private Long userId;
+
+    @JsonIgnore
+    private String message;
+
+    @JsonProperty("raw_message")
+    private String rawMessage;
+
+    @JsonProperty("font")
+    private Integer font;
+
+    @JsonIgnore
+    private List<ArrayMsg> arrayMsg;
+
+    @JsonIgnore
+    private String plainText;
+
+    @JsonSetter("message")
+    private void setMessageFromJson(JsonNode json) {
+        if (json.isString()) {
+            this.message = json.asString();
+            this.arrayMsg = MessageConverser.stringToArray(message);
+            this.plainText = MessageConverser.arrayToPlainText(arrayMsg);
+        } else if (json.isArray()) {
+            this.arrayMsg = JsonUtils.parseArray(json, ArrayMsg.class);
+            this.message = MessageConverser.arraysToString(arrayMsg);
+            this.plainText = MessageConverser.arrayToPlainText(arrayMsg);
+        } else {
+            throw new IllegalArgumentException("Invalid message format: " + json);
+        }
+    }
+
+    @JsonGetter("message")
+    public String getMessage() {
+        if (!StringUtils.hasText(message) && !CollectionUtils.isEmpty(arrayMsg)) {
+            message = MessageConverser.arraysToString(arrayMsg);
+        }
+        return message;
+    }
+
+    @JsonIgnore
+    public void setMessage(String message) {
+        this.message = message;
+        this.arrayMsg = MessageConverser.stringToArray(message);
+    }
+
+}

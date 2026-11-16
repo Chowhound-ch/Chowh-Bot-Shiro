@@ -1,11 +1,11 @@
 package per.chowh.bot.ext.support.msgarr;
 
+import per.chowh.bot.core.event.Event;
+import per.chowh.bot.core.event.message.MessageEvent;
 import tools.jackson.databind.JsonNode;
 import com.mikuac.shiro.dto.action.common.ActionData;
 import com.mikuac.shiro.dto.action.response.GetForwardMsgResp;
 import com.mikuac.shiro.dto.action.response.MsgResp;
-import com.mikuac.shiro.dto.event.Event;
-import com.mikuac.shiro.dto.event.message.MessageEvent;
 import com.mikuac.shiro.enums.MsgTypeEnum;
 import com.mikuac.shiro.model.ArrayMsg;
 import org.springframework.core.annotation.Order;

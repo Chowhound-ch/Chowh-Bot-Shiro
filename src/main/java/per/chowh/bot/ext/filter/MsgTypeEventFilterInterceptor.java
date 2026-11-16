@@ -1,6 +1,5 @@
 package per.chowh.bot.ext.filter;
 
-import com.mikuac.shiro.dto.event.message.MessageEvent;
 import com.mikuac.shiro.enums.MsgTypeEnum;
 import com.mikuac.shiro.model.ArrayMsg;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +7,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
+import per.chowh.bot.core.event.message.MessageEvent;
 import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.utils.EventWrapper;
 import per.chowh.bot.ext.filter.annotation.EventFilter;

@@ -1,7 +1,5 @@
 package per.chowh.bot.config;
 
-import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
-import com.mikuac.shiro.dto.event.message.MessageEvent;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Role;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -28,15 +26,6 @@ public class ChowhBotEventRegister extends EventRegister {
         EventFilter annotation = AnnotationUtils.findAnnotation(method, EventFilter.class);
         if (annotation != null) {
             eventMethod.putExt(Constants.EVENT_FILTER, annotation);
-        }
-        // 替换AnyMessageEvent
-        replaceAnyMessage(eventMethod);
-    }
-
-    private void replaceAnyMessage(EventMethod eventMethod) {
-        Class<?> eventClass = eventMethod.getEventClass();
-        if (AnyMessageEvent.class.isAssignableFrom(eventClass)) {
-            eventMethod.setEventClass(MessageEvent.class);
         }
     }
 }

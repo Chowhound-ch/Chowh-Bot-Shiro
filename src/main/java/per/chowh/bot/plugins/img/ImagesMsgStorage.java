@@ -2,9 +2,9 @@ package per.chowh.bot.plugins.img;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
+import per.chowh.bot.core.event.message.MessageEvent;
+import per.chowh.bot.core.event.message.PrivateMessageEvent;
 import tools.jackson.databind.JsonNode;
-import com.mikuac.shiro.dto.event.message.MessageEvent;
-import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 import com.mikuac.shiro.enums.MsgTypeEnum;
 import com.mikuac.shiro.model.ArrayMsg;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,7 @@
 package per.chowh.bot.ext.dict.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import per.chowh.bot.ext.distribute.domain.EventPermit;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
 * @author hh825
@@ -50,6 +52,12 @@ public class DataDictService extends ServiceImpl<DataDictMapper, DataDict>{
         LambdaQueryWrapper<DataDict> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(DataDict::getDictCode, dictCode);
         return list(wrapper);
+    }
+
+    public List<String> listDictCodeDistinct(String dictCode) {
+        QueryWrapper<DataDict> wrapper = new QueryWrapper<>();
+        wrapper.select("DISTINCT dict_name").eq("dict_code", dictCode);
+        return list(wrapper).stream().map(DataDict::getDictName).toList();
     }
 
     @Cacheable(key = "#dictCode+'&value&'+#dictName")

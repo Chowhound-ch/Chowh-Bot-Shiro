@@ -3,9 +3,9 @@ package per.chowh.bot.core.utils;
 
 import com.mikuac.shiro.common.utils.MsgUtils;
 import com.mikuac.shiro.constant.ActionParams;
-import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
-import com.mikuac.shiro.dto.event.message.MessageEvent;
-import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
+import per.chowh.bot.core.event.message.GroupMessageEvent;
+import per.chowh.bot.core.event.message.MessageEvent;
+import per.chowh.bot.core.event.message.PrivateMessageEvent;
 
 /**
  * @author : Chowhound

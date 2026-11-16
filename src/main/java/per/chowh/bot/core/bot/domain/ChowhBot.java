@@ -10,8 +10,6 @@ import com.mikuac.shiro.core.BotPlugin;
 import com.mikuac.shiro.dto.action.common.ActionData;
 import com.mikuac.shiro.dto.action.common.ActionRaw;
 import com.mikuac.shiro.dto.action.common.MsgId;
-import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
-import com.mikuac.shiro.dto.event.message.MessageEvent;
 import com.mikuac.shiro.handler.ActionHandler;
 
 import lombok.Getter;
@@ -19,6 +17,8 @@ import lombok.Setter;
 import org.springframework.web.socket.WebSocketSession;
 import per.chowh.bot.core.bot.action.NapcatExtendApi;
 import per.chowh.bot.core.bot.response.LatestMsgResp;
+import per.chowh.bot.core.event.message.GroupMessageEvent;
+import per.chowh.bot.core.event.message.MessageEvent;
 import per.chowh.bot.core.utils.EventWrapper;
 import per.chowh.bot.core.utils.MsgUtils;
 import per.chowh.bot.utils.JacksonUtil;

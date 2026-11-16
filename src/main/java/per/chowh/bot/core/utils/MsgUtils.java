@@ -1,16 +1,15 @@
 package per.chowh.bot.core.utils;
 
+import per.chowh.bot.core.event.Event;
+import per.chowh.bot.core.event.message.AnyMessageEvent;
+import per.chowh.bot.core.event.message.GroupMessageEvent;
+import per.chowh.bot.core.event.message.MessageEvent;
+import per.chowh.bot.core.event.message.PrivateMessageEvent;
 import tools.jackson.databind.JsonNode;
-import com.mikuac.shiro.common.utils.ShiroUtils;
 import com.mikuac.shiro.constant.ActionParams;
-import com.mikuac.shiro.core.Bot;
 import com.mikuac.shiro.dto.action.common.ActionData;
 import com.mikuac.shiro.dto.action.response.GetForwardMsgResp;
 import com.mikuac.shiro.dto.action.response.MsgResp;
-import com.mikuac.shiro.dto.event.Event;
-import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
-import com.mikuac.shiro.dto.event.message.MessageEvent;
-import com.mikuac.shiro.dto.event.message.PrivateMessageEvent;
 import com.mikuac.shiro.enums.MsgTypeEnum;
 import com.mikuac.shiro.model.ArrayMsg;
 import per.chowh.bot.core.bot.domain.ChowhBot;
@@ -18,7 +17,6 @@ import per.chowh.bot.utils.JacksonUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author : Chowhound
@@ -35,9 +33,9 @@ public class MsgUtils {
 
     public static String getNickName(MessageEvent event) {
         if (ActionParams.GROUP.equals(event.getMessageType())) {
-            return ((GroupMessageEvent) event).getSender().getNickname();
+            return ((AnyMessageEvent) event).getSender().getNickname();
         } else if (ActionParams.PRIVATE.equals(event.getMessageType())) {
-            return ((PrivateMessageEvent) event).getPrivateSender().getNickname();
+            return ((AnyMessageEvent) event).getSender().getNickname();
         }
         return null;
     }

@@ -5,13 +5,13 @@ import com.mikuac.shiro.dto.action.common.ActionData;
 import com.mikuac.shiro.dto.action.common.ActionList;
 import com.mikuac.shiro.dto.action.response.FriendInfoResp;
 import com.mikuac.shiro.dto.action.response.GroupMemberInfoResp;
-import com.mikuac.shiro.dto.event.message.AnyMessageEvent;
 import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
-import com.mikuac.shiro.dto.event.message.MessageEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.bot.domain.ChowhBotContainer;
+import per.chowh.bot.core.event.message.AnyMessageEvent;
+import per.chowh.bot.core.event.message.MessageEvent;
 
 import java.util.Objects;
 
@@ -34,7 +34,7 @@ public class BotUtils{
     }
 
     public static String getUserCard(AnyMessageEvent event) {
-        GroupMessageEvent.GroupSender sender = event.getSender();
+        AnyMessageEvent.Sender sender = event.getSender();
         return StrUtil.isBlank(sender.getCard()) ? sender.getNickname() : sender.getCard();
     }
 

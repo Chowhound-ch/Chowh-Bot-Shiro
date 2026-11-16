@@ -34,8 +34,7 @@ public class FreeMarkerUtils {
         //创建freeMarker配置对象
         Configuration cfg = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
         //设置读取模板的基础路径
-        cfg.setTemplateLoader(new ClassTemplateLoader(
-        FreeMarkerUtils.class.getClass().getClassLoader(), "/templates"));
+        cfg.setTemplateLoader(new ClassTemplateLoader(FreeMarkerUtils.class, "/templates"));
         //设置编码格式
         cfg.setDefaultEncoding(StandardCharsets.UTF_8.toString());
         //设置模板异常处理

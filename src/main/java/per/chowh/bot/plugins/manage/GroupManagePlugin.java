@@ -1,8 +1,8 @@
 package per.chowh.bot.plugins.manage;
 
-import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
+import per.chowh.bot.core.event.message.GroupMessageEvent;
 import per.chowh.bot.core.permit.domain.Group;
 import per.chowh.bot.core.registery.annotation.EventListener;
 

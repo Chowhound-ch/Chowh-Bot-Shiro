@@ -1,11 +1,11 @@
 package per.chowh.bot.core.registery.interceptor;
 
 import cn.hutool.core.util.StrUtil;
-import com.mikuac.shiro.dto.event.message.MessageEvent;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
+import per.chowh.bot.core.event.message.MessageEvent;
 import per.chowh.bot.core.registery.annotation.EventListener;
 import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.utils.EventWrapper;

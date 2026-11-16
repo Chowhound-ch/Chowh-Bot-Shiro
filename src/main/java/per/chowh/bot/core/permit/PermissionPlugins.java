@@ -2,8 +2,6 @@ package per.chowh.bot.core.permit;
 
 import com.mikuac.shiro.annotation.common.Shiro;
 import com.mikuac.shiro.common.utils.ShiroUtils;
-import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
-import com.mikuac.shiro.dto.event.message.MessageEvent;
 import com.mikuac.shiro.model.ArrayMsg;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
+import per.chowh.bot.core.event.message.GroupMessageEvent;
+import per.chowh.bot.core.event.message.MessageEvent;
 import per.chowh.bot.core.registery.annotation.EventListener;
 import per.chowh.bot.core.permit.domain.User;
 import per.chowh.bot.core.permit.enums.GroupStatusEnum;

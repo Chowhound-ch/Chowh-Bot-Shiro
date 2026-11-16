@@ -1,8 +1,8 @@
 package per.chowh.bot.core.utils;
 
+import per.chowh.bot.core.event.Event;
+import per.chowh.bot.core.event.message.MessageEvent;
 import tools.jackson.databind.JsonNode;
-import com.mikuac.shiro.dto.event.Event;
-import com.mikuac.shiro.dto.event.message.MessageEvent;
 import lombok.Data;
 import per.chowh.bot.utils.JacksonUtil;
 
@@ -35,12 +35,12 @@ public class EventWrapper {
 
     public Long getUserId() {
         JsonNode node = eventJson.get(USER_ID);
-        return node == null ? null : node.asLong();
+        return node == null || node.isNull() ? null : node.asLong();
     }
 
     public Long getGroupId() {
         JsonNode node = eventJson.get(GROUP_ID);
-        return node == null ? null : node.asLong();
+        return node == null || node.isNull() ? null : node.asLong();
     }
 
     public String getMessage() {

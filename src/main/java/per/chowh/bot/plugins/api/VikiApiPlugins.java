@@ -2,8 +2,8 @@ package per.chowh.bot.plugins.api;
 
 import lombok.extern.slf4j.Slf4j;
 import per.chowh.bot.common.constants.Constants;
+import per.chowh.bot.core.event.message.GroupMessageEvent;
 import tools.jackson.databind.JsonNode;
-import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
