@@ -49,3 +49,4 @@ application-*.*
 *.db
 yarn.lock
 node_modules
+AGENTS.md
