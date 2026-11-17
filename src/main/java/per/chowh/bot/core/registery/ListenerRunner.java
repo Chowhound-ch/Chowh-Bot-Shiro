@@ -92,9 +92,8 @@ public class ListenerRunner {
         String key = groupId == null ? userId.toString() : groupId + "#" + userId;
         var listener = eventMethod.getEventListener();
         String message = listener.isRaw() ? eventWrapper.getRawMessage() : eventWrapper.getMessage();
-        String command = listener.cmd().isBlank() ? null : message;
         EventInvokeLog invokeLog = eventMethod.getInvokeLog().compute(key,
-                (ignored, previous) -> new EventInvokeLog(userId, groupId, Instant.now(), command));
+                (ignored, previous) -> new EventInvokeLog(userId, groupId, Instant.now(), message));
         try {
             botLogMapper.insert(eventMethod.getMethodId(), invokeLog);
         } catch (DataAccessException e) {
