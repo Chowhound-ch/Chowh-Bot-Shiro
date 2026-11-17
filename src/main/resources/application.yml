@@ -54,7 +54,7 @@ spring:
   sql:
     init:
       # 初始化脚本在 DataSource 就绪后、依赖 SqlSessionFactory 的 Bean 之前执行
-      # 脚本自身是 create table if not exists，重复执行无副作用
+      # 建表、建索引和旧数据兼容语句均可重复执行
       mode: always
       encoding: UTF-8
       schema-locations: file:./config/db/*.sql
@@ -84,7 +84,7 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
-      logic-delete-field: is_delete
+      logic-delete-field: isDelete
       logic-delete-value: 1
       logic-not-delete-value: 0
       id-type: auto

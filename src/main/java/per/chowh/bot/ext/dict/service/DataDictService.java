@@ -28,9 +28,7 @@ public class DataDictService {
 
     public IPage<DataDictCat> pageCategories(Page<DataDictCat> page) {
         return categoryMapper.selectPage(page,
-                new LambdaQueryWrapper<DataDictCat>()
-                        .eq(DataDictCat::getIsDelete, 0)
-                        .orderByAsc(DataDictCat::getCatCode));
+                new LambdaQueryWrapper<DataDictCat>().orderByAsc(DataDictCat::getCatCode));
     }
 
     public void saveCategory(String catCode, String catName) {
@@ -45,7 +43,6 @@ public class DataDictService {
     public List<DataDictCatDetail> listDetails(String catCode) {
         return detailMapper.selectList(new LambdaQueryWrapper<DataDictCatDetail>()
                 .eq(DataDictCatDetail::getCatCode, catCode)
-                .eq(DataDictCatDetail::getIsDelete, 0)
                 .orderByAsc(DataDictCatDetail::getDictCode));
     }
 
@@ -54,8 +51,7 @@ public class DataDictService {
         DataDictCatDetail detail = detailMapper.selectOne(new LambdaQueryWrapper<DataDictCatDetail>()
                 .select(DataDictCatDetail::getDictName)
                 .eq(DataDictCatDetail::getCatCode, catCode)
-                .eq(DataDictCatDetail::getDictCode, dictCode)
-                .eq(DataDictCatDetail::getIsDelete, 0));
+                .eq(DataDictCatDetail::getDictCode, dictCode));
         return detail == null ? dictCode : detail.getDictName();
     }
 }

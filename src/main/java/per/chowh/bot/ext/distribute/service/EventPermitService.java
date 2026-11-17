@@ -25,7 +25,6 @@ public class EventPermitService extends ServiceImpl<EventPermitMapper, EventPerm
     public List<EventPermit> getByEventFlag(String eventFlag) {
         LambdaQueryWrapper<EventPermit> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(EventPermit::getEventFlag, eventFlag);
-        wrapper.eq(EventPermit::getIsDelete, 0);
         return list(wrapper);
     }
 
@@ -41,7 +40,6 @@ public class EventPermitService extends ServiceImpl<EventPermitMapper, EventPerm
         LambdaQueryWrapper<EventPermit> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(EventPermit::getTarget, targetId);
         wrapper.eq(EventPermit::getPermitType, type);
-        wrapper.eq(EventPermit::getIsDelete, 0);
         remove(wrapper);
         return eventPermits;
     }
@@ -50,7 +48,6 @@ public class EventPermitService extends ServiceImpl<EventPermitMapper, EventPerm
         LambdaQueryWrapper<EventPermit> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(EventPermit::getTarget, targetId);
         wrapper.eq(EventPermit::getPermitType, type);
-        wrapper.eq(EventPermit::getIsDelete, 0);
         return list(wrapper);
     }
 }
