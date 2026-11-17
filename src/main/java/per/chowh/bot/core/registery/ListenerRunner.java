@@ -2,12 +2,17 @@ package per.chowh.bot.core.registery;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
+import per.chowh.bot.core.event.message.GroupMessageEvent;
+import per.chowh.bot.core.event.message.PrivateMessageEvent;
 import per.chowh.bot.core.registery.config.EventListenerConfig;
+import per.chowh.bot.core.registery.domain.EventInvokeLog;
 import per.chowh.bot.core.registery.domain.EventMethod;
 import per.chowh.bot.core.registery.domain.EventParam;
 import per.chowh.bot.core.registery.interceptor.EventHandlerInterceptorComposite;
+import per.chowh.bot.core.registery.mapper.BotLogMapper;
 import per.chowh.bot.core.registery.support.ListenerArgumentResolverComposite;
 import per.chowh.bot.core.utils.EventWrapper;
 import per.chowh.bot.core.utils.ListenerUtils;
@@ -15,6 +20,7 @@ import per.chowh.bot.utils.exception.CmdExecException;
 
 import javax.net.ssl.SSLHandshakeException;
 import java.lang.reflect.InvocationTargetException;
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.*;
@@ -30,6 +36,8 @@ public class ListenerRunner {
     private EventRegister eventRegister;
     @Autowired
     private EventListenerConfig config;
+    @Autowired
+    private BotLogMapper botLogMapper;
     private final ThreadPoolExecutor executor = new ThreadPoolExecutor(4, 8,
             0L, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<>(512), new ThreadPoolExecutor.CallerRunsPolicy());
@@ -57,6 +65,7 @@ public class ListenerRunner {
         try {
             if (interceptors.preHandle(bot, eventMethod, eventWrapper)) {
                 Object[] args = getArgs(bot, eventMethod, eventWrapper);
+                recordInvocation(eventMethod, eventWrapper);// 记录触发日志
                 Object res = eventMethod.getMethod().invoke(eventMethod.getBean(), args);
                 interceptors.postHandle(bot, eventMethod, eventWrapper, res); // 后置操作
             }
@@ -68,6 +77,30 @@ public class ListenerRunner {
         }
     }
 
+
+    private void recordInvocation(EventMethod eventMethod, EventWrapper eventWrapper) {
+        Long groupId;
+        switch (eventWrapper.getEvent()) {
+            case GroupMessageEvent group when group.getGroupId() != null -> groupId = group.getGroupId();
+            case PrivateMessageEvent ignored -> groupId = null;
+            default -> { return; }
+        }
+        Long userId = eventWrapper.getUserId();
+        if (userId == null) {
+            return;
+        }
+        String key = groupId == null ? userId.toString() : groupId + "#" + userId;
+        var listener = eventMethod.getEventListener();
+        String message = listener.isRaw() ? eventWrapper.getRawMessage() : eventWrapper.getMessage();
+        String command = listener.cmd().isBlank() ? null : message;
+        EventInvokeLog invokeLog = eventMethod.getInvokeLog().compute(key,
+                (ignored, previous) -> new EventInvokeLog(userId, groupId, Instant.now(), command));
+        try {
+            botLogMapper.insert(eventMethod.getMethodId(), invokeLog);
+        } catch (DataAccessException e) {
+            log.warn("[{}]写入 bot_log 失败", eventMethod.getMethodId(), e);
+        }
+    }
 
     private Object[] getArgs(ChowhBot bot, EventMethod eventMethod, EventWrapper eventWrapper) throws Exception {
         List<EventParam> params = eventMethod.getParams();

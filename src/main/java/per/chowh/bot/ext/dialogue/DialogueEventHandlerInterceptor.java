@@ -18,4 +18,6 @@ public class DialogueEventHandlerInterceptor implements EventHandlerInterceptor 
 
         return EventHandlerInterceptor.super.preHandle(bot, method, event);
     }
+
+
 }

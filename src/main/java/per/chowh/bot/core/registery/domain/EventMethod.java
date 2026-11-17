@@ -2,13 +2,16 @@ package per.chowh.bot.core.registery.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import per.chowh.bot.core.registery.annotation.EventListener;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author : Chowhound
@@ -33,6 +36,10 @@ public class EventMethod {
     private EventListener eventListener;
 
     private Map<String, Object> extMap;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private final Map<String, EventInvokeLog> invokeLog = new ConcurrentHashMap<>();
 
     public void putExt(String key, Object value) {
         if (extMap == null) {
