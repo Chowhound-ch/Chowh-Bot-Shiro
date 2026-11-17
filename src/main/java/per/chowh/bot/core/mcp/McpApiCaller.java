@@ -1,23 +1,21 @@
 package per.chowh.bot.core.mcp;
 
 import io.modelcontextprotocol.client.McpSyncClient;
-import io.modelcontextprotocol.spec.McpSchema;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-import per.chowh.bot.utils.JacksonUtil;
-import per.chowh.bot.utils.StringUtils;
 
 import java.util.List;
-import java.util.Map;
+
+/**
+ * 由于会把接口调用拆解到mcp服务器，不方便维护，暂时放弃
+ */
 
 @Component
 @ConditionalOnProperty(prefix = "spring.ai.mcp.client", name = "enabled", havingValue = "true", matchIfMissing = true)
 @ConditionalOnProperty(prefix = "spring.ai.mcp.client", name = "type", havingValue = "SYNC", matchIfMissing = true)
-public class McpApiCaller implements ApplicationRunner {
+public class McpApiCaller {
     // Spring Bean 内
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Resource(name = "mcpSyncClients")
@@ -31,15 +29,15 @@ public class McpApiCaller implements ApplicationRunner {
     }
 
 
-    @Override
-    public void run(ApplicationArguments args) throws Exception {
-//        McpSchema.CallToolResult tool = mcpClients.getFirst().callTool(
-//                new McpSchema.CallToolRequest(
-//                        "api_fixed_api",
-//                        Map.of("kwargs", "{}")
-//                )
-//        );
-//        System.out.println(JacksonUtil.toJsonString(tool));
-    }
+//    @Override
+//    public void run(ApplicationArguments args) throws Exception {
+////        McpSchema.CallToolResult tool = mcpClients.getFirst().callTool(
+////                new McpSchema.CallToolRequest(
+////                        "api_fixed_api",
+////                        Map.of("kwargs", "{}")
+////                )
+////        );
+////        System.out.println(JacksonUtil.toJsonString(tool));
+//    }
 
 }

@@ -42,7 +42,7 @@ public class VikiApiPlugins {
     @Autowired
     private MsgDistributeService distributeService;
 
-    @Scheduled(cron ="0 0 9 * * ?")
+    @Scheduled(cron ="0 30 8 * * ?")
     public void getGroupTitle() throws IOException {
         distributeService.distributeMsg(getTheNewsMsg(), NEWS);
     }
@@ -55,7 +55,7 @@ public class VikiApiPlugins {
 
     private String getTheNewsMsg() throws IOException {
         //        byte[] bytes = HttpUtils.doGetBytes(BASE_API + "/60s?encoding=image-proxy");
-        JsonNode node = HttpProxyUtils.doGetJson(Constants.getVikiUrl() + "/60s");
+        JsonNode node = HttpProxyUtils.doGetJson(Constants.getVikiUrl() + "/v2/60s");
         byte[] bytes = null;
         if (node != null && !node.isEmpty()) {
             int code = node.get("code").intValue();
@@ -77,6 +77,7 @@ public class VikiApiPlugins {
                 .build();
     }
 
+    // epic周免
     @Scheduled(cron ="0 0 10 * * 5")
     public void getEpicWeekFree() throws IOException {
         String message = getEpicWeekFreeMsg();
@@ -93,7 +94,7 @@ public class VikiApiPlugins {
 
 
     private String getEpicWeekFreeMsg() throws IOException {
-        JsonNode node = HttpUtils.doGetJson(Constants.getVikiUrl() + "/epic");
+        JsonNode node = HttpUtils.doGetJson(Constants.getVikiUrl() + "/v2/epic");
         if (node == null || node.path("code").asInt(0) != 200 || !node.path("data").isArray()) {
             return "";
         }

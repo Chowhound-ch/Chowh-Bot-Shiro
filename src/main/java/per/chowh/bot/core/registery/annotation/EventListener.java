@@ -14,6 +14,7 @@ import java.lang.annotation.Target;
  * @author : Chowhound
  * @since : 2025/8/1 - 11:31
  */
+@SuppressWarnings("unused")
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface EventListener {

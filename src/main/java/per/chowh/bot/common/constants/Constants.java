@@ -9,14 +9,8 @@ import per.chowh.bot.utils.ConfigUtils;
 public class Constants {
     public static final String EVENT_FILTER = "eventFilter";
 
-    // region 配置文件
-    public static final String VIKI_URL = "VIKI_URL";
-
-
-
-    // endregion
 
     public static String getVikiUrl() {
-        return ConfigUtils.getConfig(VIKI_URL);
+        return ConfigUtils.getConfig("VIKI_URL");
     }
 }

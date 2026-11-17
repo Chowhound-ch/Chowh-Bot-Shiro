@@ -31,7 +31,6 @@ import java.util.List;
 
 @Slf4j
 @Component
-@SuppressWarnings("unused")
 public class ImagesMsgStorage {
     @Value("${per.file-location}")
     private String IMAGE_PATH;
