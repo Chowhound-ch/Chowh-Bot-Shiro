@@ -2,16 +2,15 @@ package per.chowh.bot.ext.distribute.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
-import per.chowh.bot.core.permit.service.GroupService;
+import org.springframework.transaction.annotation.Transactional;
 import per.chowh.bot.ext.distribute.domain.EventPermit;
 import per.chowh.bot.ext.distribute.mapper.EventPermitMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,38 +22,27 @@ import java.util.List;
 @CacheConfig(cacheNames = "eventPermit")
 @Service
 public class EventPermitService extends ServiceImpl<EventPermitMapper, EventPermit>{
-    @Autowired
-    private EventPermitService self;
-
     public List<EventPermit> getByEventFlag(String eventFlag) {
         LambdaQueryWrapper<EventPermit> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(EventPermit::getEventFlag, eventFlag);
+        wrapper.eq(EventPermit::getIsDelete, 0);
         return list(wrapper);
     }
-    public EventPermit getByTargetIdAndEventFlag(Long targetId, String eventFlag) {
-        LambdaQueryWrapper<EventPermit> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(EventPermit::getEventFlag, eventFlag);
-        wrapper.eq(EventPermit::getTarget, targetId);
-        return getOne(wrapper);
-    }
 
+    @Transactional
     public void saveEventPermitList(List<EventPermit> eventPermitList) {
-        eventPermitList.forEach(eventPermit -> {
-            EventPermit curPermit = self.getByTargetIdAndEventFlag(
-                    eventPermit.getTarget(), eventPermit.getEventFlag());
-            if (curPermit != null) {
-                eventPermit.setPermitId(curPermit.getPermitId());
-            }
-        });
-        self.saveOrUpdateBatch(eventPermitList);
+        Date now = new Date();
+        eventPermitList.forEach(eventPermit -> baseMapper.insertMissing(eventPermit, now));
     }
 
+    @Transactional
     public List<EventPermit> removeByTargetAndType(Long targetId, int type) {
         List<EventPermit> eventPermits = listByTargetAndType(targetId, type);
         LambdaQueryWrapper<EventPermit> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(EventPermit::getTarget, targetId);
         wrapper.eq(EventPermit::getPermitType, type);
-        self.remove(wrapper);
+        wrapper.eq(EventPermit::getIsDelete, 0);
+        remove(wrapper);
         return eventPermits;
     }
 
@@ -62,6 +50,7 @@ public class EventPermitService extends ServiceImpl<EventPermitMapper, EventPerm
         LambdaQueryWrapper<EventPermit> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(EventPermit::getTarget, targetId);
         wrapper.eq(EventPermit::getPermitType, type);
+        wrapper.eq(EventPermit::getIsDelete, 0);
         return list(wrapper);
     }
 }

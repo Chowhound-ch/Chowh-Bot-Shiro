@@ -8,15 +8,12 @@ import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.event.message.PrivateMessageEvent;
 import per.chowh.bot.core.permit.enums.PermissionEnum;
 import per.chowh.bot.core.registery.annotation.EventListener;
-import per.chowh.bot.core.utils.MsgBuilder;
+import per.chowh.bot.core.utils.MsgTable;
 import per.chowh.bot.ext.dict.domain.DataDictCat;
 import per.chowh.bot.ext.dict.domain.DataDictCatDetail;
 import per.chowh.bot.ext.dict.service.DataDictService;
-import per.chowh.bot.utils.FreeMarkerUtils;
-import per.chowh.bot.utils.PlaywrightScreenshot;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author : Chowhound
@@ -36,7 +33,7 @@ public class DataDictPlugins {
         List<List<String>> rows = iPage.getRecords().stream()
                 .map(category -> List.of(category.getCatCode(), category.getCatName()))
                 .toList();
-        sendTable(bot, event, "字典分类列表", List.of("主编码", "字典名称"), rows,
+        MsgTable.send(bot, event, "字典分类列表", List.of("主编码", "字典名称"), rows,
                 "当前页 " + page + "　总页数 " + iPage.getPages() + "　总记录数 " + iPage.getTotal());
     }
 
@@ -45,7 +42,7 @@ public class DataDictPlugins {
             name = "增加字典")
     public void addDict(ChowhBot bot, PrivateMessageEvent event, String catCode, String catName) {
         dictService.saveCategory(catCode, catName);
-        sendTable(bot, event, "字典分类已保存", List.of("主编码", "字典名称"),
+        MsgTable.send(bot, event, "字典分类已保存", List.of("主编码", "字典名称"),
                 List.of(List.of(catCode, catName)), "");
     }
 
@@ -56,7 +53,7 @@ public class DataDictPlugins {
             bot.sendMsg(event, "字典分类 " + catCode + " 不存在，请先增加字典", true);
             return;
         }
-        sendTable(bot, event, "字典明细已保存 · " + catCode, List.of("子编码", "明细名称"),
+        MsgTable.send(bot, event, "字典明细已保存 · " + catCode, List.of("子编码", "明细名称"),
                 List.of(List.of(dictCode, dictName)), "");
     }
 
@@ -66,18 +63,7 @@ public class DataDictPlugins {
         List<List<String>> rows = details.stream()
                 .map(detail -> List.of(detail.getDictCode(), detail.getDictName()))
                 .toList();
-        sendTable(bot, event, "字典明细 · " + catCode, List.of("子编码", "明细名称"), rows,
+        MsgTable.send(bot, event, "字典明细 · " + catCode, List.of("子编码", "明细名称"), rows,
                 "总记录数 " + details.size());
-    }
-
-    private void sendTable(ChowhBot bot, PrivateMessageEvent event, String title,
-                           List<String> columns, List<List<String>> rows, String summary) {
-        String html = FreeMarkerUtils.getTemplate("msg/data_dict.ftl", Map.of(
-                "title", title, "columns", columns, "rows", rows, "summary", summary));
-        if (html.isBlank()) {
-            throw new IllegalStateException("字典表格模板渲染失败");
-        }
-        byte[] image = PlaywrightScreenshot.takeHtmlScreenshot(html, ".dict-card");
-        bot.sendMsg(event, new MsgBuilder().img(image).build(), false);
     }
 }

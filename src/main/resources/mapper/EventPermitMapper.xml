@@ -38,4 +38,15 @@
         ${tb_alias}.modify_time as "${prefix}modify_time", 
         ${tb_alias}.is_delete as "${prefix}is_delete"
     </sql>
+    <insert id="insertMissing">
+        insert into event_permit (event_flag, permit_type, target, create_time, modify_time)
+        select #{permit.eventFlag}, #{permit.permitType}, #{permit.target}, #{now}, #{now}
+        where not exists (
+            select 1 from event_permit
+            where event_flag = #{permit.eventFlag}
+              and permit_type = #{permit.permitType}
+              and target = #{permit.target}
+              and is_delete = 0
+        )
+    </insert>
 </mapper>
