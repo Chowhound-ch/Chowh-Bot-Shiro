@@ -33,13 +33,13 @@ public class McpApiCaller implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        McpSchema.CallToolResult tool = mcpClients.getFirst().callTool(
-                new McpSchema.CallToolRequest(
-                        "api_fixed_api",
-                        Map.of("kwargs", "{}")
-                )
-        );
-        System.out.println(JacksonUtil.toJsonString(tool));
+//        McpSchema.CallToolResult tool = mcpClients.getFirst().callTool(
+//                new McpSchema.CallToolRequest(
+//                        "api_fixed_api",
+//                        Map.of("kwargs", "{}")
+//                )
+//        );
+//        System.out.println(JacksonUtil.toJsonString(tool));
     }
 
 }
