@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.chowh.bot.ext.dict.mapper.DataDictCatDetailMapper">
+    <insert id="saveDetail">
+        insert into data_dict_cat_detail (cat_code, dict_code, dict_name, create_time, modify_time)
+        select cat_code, #{dictCode}, #{dictName}, #{now}, #{now}
+        from data_dict_cat
+        where cat_code = #{catCode} and is_delete = 0
+        on conflict (cat_code, dict_code) do update
+        set dict_name = excluded.dict_name, modify_time = excluded.modify_time, is_delete = 0
+    </insert>
+</mapper>

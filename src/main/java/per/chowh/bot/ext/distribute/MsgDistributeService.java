@@ -1,26 +1,16 @@
 package per.chowh.bot.ext.distribute;
 
-import cn.hutool.core.codec.Base64;
-import cn.hutool.core.util.URLUtil;
 import com.mikuac.shiro.model.ArrayMsg;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.utils.BotUtils;
-import per.chowh.bot.core.utils.MsgBuilder;
 import per.chowh.bot.ext.distribute.domain.EventPermit;
 import per.chowh.bot.ext.distribute.service.EventPermitService;
-import per.chowh.bot.ext.template.utils.MsgParamsUtils;
-import per.chowh.bot.utils.FreeMarkerUtils;
-import per.chowh.bot.utils.PlaywrightScreenshot;
 
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 处理消息分发

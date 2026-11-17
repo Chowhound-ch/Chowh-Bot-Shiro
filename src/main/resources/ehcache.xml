@@ -31,12 +31,8 @@
     <cache alias="eventPermit" uses-template="defaults">
         <value-type>per.chowh.bot.ext.distribute.domain.EventPermit</value-type>
     </cache>
-    <cache alias="dataDict" uses-template="defaults">
-        <key-type>java.lang.String</key-type>
-        <value-type>per.chowh.bot.ext.dict.domain.DataDict</value-type>
+    <cache alias="dataDictName" uses-template="defaults">
+        <key-type>org.springframework.cache.interceptor.SimpleKey</key-type>
     </cache>
-<!--    <cache alias="dataDict" uses-template="defaults">-->
-<!--        <value-type>per.chowh.bot.ext.dict.</value-type>-->
-<!--    </cache>-->
 
 </config>

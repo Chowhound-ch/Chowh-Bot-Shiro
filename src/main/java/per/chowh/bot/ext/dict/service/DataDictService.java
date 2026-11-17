@@ -1,85 +1,61 @@
 package per.chowh.bot.ext.dict.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
-import per.chowh.bot.ext.dict.domain.DataDict;
-import per.chowh.bot.ext.dict.mapper.DataDictMapper;
 import org.springframework.stereotype.Service;
-import per.chowh.bot.ext.distribute.domain.EventPermit;
+import per.chowh.bot.ext.dict.domain.DataDictCat;
+import per.chowh.bot.ext.dict.domain.DataDictCatDetail;
+import per.chowh.bot.ext.dict.mapper.DataDictCatDetailMapper;
+import per.chowh.bot.ext.dict.mapper.DataDictCatMapper;
 
+import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
-/**
-* @author hh825
-* @description 针对表【data_dict】的数据库操作Service实现
-* @createDate 2025-12-01 16:27:58
-*/
-@Scope(proxyMode = ScopedProxyMode.TARGET_CLASS)
-@CacheConfig(cacheNames = "dataDict")
 @Service
-public class DataDictService extends ServiceImpl<DataDictMapper, DataDict>{
-    @Autowired
-    private DataDictService self;
+@CacheConfig(cacheNames = "dataDictName")
+public class DataDictService {
+    private final DataDictCatMapper categoryMapper;
+    private final DataDictCatDetailMapper detailMapper;
 
-    @CachePut(key = "#entity.dictCode+ '&value&' + #entity.dictName")
-    public DataDict saveDataDict(DataDict entity) {
-        DataDict dictValue = self.getDictValue(entity.getDictCode(), entity.getDictName());
-        if (!dictValue.isNull()) {
-            entity.setDictId(dictValue.getDictId());
-            this.updateById(entity);
-        } else {
-            this.save(entity);
-        }
-        return entity;
+    public DataDictService(DataDictCatMapper categoryMapper, DataDictCatDetailMapper detailMapper) {
+        this.categoryMapper = categoryMapper;
+        this.detailMapper = detailMapper;
     }
 
-
-    public IPage<String> listPage(Page<DataDict> page) {
-        return baseMapper.listDictNamePage(page);
+    public IPage<DataDictCat> pageCategories(Page<DataDictCat> page) {
+        return categoryMapper.selectPage(page,
+                new LambdaQueryWrapper<DataDictCat>()
+                        .eq(DataDictCat::getIsDelete, 0)
+                        .orderByAsc(DataDictCat::getCatCode));
     }
 
-    public List<DataDict> listByDictCode(String dictCode) {
-        LambdaQueryWrapper<DataDict> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(DataDict::getDictCode, dictCode);
-        return list(wrapper);
+    public void saveCategory(String catCode, String catName) {
+        categoryMapper.saveCategory(catCode, catName, new Date());
     }
 
-    public List<String> listDictCodeDistinct(String dictCode) {
-        QueryWrapper<DataDict> wrapper = new QueryWrapper<>();
-        wrapper.select("DISTINCT dict_name").eq("dict_code", dictCode);
-        return list(wrapper).stream().map(DataDict::getDictName).toList();
+    @CacheEvict(key = "new org.springframework.cache.interceptor.SimpleKey(#p0, #p1)", condition = "#result")
+    public boolean saveDetail(String catCode, String dictCode, String dictName) {
+        return detailMapper.saveDetail(catCode, dictCode, dictName, new Date()) > 0;
     }
 
-    @Cacheable(key = "#dictCode+'&value&'+#dictName")
-    public DataDict getDictValue(String dictCode, String dictName) {
-        LambdaQueryWrapper<DataDict> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(DataDict::getDictCode, dictCode);
-        wrapper.eq(DataDict::getDictName, dictName);
-        DataDict dataDict = getOne(wrapper);
-        if (dataDict == null) {
-            return DataDict.NULL;
-        }
-        return dataDict;
+    public List<DataDictCatDetail> listDetails(String catCode) {
+        return detailMapper.selectList(new LambdaQueryWrapper<DataDictCatDetail>()
+                .eq(DataDictCatDetail::getCatCode, catCode)
+                .eq(DataDictCatDetail::getIsDelete, 0)
+                .orderByAsc(DataDictCatDetail::getDictCode));
     }
-    @Cacheable(key = "#dictCode+'&name&'+#dictValue")
-    public DataDict getDictName(String dictCode, String dictValue) {
-        LambdaQueryWrapper<DataDict> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(DataDict::getDictCode, dictCode);
-        wrapper.eq(DataDict::getDictValue, dictValue);
-        DataDict dataDict = getOne(wrapper);
-        if (dataDict == null) {
-            return DataDict.NULL;
-        }
-        return dataDict;
+
+    @Cacheable(sync = true, condition = "#p0 != null && #p1 != null")
+    public String getDetailName(String catCode, String dictCode) {
+        DataDictCatDetail detail = detailMapper.selectOne(new LambdaQueryWrapper<DataDictCatDetail>()
+                .select(DataDictCatDetail::getDictName)
+                .eq(DataDictCatDetail::getCatCode, catCode)
+                .eq(DataDictCatDetail::getDictCode, dictCode)
+                .eq(DataDictCatDetail::getIsDelete, 0));
+        return detail == null ? dictCode : detail.getDictName();
     }
 }
