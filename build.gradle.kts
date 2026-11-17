@@ -39,6 +39,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-quartz")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.ai:spring-ai-starter-mcp-client")
+    implementation("io.minio:minio:9.0.4")
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-freemarker
     implementation("org.springframework.boot:spring-boot-starter-freemarker")
     // https://mvnrepository.com/artifact/com.microsoft.playwright/playwright

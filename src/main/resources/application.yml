@@ -25,6 +25,11 @@ per:
     enabled: true
     profile: ${spring.profiles.active}
 #    files: .env.${spring.profiles.active}
+  minio:
+    enabled: ${BOT_MINIO_ENABLED:false}
+    endpoint: ${BOT_MINIO_ENDPOINT:}
+    access-key: ${BOT_MINIO_ACCESS_KEY:}
+    secret-key: ${BOT_MINIO_SECRET_KEY:}
 
 server:
   port: 8002

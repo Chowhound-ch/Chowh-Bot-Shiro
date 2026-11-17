@@ -46,16 +46,3 @@ create index if not exists event_permit_active_flag_idx
     on event_permit (event_flag, permit_type, target) where is_delete = 0;
 create index if not exists event_permit_active_target_idx
     on event_permit (target, permit_type) where is_delete = 0;
-
-create table if not exists `data_dict`
-(
-    dict_id     INTEGER
-    constraint data_dict_pk
-    primary key autoincrement,
-    dict_code   TEXT,
-    dict_name   TEXT,
-    create_time datetime,
-    modify_time datetime,
-    is_delete   integer default 0,
-    dict_value TEXT
-)

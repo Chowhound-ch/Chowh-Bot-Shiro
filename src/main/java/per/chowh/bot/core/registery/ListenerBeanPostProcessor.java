@@ -51,8 +51,9 @@ public class ListenerBeanPostProcessor implements BeanPostProcessor {
                             if (eventMethod != null) {
                                 throw new IllegalArgumentException("每个监听器仅支持监听一种Event");
                             }
+                            String methodId = aClass.getSimpleName() + "#" + method.getName();
                             // 检测到具体要监听的事件
-                            eventMethod = new EventMethod(type, beanName, method, bean, methodParameters, eventListener, new HashMap<>());
+                            eventMethod = new EventMethod(type, beanName, methodId, method, bean, methodParameters, eventListener, new HashMap<>());
                         }
                         // 除Event的参数，跟据Name解析
                         EventParam eventParam = new EventParam();

@@ -22,6 +22,8 @@ public class EventMethod {
 
     private String beanName;
 
+    private String methodId; // 监听方法id
+
     private Method method;
 
     private Object bean;

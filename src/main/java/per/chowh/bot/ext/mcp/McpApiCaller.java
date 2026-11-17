@@ -1,4 +1,4 @@
-package per.chowh.bot.core.mcp;
+package per.chowh.bot.ext.mcp;
 
 import io.modelcontextprotocol.client.McpSyncClient;
 import jakarta.annotation.PostConstruct;

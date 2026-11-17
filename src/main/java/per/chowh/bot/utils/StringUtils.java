@@ -2,11 +2,16 @@ package per.chowh.bot.utils;
 
 import cn.hutool.core.util.StrUtil;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * @author : Chowhound
  * @since : 2025/9/4 - 11:12
  */
 public class StringUtils {
+    private static final Pattern ENVIRONMENT_PLACEHOLDER =
+            Pattern.compile("#\\{(?<quote>`?)(?<key>[A-Za-z_][A-Za-z0-9_.-]*)\\k<quote>\\}");
 
     @SuppressWarnings("unchecked")
     public static <T> T convertStringToType(String str, Class<T> targetType) {
@@ -39,5 +44,14 @@ public class StringUtils {
         } else {
             throw new IllegalArgumentException("Unsupported target type: " + targetType);
         }
+    }
+
+
+    public static String parseByEnvironment(String str) {
+        if (str == null) {
+            return null;
+        }
+        return ENVIRONMENT_PLACEHOLDER.matcher(str).replaceAll(match ->
+                Matcher.quoteReplacement(ConfigUtils.getConfig(match.group("key"), match.group())));
     }
 }
