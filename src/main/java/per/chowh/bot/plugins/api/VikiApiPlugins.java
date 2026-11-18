@@ -1,9 +1,11 @@
 package per.chowh.bot.plugins.api;
 
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import per.chowh.bot.common.constants.Constants;
 import per.chowh.bot.core.event.message.GroupMessageEvent;
+import per.chowh.bot.utils.*;
 import tools.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -13,12 +15,6 @@ import per.chowh.bot.core.registery.annotation.EventListener;
 import per.chowh.bot.core.utils.MsgBuilder;
 import per.chowh.bot.ext.distribute.MsgDistributeService;
 import per.chowh.bot.plugins.api.entity.EpicFreeGameInfo;
-import per.chowh.bot.utils.DateUtils;
-import per.chowh.bot.utils.FreeMarkerUtils;
-import per.chowh.bot.utils.HttpProxyUtils;
-import per.chowh.bot.utils.HttpUtils;
-import per.chowh.bot.utils.JacksonUtil;
-import per.chowh.bot.utils.PlaywrightScreenshot;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +33,8 @@ import java.util.stream.Stream;
 public class VikiApiPlugins {
     public static final String EPIC_FREE = "epic";
     public static final String NEWS = "60s";
+    public static final String MOYU = "moyu";
+    private static final String MOYU_CALENDAR_API = "https://api.moyujidi.com/api/moyurili";
     private static final int MAX_COVER_BYTES = 2 * 1024 * 1024;
 
     @Autowired
@@ -48,7 +46,7 @@ public class VikiApiPlugins {
     }
 
 
-    @EventListener(cmd = "60s", name = "60s读懂世界")
+    @EventListener(cmd = NEWS, name = "60s读懂世界")
     public void getGroupTitle(ChowhBot bot, GroupMessageEvent event) throws IOException {
         bot.sendGroupMsg(event.getGroupId(), getTheNewsMsg(), false);
     }
@@ -77,6 +75,35 @@ public class VikiApiPlugins {
                 .build();
     }
 
+    @Scheduled(cron = "0 30 8 * * ?")
+    public void pushMoyuCalendar() throws IOException {
+        String message = getMoyuCalendarMsg();
+        if (!message.isEmpty()) {
+            distributeService.distributeMsg(message, MOYU);
+        }
+    }
+
+    @EventListener(cmd = "摸鱼", name = "摸鱼人日历")
+    public void getMoyuCalendar(ChowhBot bot, GroupMessageEvent event) throws IOException {
+        String message = getMoyuCalendarMsg();
+        bot.sendGroupMsg(event.getGroupId(), message.isEmpty() ? "摸鱼人日历获取失败" : message, false);
+    }
+
+    private String getMoyuCalendarMsg() throws IOException {
+        JsonNode data = HttpUtils.doGetJson(MOYU_CALENDAR_API);
+        if (data == null || data.path("code").asInt(-1) != 0) {
+            return "";
+        }
+        String imageUrl = data.get("data").get("url").asString("");
+        if (StrUtil.isBlank(imageUrl)) {
+            return "";
+        }
+        byte[] bytes = HttpUtils.doGetBytes(imageUrl);
+
+        return bytes.length == 0 ? "" : MsgBuilder.builder().img(bytes).build();
+    }
+
+
     // epic周免
     @Scheduled(cron ="0 0 10 * * 5")
     public void getEpicWeekFree() throws IOException {
@@ -86,7 +113,7 @@ public class VikiApiPlugins {
         }
     }
 
-    @EventListener(cmd = "epic周免", name = "epic周免")
+    @EventListener(cmd = EPIC_FREE, name = "epic周免")
     public void getEpicWeekFree(ChowhBot bot, GroupMessageEvent event) throws IOException {
         String message = getEpicWeekFreeMsg();
         bot.sendGroupMsg(event.getGroupId(), message.isEmpty() ? "查询失败" : message, false);
