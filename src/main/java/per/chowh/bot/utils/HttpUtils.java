@@ -91,7 +91,7 @@ public class HttpUtils {
     /**
      * 获取url
      */
-    private static String getUrl(String url, Map<String, ?> params){
+    public static String getUrl(String url, Map<String, ?> params){
         if (params != null && !params.isEmpty()) {
             url = url + "?" + URLUtil.buildQuery(params, Charset.defaultCharset());
         }

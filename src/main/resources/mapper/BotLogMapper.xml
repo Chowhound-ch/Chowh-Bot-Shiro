@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="per.chowh.bot.core.registery.mapper.BotLogMapper">
+    <insert id="insert">
+        insert into bot_log (method_id, user_id, group_id, invoke_time, command)
+        values (#{methodId}, #{entry.userId}, #{entry.groupId,jdbcType=BIGINT},
+                #{entry.invokeTime}, #{entry.command,jdbcType=VARCHAR})
+    </insert>
+</mapper>

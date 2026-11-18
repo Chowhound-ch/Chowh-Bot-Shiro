@@ -40,4 +40,15 @@ public class EventRegister {
                 .filter(eventMethod -> eventMethod.getEventClass().isAssignableFrom(eventClass))
                 .toList();
     }
+
+    /**
+     * 获取eventClass可以触发的EventMethod
+     * @return 待执行的EventMethod
+     */
+    public EventMethod getEventMethods(String methodId) {
+        return eventMethods.stream()
+                .filter(eventMethod -> eventMethod.getMethodId().equals(methodId))
+                .findFirst()
+                .orElse(null);
+    }
 }

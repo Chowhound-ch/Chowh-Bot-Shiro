@@ -14,4 +14,9 @@ public class EventInvokeLog {
     private Long groupId;
     private Instant invokeTime;
     private String command;
+    private long eventSequence;
+
+    public EventInvokeLog(Long userId, Long groupId, Instant invokeTime, String command) {
+        this(userId, groupId, invokeTime, command, 0);
+    }
 }

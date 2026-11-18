@@ -1,11 +1,15 @@
 package per.chowh.bot.core.utils;
 
 import per.chowh.bot.core.event.Event;
+import per.chowh.bot.core.event.message.GroupMessageEvent;
 import per.chowh.bot.core.event.message.MessageEvent;
+import per.chowh.bot.core.event.message.PrivateMessageEvent;
+import lombok.EqualsAndHashCode;
 import tools.jackson.databind.JsonNode;
 import lombok.Data;
 import per.chowh.bot.utils.JacksonUtil;
 
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Matcher;
 
 /**
@@ -14,6 +18,9 @@ import java.util.regex.Matcher;
  */
 @Data
 public class EventWrapper {
+    private static final AtomicLong EVENT_SEQUENCE = new AtomicLong();
+    @EqualsAndHashCode.Exclude
+    private final long sequence = EVENT_SEQUENCE.incrementAndGet();
     private Event event;
     private Class<? extends Event> eventClass;
     private JsonNode eventJson;
@@ -41,6 +48,18 @@ public class EventWrapper {
     public Long getGroupId() {
         JsonNode node = eventJson.get(GROUP_ID);
         return node == null || node.isNull() ? null : node.asLong();
+    }
+
+    public String getMessageSessionKey() {
+        Long userId = getUserId();
+        if (userId == null) {
+            return null;
+        }
+        return switch (event) {
+            case GroupMessageEvent group when group.getGroupId() != null -> group.getGroupId() + "#" + userId;
+            case PrivateMessageEvent ignored -> userId.toString();
+            default -> null;
+        };
     }
 
     public String getMessage() {

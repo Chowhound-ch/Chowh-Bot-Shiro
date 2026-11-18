@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Component;
+import per.chowh.bot.common.constants.Constants;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.event.message.GroupMessageEvent;
-import per.chowh.bot.core.event.message.PrivateMessageEvent;
 import per.chowh.bot.core.registery.config.EventListenerConfig;
 import per.chowh.bot.core.registery.domain.EventInvokeLog;
 import per.chowh.bot.core.registery.domain.EventMethod;
@@ -16,6 +16,8 @@ import per.chowh.bot.core.registery.mapper.BotLogMapper;
 import per.chowh.bot.core.registery.support.ListenerArgumentResolverComposite;
 import per.chowh.bot.core.utils.EventWrapper;
 import per.chowh.bot.core.utils.ListenerUtils;
+import per.chowh.bot.ext.dialogue.annotation.SessionDependOn;
+import per.chowh.bot.ext.dialogue.enums.SessionType;
 import per.chowh.bot.utils.exception.CmdExecException;
 
 import javax.net.ssl.SSLHandshakeException;
@@ -77,23 +79,17 @@ public class ListenerRunner {
         }
     }
 
-
     private void recordInvocation(EventMethod eventMethod, EventWrapper eventWrapper) {
-        Long groupId;
-        switch (eventWrapper.getEvent()) {
-            case GroupMessageEvent group when group.getGroupId() != null -> groupId = group.getGroupId();
-            case PrivateMessageEvent ignored -> groupId = null;
-            default -> { return; }
-        }
-        Long userId = eventWrapper.getUserId();
-        if (userId == null) {
+        String key = eventWrapper.getMessageSessionKey();
+        if (key == null) {
             return;
         }
-        String key = groupId == null ? userId.toString() : groupId + "#" + userId;
+        Long userId = eventWrapper.getUserId();
+        Long groupId = eventWrapper.getEvent() instanceof GroupMessageEvent group ? group.getGroupId() : null;
         var listener = eventMethod.getEventListener();
         String message = listener.isRaw() ? eventWrapper.getRawMessage() : eventWrapper.getMessage();
         EventInvokeLog invokeLog = eventMethod.getInvokeLog().compute(key,
-                (ignored, previous) -> new EventInvokeLog(userId, groupId, Instant.now(), message));
+                (ignored, previous) -> new EventInvokeLog(userId, groupId, Instant.now(), message, eventWrapper.getSequence()));
         try {
             botLogMapper.insert(eventMethod.getMethodId(), invokeLog);
         } catch (DataAccessException e) {

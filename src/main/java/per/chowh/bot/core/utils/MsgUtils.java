@@ -1,10 +1,14 @@
 package per.chowh.bot.core.utils;
 
+import com.mikuac.shiro.common.utils.ShiroUtils;
+import lombok.extern.slf4j.Slf4j;
 import per.chowh.bot.core.event.Event;
 import per.chowh.bot.core.event.message.AnyMessageEvent;
 import per.chowh.bot.core.event.message.GroupMessageEvent;
 import per.chowh.bot.core.event.message.MessageEvent;
 import per.chowh.bot.core.event.message.PrivateMessageEvent;
+import per.chowh.bot.utils.HttpProxyUtils;
+import per.chowh.bot.utils.StringUtils;
 import tools.jackson.databind.JsonNode;
 import com.mikuac.shiro.constant.ActionParams;
 import com.mikuac.shiro.dto.action.common.ActionData;
@@ -15,14 +19,20 @@ import com.mikuac.shiro.model.ArrayMsg;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.utils.JacksonUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author : Chowhound
  * @since : 2025/9/9 - 15:02
  */
+@Slf4j
 public class MsgUtils {
+    private static final Pattern CQ_IMAGE =
+            Pattern.compile("\\[CQ:image,(?:[^,\\[\\]]+,)*?file=([^,\\[\\]]+)(?:,[^\\[\\]]*)?\\]");
 
     public static Long getGroupId(MessageEvent event) {
         if (ActionParams.GROUP.equals(event.getMessageType())) {
@@ -140,5 +150,32 @@ public class MsgUtils {
         if (msg.getType() == MsgTypeEnum.forward) {
 //            msg.getData().
         }
+    }
+
+    public static String parseTextImageMsg(String msg) {
+        MsgBuilder builder = MsgBuilder.builder();
+        Matcher matcher = CQ_IMAGE.matcher(msg);
+        int textStart = 0;
+        while (matcher.find()) {
+            builder.text(msg.substring(textStart, matcher.start()));
+            textStart = matcher.end();
+
+            String fileUrl = StringUtils.parseByEnvironment(ShiroUtils.unescape(matcher.group(1)));
+            if (fileUrl == null) {
+                builder.text(matcher.group());
+                continue;
+            }
+            try {
+                byte[] bytes = HttpProxyUtils.doGetBytes(fileUrl, true);
+                if (bytes.length > 0) {
+                    builder.img(bytes);
+                } else {
+                    builder.text("[图片下载失败]");
+                }
+            } catch (IOException e) {
+                log.warn("图片下载失败，错误类型 {}，url {}", e.getClass().getSimpleName(), fileUrl);
+            }
+        }
+        return builder.text(msg.substring(textStart)).build();
     }
 }

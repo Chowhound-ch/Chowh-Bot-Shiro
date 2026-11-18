@@ -9,6 +9,8 @@ import per.chowh.bot.utils.ConfigUtils;
 public class Constants {
     public static final String EVENT_FILTER = "eventFilter";
 
+    public static final String SESSION_DEPEND = "sessionDepend";
+
 
     public static String getVikiUrl() {
         return ConfigUtils.getConfig("VIKI_URL");

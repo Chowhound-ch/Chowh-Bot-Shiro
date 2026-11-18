@@ -8,6 +8,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 @Retention(RetentionPolicy.RUNTIME)
@@ -21,4 +22,8 @@ public @interface SessionDependOn {
     String[] dependOn() default "";
 
     SessionType type() default SessionType.ONCE;
+
+    long time() default 5;
+
+    TimeUnit unit() default TimeUnit.MINUTES;
 }
