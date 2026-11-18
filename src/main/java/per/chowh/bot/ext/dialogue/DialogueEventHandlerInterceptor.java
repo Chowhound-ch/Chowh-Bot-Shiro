@@ -33,7 +33,6 @@ public class DialogueEventHandlerInterceptor implements EventHandlerInterceptor 
         if (key == null || sessionDependOn.time() <= 0) {
             return false;
         }
-        // TODO 并发情况下需要限制
         Instant cutoff = Instant.now().minusNanos(sessionDependOn.unit().toNanos(sessionDependOn.time()));
         EventInvokeLog latestDependency = null;
         for (String depend : sessionDependOn.dependOn()) {
@@ -61,11 +60,11 @@ public class DialogueEventHandlerInterceptor implements EventHandlerInterceptor 
         if (latestDependency == null) {
             return false;
         }
-        if (sessionDependOn.type() == SessionType.CONTINUE) {
-            return true;
+        if (sessionDependOn.type() == SessionType.ONCE) {
+            EventInvokeLog previous = method.getInvokeLog().get(key); // 获取上一次调用记录
+            return previous == null || precedes(previous, latestDependency);
         }
-        EventInvokeLog previous = method.getInvokeLog().get(key);
-        return previous == null || precedes(previous, latestDependency);
+        return true;
     }
 
     private boolean precedes(EventInvokeLog first, EventInvokeLog second) {
