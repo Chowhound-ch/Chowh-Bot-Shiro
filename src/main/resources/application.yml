@@ -30,6 +30,11 @@ per:
     endpoint: ${BOT_MINIO_ENDPOINT:}
     access-key: ${BOT_MINIO_ACCESS_KEY:}
     secret-key: ${BOT_MINIO_SECRET_KEY:}
+  auth:
+    jwt-secret: ${BOT_JWT_SECRET:}
+    token-ttl: ${BOT_JWT_TOKEN_TTL:30m}
+    issuer: chowh-bot-admin
+    session-prefix: "chowh:admin:session:"
 
 server:
   port: 8002
@@ -37,6 +42,19 @@ server:
 spring:
   profiles:
     active: dev
+  data:
+    redis:
+      host: ${BOT_REDIS_HOST:localhost}
+      port: ${BOT_REDIS_PORT:6379}
+      username: ${BOT_REDIS_USERNAME:}
+      password: ${BOT_REDIS_PASSWORD:}
+      database: ${BOT_REDIS_DATABASE:0}
+      connect-timeout: ${BOT_REDIS_CONNECT_TIMEOUT:5s}
+      timeout: ${BOT_REDIS_TIMEOUT:5s}
+      ssl:
+        enabled: ${BOT_REDIS_SSL_ENABLED:false}
+      repositories:
+        enabled: false
   ai:
     mcp:
       client:
