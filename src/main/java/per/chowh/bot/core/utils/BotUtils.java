@@ -5,8 +5,6 @@ import com.mikuac.shiro.dto.action.common.ActionData;
 import com.mikuac.shiro.dto.action.common.ActionList;
 import com.mikuac.shiro.dto.action.response.FriendInfoResp;
 import com.mikuac.shiro.dto.action.response.GroupMemberInfoResp;
-import com.mikuac.shiro.dto.event.message.GroupMessageEvent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import per.chowh.bot.core.bot.domain.ChowhBot;
 import per.chowh.bot.core.bot.domain.ChowhBotContainer;
@@ -23,8 +21,6 @@ import java.util.Objects;
 @Component
 public class BotUtils{
     private static final BotWrapper botWrapper = new BotWrapper();
-    @Autowired
-    private ChowhBotContainer botContainer;
 
     public static ChowhBot getBot(){
         if (botWrapper.getBot() == null) {
