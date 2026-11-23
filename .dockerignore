@@ -1,0 +1,14 @@
+.git
+.gradle
+.idea
+build
+bot-admin
+.env
+.env.*
+**/.env
+**/.env.*
+!config/.env.example
+**/*.db
+**/*.db-journal
+**/*.db-wal
+**/*.db-shm

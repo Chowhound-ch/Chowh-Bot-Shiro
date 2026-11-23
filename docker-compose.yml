@@ -1,0 +1,19 @@
+services:
+  chowh-bot-shiro:
+    container_name: chowh-bot-shiro
+    build: ./
+    volumes:
+      - "/vol1/1000/main/resources/media/bot:/opt/bot"
+      - "./app:/app"
+    environment:
+      - LANG=en_US.utf8
+    extra_hosts:
+      - "nas.com:172.173.0.2"
+      - "wolves.vip:172.173.0.2"
+      - "chowh.top:172.17.0.1"
+    networks: 
+     napcat_network:  # 直接引用网络名
+       ipv4_address: 172.173.0.30
+networks:
+  napcat_network:  # 正确定义外部网络
+    external: true
