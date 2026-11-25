@@ -45,7 +45,8 @@ COPY --from=build /workspace/build/libs/ /opt/chowh-bot/
 COPY start.sh /usr/local/bin/start-bot
 
 # 与项目依赖版本匹配的 Chromium 和系统库一并安装进镜像。
-# 程序与浏览器存放在挂载目录之外。
+# 构建产物暂存于 /opt/chowh-bot，启动时复制到挂载的 /app。
+# 浏览器存放在挂载目录之外。
 RUN java -cp 'lib/*' com.microsoft.playwright.CLI install --with-deps chromium && \
     chmod -R a+rX /ms-playwright && \
     sed -i 's/\r$//' /usr/local/bin/start-bot && \

@@ -2,6 +2,7 @@
 .gradle
 .idea
 build
+app
 bot-admin
 .env
 .env.*
