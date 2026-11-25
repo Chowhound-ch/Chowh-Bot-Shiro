@@ -29,32 +29,17 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# 在镜像内使用项目自带的 Gradle Wrapper 打包。
-FROM runtime-base AS build
-WORKDIR /workspace
-COPY gradlew build.gradle.kts settings.gradle.kts ./
-COPY gradle/ ./gradle/
-COPY src/ ./src/
-COPY config/ ./config/
-RUN sed -i 's/\r$//' gradlew && \
-    sh ./gradlew --no-daemon bootJar
-
 FROM runtime-base AS runtime
-WORKDIR /opt/chowh-bot
-COPY --from=build /workspace/build/libs/ /opt/chowh-bot/
-COPY start.sh /usr/local/bin/start-bot
+# 依赖由宿主机执行 Gradle Wrapper 生成，仅用于安装匹配版本的浏览器。
+COPY build/libs/lib/ /tmp/playwright-lib/
 
 # 与项目依赖版本匹配的 Chromium 和系统库一并安装进镜像。
-# 构建产物暂存于 /opt/chowh-bot，启动时复制到挂载的 /app。
-# 浏览器存放在挂载目录之外。
-RUN java -cp 'lib/*' com.microsoft.playwright.CLI install --with-deps chromium && \
+# 宿主机的 ./app 提供应用文件，浏览器保存在挂载目录之外。
+RUN java -cp '/tmp/playwright-lib/*' com.microsoft.playwright.CLI install --with-deps chromium && \
     chmod -R a+rX /ms-playwright && \
-    sed -i 's/\r$//' /usr/local/bin/start-bot && \
-    chmod +x /usr/local/bin/start-bot && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* /tmp/playwright-lib
 
-ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
-    BOT_APP_HOME=/opt/chowh-bot
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
 WORKDIR /app
-ENTRYPOINT ["/usr/local/bin/start-bot"]
+ENTRYPOINT ["/bin/bash", "/app/start.sh"]

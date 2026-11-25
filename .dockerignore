@@ -1,7 +1,11 @@
 .git
 .gradle
 .idea
-build
+# 仅将宿主机生成的依赖提供给 Dockerfile 安装 Playwright。
+build/*
+!build/libs/
+build/libs/*
+!build/libs/lib/
 app
 bot-admin
 .env
