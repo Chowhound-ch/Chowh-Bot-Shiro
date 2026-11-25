@@ -4,7 +4,7 @@ services:
     build: ./
     volumes:
       - "/vol1/1000/main/resources/media/bot:/opt/bot"
-      - "./app:/app"
+      - "./:/app"
     environment:
       - LANG=en_US.utf8
     extra_hosts:

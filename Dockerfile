@@ -40,18 +40,20 @@ RUN sed -i 's/\r$//' gradlew && \
     sh ./gradlew --no-daemon bootJar
 
 FROM runtime-base AS runtime
-WORKDIR /app
-COPY --from=build /workspace/build/libs/ /app/
+WORKDIR /opt/chowh-bot
+COPY --from=build /workspace/build/libs/ /opt/chowh-bot/
+COPY start.sh /usr/local/bin/start-bot
 
 # 与项目依赖版本匹配的 Chromium 和系统库一并安装进镜像。
-# 浏览器保存在 /ms-playwright，挂载 /app 时仍可使用。
+# 程序与浏览器存放在挂载目录之外。
 RUN java -cp 'lib/*' com.microsoft.playwright.CLI install --with-deps chromium && \
     chmod -R a+rX /ms-playwright && \
-    cp /app/config/start.sh /app/start.sh && \
-    sed -i 's/\r$//' /app/start.sh && \
-    chmod +x /app/start.sh && \
+    sed -i 's/\r$//' /usr/local/bin/start-bot && \
+    chmod +x /usr/local/bin/start-bot && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-ENTRYPOINT ["/app/start.sh"]
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 \
+    BOT_APP_HOME=/opt/chowh-bot
+WORKDIR /app
+ENTRYPOINT ["/usr/local/bin/start-bot"]
