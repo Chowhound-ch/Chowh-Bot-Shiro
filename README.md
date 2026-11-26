@@ -16,6 +16,10 @@ Compose 将 `./app` 挂载到容器的 `/app`，通过 `/bin/bash /app/start.sh`
 
 Dockerfile 会读取宿主机构建生成的 `build/libs/lib/` 来安装对应版本的 Playwright 浏览器，因此请通过 `deploy.sh` 完成构建和启动。
 
+如果 Docker 在 `COPY build/libs/lib/` 处报 `not found`，请在服务器的项目根目录执行 `bash deploy.sh`。单独执行 `docker compose up --build` 不会运行宿主机 Gradle。若手动构建，先执行 `sh ./gradlew --no-daemon bootJar`，确认 `ls build/libs/lib/playwright-*.jar` 能找到文件，再执行 Docker 构建。
+
+Docker 构建上下文需使用已完成打包的本地项目目录。直接以 Git 仓库 URL 构建时，仓库中不包含被 Git 忽略的 `build/` 产物。
+
 ### MCP 客户端
 
 MCP 客户端默认关闭。连接 Streamable HTTP 服务时，在 `config/.env.dev`（或当前 profile 对应的 `.env` 文件）中设置以下变量，然后重启应用。

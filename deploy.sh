@@ -12,6 +12,12 @@ test -f ./build/libs/Chowh-Bot-Shiro-0.0.1.jar
 test -d ./build/libs/lib
 test -d ./build/libs/config
 
+if ! compgen -G './build/libs/lib/playwright-*.jar' > /dev/null; then
+    echo '缺少 build/libs/lib/playwright-*.jar，宿主机构建产物不完整，停止构建镜像。' >&2
+    exit 1
+fi
+printf '使用宿主机构建产物：%s/build/libs/lib\n' "$PWD"
+
 # 先构建运行环境，成功后再停止旧容器、更新应用文件。
 docker compose build chowh-bot-shiro
 docker compose stop chowh-bot-shiro

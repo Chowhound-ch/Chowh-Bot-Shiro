@@ -72,9 +72,8 @@ tasks.test {
 }
 
 // 将依赖包复制到lib目录
-tasks.register<Copy>("copyJar") {
-    // 清除现有的lib目录
-    delete(layout.buildDirectory.dir("libs/lib"))
+tasks.register<Sync>("copyJar") {
+    // 仅在任务执行时同步依赖，避免配置其他 Gradle 任务时删除部署产物。
     from(configurations.runtimeClasspath) // 统一使用 runtimeClasspath
     into(layout.buildDirectory.dir("libs/lib"))
 
@@ -84,9 +83,7 @@ tasks.register<Copy>("copyJar") {
 }
 
 // 拷贝配置文件
-tasks.register<Copy>("copyConfigFile") {
-    // 清除现有的配置目录
-    delete(layout.buildDirectory.dir("libs/config"))
+tasks.register<Sync>("copyConfigFile") {
     from("src/main/resources")
     // 运行期外部配置（如 db/ 建表脚本）；.env 与数据库文件不随包分发
     from("config") {
